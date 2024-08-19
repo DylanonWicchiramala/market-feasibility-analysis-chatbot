@@ -1,4 +1,3 @@
-from dotenv import load_dotenv
 import os
 from langchain_community.document_loaders import TextLoader, WebBaseLoader
 from langchain_core.output_parsers import StrOutputParser
@@ -8,12 +7,10 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_chroma import Chroma
 from langchain_openai import OpenAIEmbeddings
 from langchain_openai import ChatOpenAI
+import utils
 
 
-            
-# Load environment variables from the .env file
-load_dotenv("./API_keys.env")
-os.getenv('OPENAI_API_KEY')
+utils.load_env()
 
 os.environ["LANGCHAIN_TRACING_V2"] = "true"
 # os.environ["LANGCHAIN_PROJECT"] = "Multi-agent Collaboration"
