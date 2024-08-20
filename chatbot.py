@@ -9,13 +9,17 @@ from langchain_core.messages import HumanMessage
 from langchain_openai import ChatOpenAI
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph import END, StateGraph, MessagesState
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain.agents import AgentExecutor, create_openai_tools_agent
+import functools
 import tools
 
 # define tools node.
 tool_node = tools.tool_node
 
+
 # load models.
-model = ChatOpenAI(model="gpt-4o-mini")
+llm = ChatOpenAI(model="gpt-4o-mini")
 
 # Define the function that determines whether to continue or not
 def should_continue(state: MessagesState) -> Literal["tools", END]:
@@ -29,19 +33,42 @@ def should_continue(state: MessagesState) -> Literal["tools", END]:
 
 
 # Define the function that calls the model
-def call_model(state: MessagesState):
-    messages = state['messages']
-    response = model.invoke(messages)
-    # We return a list, because this will get added to the existing list
-    return {"messages": [response]}
+def call_model(state, agent, name):
+    result = agent.invoke(state)
+    return {"messages": [HumanMessage(content=result["output"], name=name)]}
 
+
+# Function to create agent
+def create_agent(llm: ChatOpenAI, tools: list, system_prompt: str):
+    # Each worker node will be given a name and some tools.
+    prompt = ChatPromptTemplate.from_messages(
+        [
+            (
+                "system",
+                system_prompt,
+            ),
+            # MessagesPlaceholder(variable_name="messages"),
+            # MessagesPlaceholder(variable_name="agent_scratchpad"),
+        ]
+    )
+    agent = create_openai_tools_agent(llm, tools, prompt)
+    executor = AgentExecutor(agent=agent, tools=tools)
+    return executor
+
+# Create agent
+code_agent = create_agent(
+    llm,
+    tools.tools,
+    "You may generate safe python code to analyze data and generate charts using matplotlib.",
+)
+
+agent_node = functools.partial(call_model, agent=code_agent, name="Coder")
 
 # Define a new graph
 workflow = StateGraph(MessagesState)
 
 # Define the two nodes we will cycle between
-workflow.add_node("agent", call_model)
-workflow.add_node("tools", tool_node)
+workflow.add_node("agent", agent_node)
 
 # Set the entrypoint as `agent`
 workflow.set_entry_point("agent")
