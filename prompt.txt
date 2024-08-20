@@ -1,0 +1,10 @@
+{
+    "Agent1": {
+        "Prompt": "",
+        "Greet": ""
+    },
+    "Agent2": {
+        "Prompt": "",
+        "Greet": ""
+    }
+}
