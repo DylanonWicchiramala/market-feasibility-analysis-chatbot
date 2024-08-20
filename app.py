@@ -1,6 +1,6 @@
 import time
 import gradio as gr
-from ragChain import submitUserMessage
+from chatbot import submitUserMessage
 
 def chat(message:str, history):
     return submitUserMessage(message)

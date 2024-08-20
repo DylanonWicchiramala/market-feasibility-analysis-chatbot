@@ -6,7 +6,7 @@ from langchain_core.tools import tool
 utils.load_env()
 
 
-def find_place_from_text(input_text, location=None, radius=10000):
+def find_place_from_text(input_text, location=None, radius=2000):
     "Finds a place based on text input and location bias."
     # Retrieve the API key from environment variables
     api_key = os.getenv('GPLACES_API_KEY')
@@ -37,7 +37,7 @@ def find_place_from_text(input_text, location=None, radius=10000):
         response.raise_for_status()  # Raise an exception for HTTP errors
 
 
-def find_location(input_text:str, location:str=None, radius=10000):
+def find_location(input_text:str, location:str=None, radius=2000):
     """Returns the latitude and longitude of a location based on text input."""
     # Call the find_place_from_text function to get the location data
     data = find_place_from_text(input_text, location, radius)
