@@ -1,6 +1,6 @@
 import time
 import gradio as gr
-from chatbot import submitUserMessage
+from chatbot_multiagent import submitUserMessage
 
 def chat(message:str, history):
     return submitUserMessage(message)
