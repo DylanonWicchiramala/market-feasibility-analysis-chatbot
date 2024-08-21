@@ -244,19 +244,17 @@ def submitUserMessage(user_input: str) -> str:
         {
             "messages": [
                 HumanMessage(
-                    question
+                    user_input
                 )
             ],
         },
         # Maximum number of steps to take in the graph
-        {"recursion_limit": 20},
+        {"recursion_limit": 40},
     )
-    
-    events = [e for e in events]
-    
-    response = list(events[-1].values())[0]["messages"][0]
-    response = response.content
-    response = response.replace("FINAL ANSWER: ", "")
+    for s in events:
+        a = list(s.items())[0]
+
+    response = a[1]['messages'][0].content.replace("FINAL ANSWER", "")
     
     return response
 

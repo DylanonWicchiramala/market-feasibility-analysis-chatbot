@@ -3,6 +3,7 @@ import gradio as gr
 from chatbot_multiagent import submitUserMessage
 
 def chat(message:str, history):
+    print(message)
     return submitUserMessage(message)
 
 
