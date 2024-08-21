@@ -67,7 +67,7 @@ retriever = vectorstore.as_retriever()
 ## tools and LLM
 
 retriever_tool = Tool(
-    name="Retriever",
+    name="population, community and household expenditures",
     func=retriever.get_relevant_documents,
     description="Use this tool to retrieve information about population, community and household expenditures."
 )
@@ -75,7 +75,7 @@ retriever_tool = Tool(
 # Bind the tools to the model
 tools = [retriever_tool, find_place_from_text, nearby_search]  # Include both tools if needed
 
-llm = ChatOpenAI(model="gpt-4o-mini")
+llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.0)
 
 ## Create agents
 def create_agent(llm, tools, system_message: str):
@@ -99,7 +99,7 @@ def create_agent(llm, tools, system_message: str):
     prompt = prompt.partial(tool_names=", ".join([tool.name for tool in tools]))
     llm_with_tools = llm.bind(functions=[format_tool_to_openai_function(t) for t in tools])
     # return prompt | llm.bind_tools(tools)
-    agent = prompt | llm_with_tools
+    agent = prompt | llm
     return agent
 
 
@@ -129,7 +129,7 @@ def agent_node(state, agent, name):
 
 ## Define Agents Node
 # Research agent and node
-agent_meta = utils.load_agent_meta()
+from prompt import agent_meta
 agent_name = [meta['name'] for meta in agent_meta]
 
 agents={}
@@ -141,7 +141,7 @@ for meta in agent_meta:
     
     agents[name] = create_agent(
             llm,
-            [find_place_from_text, nearby_search],
+            tools,
             system_message=prompt,
         )
     
@@ -177,12 +177,23 @@ for name, node in agent_nodes.items():
 workflow.add_node("call_tool", tool_node)
 
 
-for meta in agent_meta:
-    workflow.add_conditional_edges(
-        meta["name"],
-        router,
-        {"continue": meta['continue'], "call_tool": "call_tool", "__end__": END},
-    )
+workflow.add_conditional_edges(
+    "analyst",
+    router,
+    {"continue": "data collector", "call_tool": "call_tool", "__end__": END}
+)
+
+workflow.add_conditional_edges(
+    "data collector",
+    router,
+    {"call_tool": "call_tool", "continue": "reporter", "__end__": END}
+)
+
+workflow.add_conditional_edges(
+    "reporter",
+    router,
+    {"continue": "data collector", "call_tool": "call_tool", "__end__": END}
+)
 
 workflow.add_conditional_edges(
     "call_tool",
@@ -195,6 +206,35 @@ workflow.add_conditional_edges(
 )
 workflow.add_edge(START, "analyst")
 graph = workflow.compile()
+
+# %%
+# from IPython.display import Image, display
+
+# try:
+#     display(Image(graph.get_graph(xray=True).draw_mermaid_png()))
+# except Exception:
+#     # This requires some extra dependencies and is optional
+#     pass
+
+# %%
+# content = "วิเคราะห์ร้านอาหารแถวลุมพินี เซ็นเตอร์ ลาดพร้าว"
+
+# graph = workflow.compile()
+
+# events = graph.stream(
+#     {
+#         "messages": [
+#             HumanMessage(
+#                 content
+#             )
+#         ],
+#     },
+#     # Maximum number of steps to take in the graph
+#     {"recursion_limit": 10},
+# )
+# for s in events:
+#     print(s)
+#     print("----")
 
 # %%
 def submitUserMessage(user_input: str) -> str:
@@ -214,7 +254,12 @@ def submitUserMessage(user_input: str) -> str:
     
     events = [e for e in events]
     
-    response = events[-1]['data collector']['messages'][0].content.replace("FINAL ANSWER: ", "")
+    response = list(events[-1].values())[0]["messages"][0]
+    response = response.content
+    response = response.replace("FINAL ANSWER", "")
     
     return response
+
+#submitUserMessage("วิเคราะห์การเปิดร้านกาแฟใกล้มาบุญครอง")
+
 

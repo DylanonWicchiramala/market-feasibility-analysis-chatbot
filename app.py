@@ -14,6 +14,6 @@ def slow_echo_chat(message, history):
         
         
 # gr.ChatInterface(chat).launch()
-interface = gr.ChatInterface(slow_echo_chat)
+interface = gr.ChatInterface(chat)
 
 interface.launch()
