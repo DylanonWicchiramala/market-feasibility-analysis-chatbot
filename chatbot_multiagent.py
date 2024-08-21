@@ -67,7 +67,7 @@ retriever = vectorstore.as_retriever()
 ## tools and LLM
 
 retriever_tool = Tool(
-    name="population, community and household expenditures",
+    name="population, community and household expenditures data",
     func=retriever.get_relevant_documents,
     description="Use this tool to retrieve information about population, community and household expenditures."
 )
@@ -201,8 +201,8 @@ workflow.add_conditional_edges(
     # the tool calling node does not, meaning
     # this edge will route back to the original agent
     # who invoked the tool
-    lambda x: x["sender"],
-    {name: name for name in agent_name},
+    lambda x: "data collector",
+    {"data collector":"data collector"},
 )
 workflow.add_edge(START, "analyst")
 graph = workflow.compile()
@@ -217,7 +217,7 @@ graph = workflow.compile()
 #     pass
 
 # %%
-# content = "วิเคราะห์ร้านอาหารแถวลุมพินี เซ็นเตอร์ ลาดพร้าว"
+# question = "วิเคราะห์ร้านอาหารแถวลุมพินี เซ็นเตอร์ ลาดพร้าว"
 
 # graph = workflow.compile()
 
@@ -225,16 +225,16 @@ graph = workflow.compile()
 #     {
 #         "messages": [
 #             HumanMessage(
-#                 content
+#                 question
 #             )
 #         ],
 #     },
 #     # Maximum number of steps to take in the graph
-#     {"recursion_limit": 10},
+#     {"recursion_limit": 20},
 # )
 # for s in events:
-#     print(s)
-#     print("----")
+#     a = list(s.items())[0]
+#     a[1]['messages'][0].pretty_print()
 
 # %%
 def submitUserMessage(user_input: str) -> str:
@@ -244,22 +244,24 @@ def submitUserMessage(user_input: str) -> str:
         {
             "messages": [
                 HumanMessage(
-                    content=user_input
+                    question
                 )
             ],
         },
         # Maximum number of steps to take in the graph
-        {"recursion_limit": 15},
+        {"recursion_limit": 20},
     )
     
     events = [e for e in events]
     
     response = list(events[-1].values())[0]["messages"][0]
     response = response.content
-    response = response.replace("FINAL ANSWER", "")
+    response = response.replace("FINAL ANSWER: ", "")
     
     return response
 
-#submitUserMessage("วิเคราะห์การเปิดร้านกาแฟใกล้มาบุญครอง")
+
+# question = "วิเคราะห์ร้านอาหารแถวลุมพินี เซ็นเตอร์ ลาดพร้าว"
+# submitUserMessage(question)
 
 
