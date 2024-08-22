@@ -6,12 +6,19 @@ utils.load_env()
 os.environ['LANGCHAIN_TRACING_V2'] = "false"
 
 # %%
+from langchain.globals import set_debug, set_verbose
+
+set_verbose(True)
+set_debug(False)
+
+# %%
 from langchain_core.messages import HumanMessage
 import operator
 import functools
 
 # for llm model
 from langchain_openai import ChatOpenAI
+# from langchain_community.chat_models import ChatOpenAI
 from langchain.agents.format_scratchpad import format_to_openai_function_messages
 from tools import find_place_from_text, nearby_search
 from typing import Dict, List, Tuple, Annotated, Sequence, TypedDict
@@ -19,7 +26,6 @@ from langchain.agents import (
     AgentExecutor,
 )
 from langchain.agents.output_parsers import OpenAIFunctionsAgentOutputParser
-from langchain_community.chat_models import ChatOpenAI
 from langchain_community.tools.convert_to_openai import format_tool_to_openai_function
 from langchain_core.messages import (
     AIMessage, 
@@ -43,6 +49,8 @@ from langchain.tools import Tool
 def format_docs(docs):
     return "\n\n".join(doc.page_content for doc in docs)
 
+
+## Document csv
 # Specify the pattern
 file_pattern = "document/*.csv"
 file_paths = tuple(glob.glob(file_pattern))
@@ -64,8 +72,8 @@ vectorstore = Chroma.from_documents(documents=splits, embedding=OpenAIEmbeddings
 # Retrieve and generate using the relevant snippets of the blog.
 retriever = vectorstore.as_retriever()
 
-## tools and LLM
 
+## tools and LLM
 retriever_tool = Tool(
     name="population, community and household expenditures data",
     func=retriever.get_relevant_documents,
@@ -73,7 +81,8 @@ retriever_tool = Tool(
 )
 
 # Bind the tools to the model
-tools = [retriever_tool, find_place_from_text, nearby_search]  # Include both tools if needed
+# tools = [retriever_tool, find_place_from_text, nearby_search]  # Include both tools if needed
+tools = [find_place_from_text, nearby_search]
 
 llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.0)
 
@@ -99,7 +108,7 @@ def create_agent(llm, tools, system_message: str):
     prompt = prompt.partial(tool_names=", ".join([tool.name for tool in tools]))
     llm_with_tools = llm.bind(functions=[format_tool_to_openai_function(t) for t in tools])
     # return prompt | llm.bind_tools(tools)
-    agent = prompt | llm
+    agent = prompt | llm_with_tools
     return agent
 
 
@@ -201,8 +210,12 @@ workflow.add_conditional_edges(
     # the tool calling node does not, meaning
     # this edge will route back to the original agent
     # who invoked the tool
-    lambda x: "data collector",
-    {"data collector":"data collector"},
+    lambda x: x["sender"],
+    {
+        "data collector":"data collector",
+        "analyst":"analyst",
+        "reporter":"reporter",
+        },
 )
 workflow.add_edge(START, "analyst")
 graph = workflow.compile()
@@ -217,24 +230,7 @@ graph = workflow.compile()
 #     pass
 
 # %%
-# question = "วิเคราะห์ร้านอาหารแถวลุมพินี เซ็นเตอร์ ลาดพร้าว"
 
-# graph = workflow.compile()
-
-# events = graph.stream(
-#     {
-#         "messages": [
-#             HumanMessage(
-#                 question
-#             )
-#         ],
-#     },
-#     # Maximum number of steps to take in the graph
-#     {"recursion_limit": 20},
-# )
-# for s in events:
-#     a = list(s.items())[0]
-#     a[1]['messages'][0].pretty_print()
 
 # %%
 def submitUserMessage(user_input: str) -> str:
@@ -249,12 +245,14 @@ def submitUserMessage(user_input: str) -> str:
             ],
         },
         # Maximum number of steps to take in the graph
-        {"recursion_limit": 40},
+        {"recursion_limit": 20},
     )
-    for s in events:
-        a = list(s.items())[0]
-
-    response = a[1]['messages'][0].content.replace("FINAL ANSWER", "")
+    
+    events = [e for e in events]
+    
+    response = list(events[-1].values())[0]["messages"][0]
+    response = response.content
+    response = response.replace("FINAL ANSWER: ", "")
     
     return response
 

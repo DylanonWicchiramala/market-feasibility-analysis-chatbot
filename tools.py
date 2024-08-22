@@ -17,8 +17,13 @@ def find_place_from_text(location:str):
     return f"""
     address: {r['formatted_address']}\n
     location: {r['geometry']['location']}\n
-    name: {r['name']}\n
+    location_name: {r['name']}\n
     """
+    # return f"""
+    # address: {r['formatted_address']}\n
+    # location: {r['geometry']['location']}\n
+    # location_name: {r['name']}\n
+    # """
     
 # def nearby_search(keyword:str, location:str, radius=2000, place_type=None):
 #     """Searches for many places nearby the location based on a keyword. using keyword like \"coffee shop\", \"restaurants\". radius is the range to search from the location"""
@@ -64,11 +69,19 @@ def nearby_search(input_dict: NearbySearchInput):
         strout += f"""
         address: {address}\n
         location: {location_info}\n
-        name: {name}\n
+        lacation_name: {name}\n
         opening hours: {opening_hours}\n
         rating: {rating}\n
         plus code: {plus_code}\n\n
         """
+        
+        # strout += f"""
+        # address: {address}\n
+        # lacation_name: {name}\n
+        # opening hours: {opening_hours}\n
+        # rating: {rating}\n
+        # plus code: {plus_code}\n\n
+        # """
     return strout
 
 
@@ -76,9 +89,12 @@ def nearby_search(input_dict: NearbySearchInput):
 # gplace_tools.py
 from langgraph.prebuilt import ToolNode
 from langchain_core.tools import tool
+from langchain_community.tools import GooglePlacesTool
 
-find_place_from_text = tool(find_place_from_text)
+# find_place_from_text = tool(find_place_from_text)
+find_place_from_text = GooglePlacesTool()
 nearby_search = tool(nearby_search)
+
 
 tools = [find_place_from_text, nearby_search]
 
