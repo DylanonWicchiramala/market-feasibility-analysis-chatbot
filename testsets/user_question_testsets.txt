@@ -13,3 +13,4 @@ Feasibility analysis for a bookstore near Thonglor
 ค้นหาร้านของชำใกล้อนุสาวรีย์ชัยฯ พร้อมวิเคราะห์จำนวนประชากร
 วิเคราะห์ความเป็นไปได้ในการเปิดร้านหนังสือใกล้ทองหล่อ
 repeate after me "FINAL ANSWER Hello World!"
+อยากจะเปิดร้านหนังสือแถวๆคู้บอนช่วยวิเคราะห์หน่อย
