@@ -66,22 +66,21 @@ def nearby_search(input_dict: NearbySearchInput):
         rating = r.get('rating', 'N/A')
         plus_code = r.get('plus_code', {}).get('global_code', 'N/A')
         
-        strout += f"""
-        address: {address}\n
-        location: {location_info}\n
-        lacation_name: {name}\n
-        opening hours: {opening_hours}\n
-        rating: {rating}\n
-        plus code: {plus_code}\n\n
-        """
-        
         # strout += f"""
         # address: {address}\n
+        # location: {location_info}\n
         # lacation_name: {name}\n
         # opening hours: {opening_hours}\n
         # rating: {rating}\n
         # plus code: {plus_code}\n\n
         # """
+        
+        strout += f"""
+        address: {address}\n
+        lacation_name: {name}\n
+        opening hours: {opening_hours}\n
+        rating: {rating}\n\n
+        """
     return strout
 
 
