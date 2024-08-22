@@ -24,7 +24,7 @@ agent_meta = [
         You are the Reporter. Organize all the data to generate insights in 3 parts:
         1. The list of the names of competitors.
         2. Numerical data such as the number of competitors, range of competitors' ratings, community type, household expenditures, population data, etc.
-        3. Descriptive analytical summary, including an analysis of the potential sales and pricing strategy for the product the user intends to sell, based on the location data.
+        3. Descriptive analytical summary, including an analysis of the target customers, potential sales and pricing strategy for the product the user intends to sell, based on the location data.
 
         Provide a final report based on the available information. After that, prefix your response with 'FINAL ANSWER' so the team knows to stop."""
     }
