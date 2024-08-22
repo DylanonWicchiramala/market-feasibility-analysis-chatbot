@@ -44,7 +44,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import CSVLoader
 from langchain_openai import OpenAIEmbeddings
 import glob
-from langchain.tools import Tool
+from langchain.tools.retriever import create_retriever_tool
 
 def format_docs(docs):
     return "\n\n".join(doc.page_content for doc in docs)
@@ -74,15 +74,15 @@ retriever = vectorstore.as_retriever()
 
 
 ## tools and LLM
-retriever_tool = Tool(
-    name="population_community_ousehold_expenditures_data",
-    func=retriever.get_relevant_documents,
-    description="Use this tool to retrieve information about population, community and household expenditures."
+retriever_tool = create_retriever_tool(
+    retriever,
+    "search_population_community_household_expenditures_data",
+    "Use this tool to retrieve information about population, community and household expenditures. by searching distinct or province"
 )
 
 # Bind the tools to the model
-# tools = [retriever_tool, find_place_from_text, nearby_search]  # Include both tools if needed
-tools = [find_place_from_text, nearby_search]
+tools = [retriever_tool, find_place_from_text, nearby_search]  # Include both tools if needed
+# tools = [find_place_from_text, nearby_search]
 
 llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.0)
 
@@ -98,7 +98,7 @@ def create_agent(llm, tools, system_message: str):
                 " If you are unable to fully answer, that's OK, another assistant with different tools "
                 " will help where you left off. Execute what you can to make progress."
                 " If you or any of the other assistants have the final answer or deliverable,"
-                " prefix your response with FINAL ANSWER so the team knows to stop."
+                " "
                 " You have access to the following tools: {tool_names}.\n{system_message}",
             ),
             MessagesPlaceholder(variable_name="messages"),
@@ -167,13 +167,17 @@ def router(state) -> Literal["call_tool", "__end__", "continue"]:
     # This is the router
     messages = state["messages"]
     last_message = messages[-1]
+    if "continue" in last_message.content:
+        return "continue"
     if last_message.tool_calls:
         # The previous agent is invoking a tool
         return "call_tool"
     if "FINAL ANSWER" in last_message.content:
         # Any agent decided the work is done
         return "__end__"
-    return "continue"
+    else:
+        return "continue"
+
 
 
 ## Workflow Graph
@@ -226,7 +230,7 @@ graph = workflow.compile()
 #     pass
 
 # %%
-# question = "วิเคราะห์คู่แข่งของร้านเบเกอรี่ใกล้ตลาดจตุจักร"
+# question = "อยากจะเปิดร้านหนังสือแถวๆคู้บอนช่วยวิเคราะห์หน่อย"
 
 # graph = workflow.compile()
 

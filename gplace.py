@@ -61,7 +61,7 @@ def find_location(input_text:str, location:str=None, radius=2000):
     return f"{latitude},{longitude}"
 
 
-def nearby_search(keyword:str, location:str, radius=2000, place_type=None):
+def nearby_search_old(keyword:str, location:str, radius=2000, place_type=None):
     """Searches for nearby places based on a keyword and location."""
     # Retrieve the API key from environment variables
     api_key = os.getenv('GPLACES_API_KEY')
@@ -93,3 +93,51 @@ def nearby_search(keyword:str, location:str, radius=2000, place_type=None):
 
     # Return the response data
     return data['results']
+
+
+def nearby_search(keyword:str, location:str, radius=2000, place_type=None):
+    # Retrieve the API key from environment variables
+    api_key = os.getenv('GPLACES_API_KEY')
+
+    if not api_key:
+        raise ValueError("API key not found. Please set the GOOGLE_MAPS_API_KEY environment variable.")
+
+    # Define the endpoint URL
+    url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json"
+
+    # Set up the parameters for the request
+    params = {
+        'keyword': keyword,
+        'location': location,
+        'radius': radius,
+        'type': place_type,
+        'key': api_key,
+        "rankPreference": "DISTANCE"
+    }
+
+    # Send the GET request to the Google Maps API
+    response = requests.get(url, params=params)
+
+    # Check if the request was successful
+    if response.status_code != 200:
+        raise Exception(f"Error with request: {response.status_code}, {response.text}")
+
+    # Parse the JSON response
+    data = response.json()
+    results = data['results']
+
+    # search into next page
+    while data.get('next_page_token', False):
+        params = {'next_page_token': data['next_page_token']}
+        response = requests.get(url, params=params)
+        
+        if response.status_code != 200:
+            raise Exception(f"Error with request: {response.status_code}, {response.text}")
+        
+        data = response.json()
+        
+        results.append(data['results'])
+        
+
+    # Return the response data
+    return results

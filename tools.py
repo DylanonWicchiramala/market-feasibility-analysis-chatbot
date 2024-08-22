@@ -46,6 +46,7 @@ def find_place_from_text(location:str):
 def nearby_search(input_dict: NearbySearchInput):
     """Searches for many places nearby the location based on a keyword. using keyword like \"coffee shop\", \"restaurants\". radius is the range to search from the location."""
     
+    max_results = 10
     keyword = input_dict['keyword']
     location = input_dict['location_name']
     radius = input_dict.get('radius', 2000)
@@ -56,8 +57,8 @@ def nearby_search(input_dict: NearbySearchInput):
     result = gplace.nearby_search(keyword, location_coords, radius)
     
     number_results = len(result)
-    strout = "number of results more than {}\n".format(number_results) if number_results==20 else "number of results: {}\n".format(number_results)
-    for r in result:
+    strout = "number of results more than {}\n".format(number_results) if number_results==60 else "number of results: {}\n".format(number_results)
+    for r in result[:max_results]:
         # Use .get() to handle missing keys
         address = r.get('vicinity', 'N/A')
         location_info = r.get('geometry', {}).get('location', 'N/A')
