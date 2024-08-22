@@ -7,6 +7,11 @@ class NearbySearchInput(TypedDict):
     location_name: str
     radius: int
     place_type: Optional[str]
+    
+    
+class NearbyDenseCommunityInput(TypedDict):
+    location_name: str
+    radius: int
 
 # %%
 def find_place_from_text(location:str):
@@ -84,6 +89,32 @@ def nearby_search(input_dict: NearbySearchInput):
     return strout
 
 
+def nearby_dense_community(input_dict: NearbyDenseCommunityInput) -> str:
+    """ getting nearby dense community such as (community mall, hotel, school, etc), by location name, radius(in meters)
+    return list of location community nearby, name, community type.
+    """
+    location = input_dict['location_name']
+    radius = input_dict['radius']
+    
+    location_coords = gplace.find_location(location, radius=radius)
+    result = gplace.nearby_dense_community(location_coords, radius)
+    
+    strout = ""
+    for r in result:
+        # Use .get() to handle missing keys
+        address = r.get('vicinity', 'N/A')
+        location_types = r.get('types', 'N/A')
+        name = r.get('name', 'N/A')
+        opening_hours = r.get('opening_hours', 'N/A')
+        rating = r.get('rating', 'N/A')
+        plus_code = r.get('plus_code', {}).get('global_code', 'N/A')
+        
+        strout += f"""
+        name: {name}\n
+        types: {location_types}\n
+        """
+    return strout
+
 # %%
 # gplace_tools.py
 from langgraph.prebuilt import ToolNode
@@ -93,11 +124,5 @@ from langchain_community.tools import GooglePlacesTool
 find_place_from_text = tool(find_place_from_text)
 # find_place_from_text = GooglePlacesTool()
 nearby_search = tool(nearby_search)
-
-
-tools = [find_place_from_text, nearby_search]
-
-# Create ToolNodes for each tool
-tool_node = ToolNode(tools)
-
+nearby_dense_community = tool(nearby_dense_community)
 
