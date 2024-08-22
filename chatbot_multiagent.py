@@ -75,7 +75,7 @@ retriever = vectorstore.as_retriever()
 
 ## tools and LLM
 retriever_tool = Tool(
-    name="population, community and household expenditures data",
+    name="population_community_ousehold_expenditures_data",
     func=retriever.get_relevant_documents,
     description="Use this tool to retrieve information about population, community and household expenditures."
 )
@@ -106,10 +106,10 @@ def create_agent(llm, tools, system_message: str):
     )
     prompt = prompt.partial(system_message=system_message)
     prompt = prompt.partial(tool_names=", ".join([tool.name for tool in tools]))
-    llm_with_tools = llm.bind(functions=[format_tool_to_openai_function(t) for t in tools])
-    # return prompt | llm.bind_tools(tools)
-    agent = prompt | llm_with_tools
-    return agent
+    #llm_with_tools = llm.bind(functions=[format_tool_to_openai_function(t) for t in tools])
+    return prompt | llm.bind_tools(tools)
+    #agent = prompt | llm_with_tools
+    #return agent
 
 
 ## Define state
@@ -189,11 +189,11 @@ workflow.add_node("call_tool", tool_node)
 workflow.add_conditional_edges(
     "analyst",
     router,
-    {"continue": "data collector", "call_tool": "call_tool", "__end__": END}
+    {"continue": "data_collector", "call_tool": "call_tool", "__end__": END}
 )
 
 workflow.add_conditional_edges(
-    "data collector",
+    "data_collector",
     router,
     {"call_tool": "call_tool", "continue": "reporter", "__end__": END}
 )
@@ -201,7 +201,7 @@ workflow.add_conditional_edges(
 workflow.add_conditional_edges(
     "reporter",
     router,
-    {"continue": "data collector", "call_tool": "call_tool", "__end__": END}
+    {"continue": "data_collector", "call_tool": "call_tool", "__end__": END}
 )
 
 workflow.add_conditional_edges(
@@ -211,11 +211,7 @@ workflow.add_conditional_edges(
     # this edge will route back to the original agent
     # who invoked the tool
     lambda x: x["sender"],
-    {
-        "data collector":"data collector",
-        "analyst":"analyst",
-        "reporter":"reporter",
-        },
+    {name:name for name in agent_name},
 )
 workflow.add_edge(START, "analyst")
 graph = workflow.compile()
@@ -230,7 +226,25 @@ graph = workflow.compile()
 #     pass
 
 # %%
+# question = "ค้นหาร้านของชำใกล้อนุสาวรีย์ชัยฯ พร้อมวิเคราะห์จำนวนประชากร"
 
+# graph = workflow.compile()
+
+# events = graph.stream(
+#     {
+#         "messages": [
+#             HumanMessage(
+#                 question
+#             )
+#         ],
+#     },
+#     # Maximum number of steps to take in the graph
+#     {"recursion_limit": 20},
+# )
+# for s in events:
+#     # print(s)
+#     a = list(s.items())[0]
+#     a[1]['messages'][0].pretty_print()
 
 # %%
 def submitUserMessage(user_input: str) -> str:
