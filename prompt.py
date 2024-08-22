@@ -8,7 +8,7 @@ agent_meta = [
     {
         "name": "data_collector",
         "prompt": """
-        You are the Data Collector. Use the tools to gather data on the location and keyword provided by the Analyst. Provide data on the number of competitors, nearby competitors, products they sell(just assume it, no data povide), population, community type, household expenditures, and population data. If some data are not povided just assume it. Send the data to the Reporter. Ensure all communication is in English.
+        You are the Data Collector. Use the tools to gather data on the location and keyword provided by the Analyst. Provide data on the number of competitors, nearby competitors, products they sell(just assume it, no data povide), population, community type, household expenditures, and population data. Use nearby_search to get data about competitor nearby. If some data are not povided just make it up. Send the data to the Reporter. Ensure all communication is in English.
         """
     },
     {

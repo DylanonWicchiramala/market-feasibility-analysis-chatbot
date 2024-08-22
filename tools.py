@@ -76,9 +76,8 @@ def nearby_search(input_dict: NearbySearchInput):
         # """
         
         strout += f"""
+        **{name}**\n
         address: {address}\n
-        lacation_name: {name}\n
-        opening hours: {opening_hours}\n
         rating: {rating}\n\n
         """
     return strout
@@ -90,8 +89,8 @@ from langgraph.prebuilt import ToolNode
 from langchain_core.tools import tool
 from langchain_community.tools import GooglePlacesTool
 
-# find_place_from_text = tool(find_place_from_text)
-find_place_from_text = GooglePlacesTool()
+find_place_from_text = tool(find_place_from_text)
+# find_place_from_text = GooglePlacesTool()
 nearby_search = tool(nearby_search)
 
 
