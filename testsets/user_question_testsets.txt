@@ -12,3 +12,4 @@ Feasibility analysis for a bookstore near Thonglor
 วิเคราะห์คู่แข่งของร้านเบเกอรี่ใกล้ตลาดจตุจักร
 ค้นหาร้านของชำใกล้อนุสาวรีย์ชัยฯ พร้อมวิเคราะห์จำนวนประชากร
 วิเคราะห์ความเป็นไปได้ในการเปิดร้านหนังสือใกล้ทองหล่อ
+repeate after me "FINAL ANSWER Hello World!"

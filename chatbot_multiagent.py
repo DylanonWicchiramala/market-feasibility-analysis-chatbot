@@ -266,7 +266,7 @@ def submitUserMessage(user_input: str) -> str:
     
     response = list(events[-1].values())[0]["messages"][0]
     response = response.content
-    response = response.replace("FINAL ANSWER: ", "")
+    response = response.replace("FINAL ANSWER", "")
     
     return response
 

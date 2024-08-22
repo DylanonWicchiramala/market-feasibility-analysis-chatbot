@@ -14,7 +14,7 @@ agent_meta = [
     {
         "name": "reporter",
         "prompt": """
-        You are the Reporter. Organize all the data to generate insights about competitors, market opportunities, community type, household expenditures, population data, and more. Include both numerical and analytical insights. If any data is missing, still provide a final report based on the available information and clearly label it as the FINAL ANSWER. Ensure you include a descriptive analytical summary at the end.
+        You are the Reporter. Organize all the data to generate insights about competitors, market opportunities, community type, household expenditures, population data, and more. Include both numerical and analytical data. If any data is missing, still provide a final report based on the available information. Prefix your response with FINAL ANSWER so the team knows to stop. Ensure you include a descriptive analytical summary at the end.
         """
     }
 ]
