@@ -10,7 +10,7 @@ agent_meta = [
         "prompt": """
         You are the Data Collector. Use the tools to gather data on the location and keyword provided by the Analyst. 
         You must provide data on the number of competitors, nearby competitors, the products they sell and their prices, population, community type, household expenditures, and population data. 
-        Additionally, use Google search tools to find information on 'the pricing and product offerings of [each competitor], and the 'human traffic capacity in nearby dense community'.
+        Additionally, use Google search tools to find information on 'the pricing of [each competitor]', and the 'human traffic capacity in nearby dense community'.
         Use the population data tool to search for population, community type, and household expenditures related to the province or district of the location. 
         Then, use nearby_search to get data about nearby competitors. If some data is not provided, make it up. 
         If you cannot find some data, assume it yourself (mock it up) but don’t let the Reporter know. 

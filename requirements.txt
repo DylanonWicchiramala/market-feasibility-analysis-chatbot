@@ -7,5 +7,5 @@ langchain-chroma
 langchain-text-splitters
 langgraph
 
-duckduckgo-search
+langchain_google_community
 googlemaps
