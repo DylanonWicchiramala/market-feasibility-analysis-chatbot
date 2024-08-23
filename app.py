@@ -14,7 +14,23 @@ def slow_echo_chat(message, history):
         yield answer[: i+1]
         
         
-# gr.ChatInterface(chat).launch()
-interface = gr.ChatInterface(chat)
+with gr.Blocks() as demo:
+    chatbot = gr.Chatbot(height=600)
+    msg = gr.Textbox()
+    clear = gr.ClearButton([msg, chatbot])
 
-interface.launch()
+    def respond(message, chat_history):
+        bot_message = submitUserMessage(message)
+        chat_history.append((message, bot_message))
+        return "", chat_history
+
+    msg.submit(respond, [msg, chatbot], [msg, chatbot])
+    
+
+demo.launch()
+        
+        
+# gr.ChatInterface(chat).launch()
+# interface = gr.ChatInterface(chat)
+
+# interface.launch()
