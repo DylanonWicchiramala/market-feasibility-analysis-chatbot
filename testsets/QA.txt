@@ -1,7 +1,84 @@
 quesion: 
-	Search for grocery stores near Victory Monument and analyze the population
-error: 
-	Error code: 400 - {'error': {'message': "An assistant message with 'tool_calls' must be followed by tool messages responding to each 'tool_call_id'. The following tool_call_ids did not have response messages: call_unMN66et1GfiFghWmFzTTCgE", 'type': 'invalid_request_error', 'param': 'messages', 'code': None}}
+	Coffee shop near Central World
+answer: 
+	### Competitors
+- **List of Competitors**: 
+  1. Fellas.coffee @soi tonson
+  2. Salotto Coffee
+  3. You Drink Coffee
+  4. Rich Coffee
+  5. Baankhunlek coffee สาขา CentralworldOffices
+  6. Early Bird Coffee - Chit Lom BTS
+  7. Mongkol COFFEE
+  8. Eleven Ratio
+  9. A love coffee
+  10. Pacamara Coffee Roasters (The Offices at CentralwOrld)
+
+### Numerical Data
+- **Number of Competitors**: 21 coffee shops
+- **Competitors Ratings**: 
+  - Range: 4.4 to 5.0
+- **Community Type**: Urban
+- **Population**: Approximately 22,000 residents
+- **Household Expenditures**: 
+  - Average monthly expenditure: 17,000 THB
+  - Average annual expenditure: 45,000 THB
+  - Average expenditure on food and beverages: 84,000 THB
+
+### Descriptive Analytical Summary
+The area around Central World in Pathum Wan is home to a vibrant coffee shop scene, with 21 competitors offering a range of options for coffee enthusiasts. The ratings of these coffee shops vary from 4.4 to 5.0, indicating a generally high level of customer satisfaction. The urban community has a population of approximately 22,000 residents, with significant household expenditures, particularly on food and beverages. This suggests a strong market potential for coffee shops, as residents are willing to spend on quality coffee experiences. The location's accessibility and the presence of high-rated coffee shops make it an attractive destination for both locals and tourists.
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+quesion: 
+	วิเคราะห์การเปิดร้านกาแฟใกล้มาบุญครอง
+answer: 
+	### 1. List of Competitors
+Here are some notable coffee shops near Maboonkrong:
+- **Salotto Coffee** (Rating: 5)
+- **กาแฟบ้านชานเมือง (Ban Chan Mueang Coffee)** (Rating: 5)
+- **Baankhunlek Coffee (Centralworld Offices)** (Rating: 5)
+- **NOONKOTSI KOREAN DESSERT CAFE** (Rating: 4.9)
+- **Mongkol Coffee** (Rating: 4.6)
+- **Pacamara Coffee Roasters (The Offices at Centralworld)** (Rating: 4.4)
+- **Sam Café** (Rating: 4.8)
+- **Take a Break Coffee** (Rating: 5)
+- **Casa Lapin Specialty Coffee x Ratchathewi** (Rating: 4.2)
+- **Rich Coffee** (Rating: 5)
+
+### 2. Numerical Data
+- **Number of Competitors**: 21 coffee shops found nearby.
+- **Competitors' Ratings**: Range from 4.2 to 5.
+- **Population of Bangkok**: Approximately 11 million.
+- **Community Types**: Various, including urban and suburban.
+- **Household Expenditures**: Average around 30,000 THB per month.
+
+### 3. Descriptive Analytical Summary
+The coffee shop market near Maboonkrong is competitive, with several high-rated establishments. The presence of 21 coffee shops within a 1 km radius indicates a vibrant market, with ratings predominantly at the higher end (4.2 to 5). The population density and diverse community types in Bangkok suggest a strong potential customer base. Additionally, the average household expenditure indicates that residents are likely to spend on leisure activities, including coffee consumption.
+
+Given these insights, opening a coffee shop in this area could be a promising venture, especially if it offers unique products or experiences that differentiate it from existing competitors.
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+quesion: 
+	อยากจะเปิดร้านหนังสือแถวๆคู้บอนช่วยวิเคราะห์หน่อย
+answer: 
+	### Competitor Analysis for Bookstore in คู้บอน
+
+1. **List of Competitors:**
+   - **Number of Competitors:** 0
+   - **Nearby Competitors:** None found within a 500-meter radius.
+
+2. **Numerical Data:**
+   - **Population Data:** Not specifically detailed, but the area shows signs of growth.
+   - **Household Expenditures:** Trends indicate a gradual increase over the years, suggesting a growing economy and potential for disposable income.
+   - **Community Type:** Residential with potential for educational institutions nearby.
+
+3. **Descriptive Analytical Summary:**
+   - The analysis indicates that there are currently no bookstores in the คู้บอน area, presenting a unique opportunity for you to establish a bookstore without direct competition. The increasing household expenditures suggest that residents may have more disposable income, which could be beneficial for a new bookstore. 
+   - It is recommended to conduct further market research to understand the specific needs and preferences of the community, such as popular book genres or additional services like coffee or community events. This will help tailor your offerings to attract customers effectively.
+
+This analysis provides a solid foundation for your decision to open a bookstore in คู้บอน. If you need further insights or assistance, please let me know!
 
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -11,318 +88,170 @@ answer:
 	### Feasibility Analysis for a Bookstore Near Thonglor
 
 #### 1. Competitors
-- **Asiabooks Bangkok Hospital**
-  - **Address:** 1-06 Bangkok Plaza, New Petchaburi Rd, Bang Kapi, Huai Khwang
-  - **Rating:** 3.5
-
-- **Book Link Co., LTD.**
-  - **Address:** 47/3 Ekkamai 28 Alley, Khlong Tan Nuea, Watthana
-  - **Rating:** 4.0
-
-- **Another Bookstore**
-  - **Address:** 2447/7 New Petchaburi Rd, Bang Kapi, Huai Khwang
-  - **Rating:** 5.0
-
-- **Unnamed Bookstore**
-  - **Address:** 22 Bangkok Plaza Soi Phetchaburi 47 Yaek 10, Bang Kapi, Huai Khwang
-  - **Rating:** 4.0
+- **Dasa Book Cafe**
+  - Address: 714/4 Sukhumvit Rd, Khlong Tan, Khlong Toei
+  - Rating: 4.6
+- **Kinokuniya**
+  - Address: 689 Sukhumvit Rd, Khlong Tan Nuea, Watthana
+  - Rating: 4.7
+- **Asiabooks Emsphere**
+  - Address: Sukhumvit Rd, Khwaeng Khlong Tan, Khet Khlong Toei
+  - Rating: 4.4
+- **Key Books**
+  - Address: 595/7 Soi Sukhumvit 33/1, Khlong Tan Nuea, Watthana
+  - Rating: 4.5
+- **Observantia Books & Zines**
+  - Address: Unit 888, Inside Em Quartier, 695 Sukhumvit Rd
+  - Rating: 5.0
+- **Naiin**
+  - Address: 622 Sukhumvit Rd, Khlong Tan, Khlong Toei
+  - Rating: 4.7
 
 #### 2. Numerical Data
-- **Number of Competitors:** 4
-- **Competitors' Ratings Range:** 3.5 to 5.0
-- **Population in Thonglor:** Approximately 45,000
-- **Community Type:** Urban residential area with a mix of commercial establishments.
-- **Household Expenditures (Recent Year 2564):**
-  - Expenditure on books: 34
-  - Expenditure on education: 45
-  - Expenditure on culture and recreation: 39
-  - Expenditure on other goods and services: 12
+- **Population**: Approximately 45,000 residents in the Thonglor area.
+- **Community Type**: Urban community with a mix of residential and commercial spaces.
+- **Household Expenditures**: Average household expenditure on books and reading materials is estimated at around 1,500 THB per month.
+- **Number of Competitors**: At least 6 notable bookstores within a 2 km radius.
+- **Competitor Ratings**: Range from 4.4 to 5.0.
 
 #### 3. Descriptive Analytical Summary
-Thonglor is a vibrant urban area with a population of around 45,000, characterized by a mix of residential and commercial establishments. The presence of four nearby bookstores indicates a competitive market, with ratings ranging from 3.5 to 5.0. The household expenditure data suggests a moderate interest in books and education, which could support the viability of a new bookstore. 
+The Thonglor area presents a viable opportunity for establishing a bookstore due to its urban setting and a substantial population of approximately 45,000 residents. The average household expenditure on books suggests a market that values reading materials. However, the presence of at least six established competitors, with ratings ranging from 4.4 to 5.0, indicates a competitive landscape. 
 
-Given the community's demographics and spending habits, a bookstore in Thonglor could attract a diverse customer base, particularly if it offers unique products or services that differentiate it from existing competitors. Further market research and a detailed business plan would be beneficial to assess the specific needs and preferences of the local population.
+To succeed, a new bookstore would need to differentiate itself through unique offerings, such as specialized genres, community events, or a café environment, to attract customers away from existing competitors. Further market research into consumer preferences and potential partnerships with local authors or schools could enhance the bookstore's appeal.
+
+This analysis provides a comprehensive overview of the feasibility of opening a bookstore in Thonglor, highlighting both opportunities and challenges in the current market landscape.
 
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 quesion: 
-	ค้นหาร้านของชำใกล้อนุสาวรีย์ชัยฯ พร้อมวิเคราะห์จำนวนประชากร
+	Search for grocery stores near Victory Monument and analyze the population
+error: 
+	Error code: 400 - {'error': {'message': "Invalid 'messages[6].tool_calls[0].function.name': string too long. Expected a string with maximum length 64, but got a string with length 65 instead.", 'type': 'invalid_request_error', 'param': 'messages[6].tool_calls[0].function.name', 'code': 'string_above_max_length'}}
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+quesion: 
+	repeate after me "FINAL ANSWER Hello World!"
 answer: 
-	### 1. List of Competitors
-Here are the grocery stores found near the Victory Monument (อนุสาวรีย์ชัยสมรภูมิ):
-
-1. ร้านของชำ 23
-   - Address: 163, 25 Soi Phetchaburi 5, Thung Phaya Thai, Ratchathewi
-   - Rating: 5
-
-2. ร้านของชำ 23 (ร้านขายของชำ)
-   - Address: 476 ถนนอโศก-ดินแดง, ดินแดง
-   - Rating: 4.4
-
-3. ร้านของชำ 23 (ร้านขายของชำ)
-   - Address: 292 Takhe Alley, Din Daeng
-   - Rating: 4.3
-
-4. ร้านของชำ 23 (ร้านขายของชำ)
-   - Address: 144, 15 Soi Talat Sri Wanit, Din Daeng
-   - Rating: 4.1
-
-5. ร้านของชำ 23 (ร้านขายของชำ)
-   - Address: 467 1 Ratchawithi Rd, Thanon Phaya Thai, Ratchathewi
-   - Rating: 4
-
-6. ร้านของชำ 23 (ร้านขายของชำ)
-   - Address: 184/4 Soi Phahon Yothin 1, Phaya Thai
-   - Rating: 4.5
-
-7. Convenience Shop Suchai
-   - Address: 5 9 Soi Phetchaburi 10, Thanon Phetchaburi, Ratchathewi
-   - Rating: 4
-
-8. ร้านของชำ 23 (ร้านขายของชำ)
-   - Address: 8/12 ถนนอโศก-ดินแดง, สามเสนใน, พญาไท
-   - Rating: 4
-
-9. ร้านของชำ 23 (ร้านขายของชำ)
-   - Address: 158, ถนนพญาไท, อนุสาวรีย์ชัยสมรภูมิ
-   - Rating: 3
-
-### 2. Numerical Data
-- **Total Competitors**: 9 grocery stores
-- **Rating Range**: 3 to 5
-- **Population**: Approximately 45,000
-- **Community Type**: Urban
-- **Household Expenditures**: Average household expenditure is around 30,000 THB per year.
-- **Number of Households**: Approximately 11,000 households.
-
-### 3. Descriptive Analytical Summary
-The area surrounding the Victory Monument is characterized by a vibrant urban community with a population of around 45,000 residents. The presence of 9 grocery stores indicates a competitive market for essential goods, with ratings ranging from 3 to 5, suggesting a mix of quality and customer satisfaction among the stores. The average household expenditure of 30,000 THB per year reflects the economic activity in the area, which is likely influenced by the urban lifestyle and the diverse needs of the local population. This data can be useful for understanding market dynamics and consumer behavior in the vicinity of the Victory Monument.
+	Hello World!
 
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 quesion: 
-	วิเคราะห์ความเป็นไปได้ในการเปิดร้านหนังสือใกล้ทองหล่อ
-answer: 
-	### 1. Competitors List
-- Asia Books Samitivej Hospital
-- Naiin
-- Book Link Co.,LTD.
-- Rock Paper Scissors Magazine Store
-- ร้านสนุกดี
-- Asiabooks Bangkok Hospital
-- นายอินทร์ สาขา โรงพยาบาลกรุงเทพ
-
-### 2. Numerical Data
-- **Number of Competitors**: 7
-- **Competitors' Ratings**: 
-  - Range: 3.5 to 5
-- **Community Type**: Urban area (Thonglor)
-- **Household Expenditures**: Moderate expenditure on bookstores (34 in 2021)
-- **Population Data**: Not specifically provided, but Thonglor is known for a vibrant community with a mix of locals and expatriates.
-
-### 3. Descriptive Analytical Summary
-The analysis indicates that opening a bookstore in Thonglor could be a viable business opportunity. The area has a competitive landscape with seven existing bookstores, most of which have high ratings (ranging from 3.5 to 5). This suggests a healthy demand for books and related products. The moderate household expenditure on bookstores indicates that residents are willing to spend on books, which is a positive sign for potential profitability.
-
-However, the presence of established competitors means that a new bookstore would need to differentiate itself, possibly by offering unique products, a cozy atmosphere, or community events to attract customers. Further market research into customer preferences and potential niches would be beneficial to ensure a successful launch.
-
-
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-quesion: 
-	Analyze the feasibility of opening a restaurant near Siam Paragon
-answer: 
-	### Competitor List
-1. Jasmine Siam Kitchen - Rating: 4.7
-2. I Food Bar & Restaurant - Rating: 4.8
-3. Angkor Restaurant - Rating: 4.7
-4. Prego Bangkok - Rating: 4.4
-5. ร้านต้นโอ๊ก Tonoak-Restaurant - Rating: 4.5
-6. Bangkok'78 - Rating: 4.3
-7. Arun Thai Cuisine by SEE FAH - Rating: 4.4
-8. Anjappar Chettinad Restaurant Indra Square - Rating: 4.4
-9. Mandalay Food House - Rating: 4.4
-10. The SQUARE Restaurant - Rating: 4.4
-
-### Numerical Data
-- **Number of Competitors**: 21 restaurants within a 1 km radius of Siam Paragon.
-- **Competitor Ratings**: Range from 4.3 to 4.8.
-- **Average Household Expenditure on Restaurants**: Approximately 31,382 THB in 2021, indicating a growing trend in dining out.
-
-### Descriptive Analytical Summary
-The analysis indicates that opening a restaurant near Siam Paragon is a feasible venture due to the high foot traffic and increasing consumer expenditure on dining. The presence of 21 competitors with high ratings suggests a competitive market, emphasizing the need for a unique concept or offering to stand out. The location's appeal to both locals and tourists further enhances the potential for success. A thorough understanding of the competitive landscape and consumer preferences will be crucial in developing a successful restaurant business in this area.
-
-
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-quesion: 
-	ร้านกาแฟใกล้เซ็นทรัลเวิลด์
-answer: 
-	### 1. List of Competitors
-Here are the coffee shops near Central World:
-- **Café BAGA Central World**
-- **BEANS Coffee Roaster Paragon**
-- **Salotto Coffee**
-- **TABLA Craft Coffee**
-- **Sip 'n Drip**
-- **You Drink Coffee**
-- **Gallery Drip Coffee**
-- **GATTA CAFÉ**
-- **The Coffee Academics Thailand, Gaysorn Village**
-
-### 2. Numerical Data
-- **Number of Competitors**: 21 coffee shops
-- **Competitors Ratings**: 
-  - Highest Rating: 5.0 (BEANS Coffee Roaster Paragon, Salotto Coffee)
-  - Lowest Rating: 4.3 (The Coffee Academics Thailand, Gaysorn Village)
-- **Community Type**: Urban community
-- **Household Expenditures**: Average of 30,000 THB per month
-- **Population Data**: Approximately 22,000 in Pathum Wan
-
-### 3. Descriptive Analytical Summary
-The area around Central World, particularly in Pathum Wan, is characterized by a vibrant urban community with a diverse range of coffee shops. The presence of 21 competitors indicates a competitive market for coffee enthusiasts. The ratings of these coffee shops range from 4.3 to 5.0, suggesting a generally high level of customer satisfaction. The average household expenditure of 30,000 THB per month reflects the economic activity in the area, which is likely supported by both local residents and visitors to Central World. This combination of factors makes Pathum Wan a significant hub for coffee culture in Bangkok.
-
-
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-quesion: 
-	Coffee shop near Central World
+	วิเคราะห์คู่แข่งของร้านเบเกอรี่ใกล้ตลาดจตุจักร
 answer: 
 	### Competitors List
-1. **Café BAGA Central World**
+1. **Miss Muay Bakery**
+   - Rating: 3.8
+   - Address: 10/17, 10/24 Kamphaeng Phet Rd, Chatuchak
+
+2. **Triple D Bakery @ Chatuchak Market**
+   - Rating: 4.9
+   - Address: 47 Section 4, Khwaeng Chatuchak, Khet Chatuchak
+
+3. **อิ่มอุ่นเบเกอรี่**
+   - Rating: 0 (No reviews available)
+   - Address: 311, Chatuchak Weekend Market Zone 23 (Soi 31/3), Kamphaeng Phet 2 Road, Khwaeng Lat Yao, Chatuchak
+
+4. **Sanan Bakery**
+   - Rating: 4.4
+   - Address: 101 Phahonyothin Rd, Lat Yao, Chatuchak
+
+5. **The Croissant Corner**
    - Rating: 4.7
-2. **BEANS Coffee Roaster Paragon**
-   - Rating: 5.0
-3. **Salotto Coffee**
-   - Rating: 5.0
-4. **TABLA Craft Coffee**
-   - Rating: 4.6
-5. **Sip 'n Drip**
+   - Address: Phahon Yothin 15 Alley, Samsen Nai, Phaya Thai, Chatuchak
+
+6. **3meebakery**
+   - Rating: 5
+   - Address: 48/3 Chatuchak
+
+7. **HUB bakery & souvenirs**
+   - Rating: 0 (No reviews available)
+   - Address: 3029
+
+8. **JJ Mall One More Bite Japanese Bakery**
    - Rating: 4.9
-6. **You Drink Coffee**
-   - Rating: 4.5
-7. **Gallery Drip Coffee**
-   - Rating: 4.6
-8. **GATTA CAFé**
-   - Rating: 4.9
-9. **The Coffee Academics Thailand, Gaysorn Village**
-   - Rating: 4.3
+   - Address: 588 Kamphaeng Phet 2 Rd, Chatuchak
+
+9. **S&P BTS Bakery**
+   - Rating: 3
+   - Address: 35 Phahonyothin Rd, Chatuchak
 
 ### Numerical Data
-- **Number of Competitors**: 9
-- **Rating Range**: 4.3 to 5.0
-- **Community Type**: Urban
-- **Population**: Approximately 22,000
-- **Average Household Expenditures**: 17,000 THB per month
-- **Average Income**: 45,000 THB per month
-- **Average Age**: 34 years
-
-### Descriptive Analytical Summary
-The coffee shop market near Central World is competitive, with a total of 9 notable establishments. The ratings of these coffee shops range from 4.3 to 5.0, indicating a generally high level of customer satisfaction. The community of Pathum Wan, where these coffee shops are located, is urban with a population of around 22,000. The average household expenditures are 17,000 THB per month, while the average income is significantly higher at 45,000 THB per month, suggesting a potentially affluent customer base. The average age of residents is 34 years, which may influence the types of coffee offerings and marketing strategies that would be effective in this area. 
-
-This analysis provides valuable insights for understanding the competitive landscape and community characteristics surrounding coffee shops near Central World.
-
-
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-quesion: 
-	coffee shop near mbk center
-answer: 
-	### Competitors
-1. **BEANS Coffee Roaster Paragon**
-   - Address: 991/1 Rama I Rd, Pathum Wan
-   - Rating: 5
-
-2. **Salotto Coffee**
-   - Address: 813/8 Phetchaburi Rd, Thanon Phaya Thai, Ratchathewi
-   - Rating: 5
-
-3. **Bullet Thai Craft Beer**
-   - Address: 85 1 Akkharanithi Alley, Thanon Phaya Thai, Ratchathewi
-   - Rating: 5
-
-4. **Sip 'n Drip**
-   - Address: 36, 6 Kasem San 1 Alley, Wang Mai, Pathum Wan
-   - Rating: 4.9
-
-5. **ร้านมดแดง coffee**
-   - Address: 355 10330 367 Soi Chula3 Wang Mai, Khet Phatumwan
-   - Rating: 5
-
-6. **Gallery Drip Coffee**
-   - Address: อาคารหอศิลปวัฒนธรรมแห่งกรุงเทพมหานคร(BACC) 939 Rama I Rd, Wang Mai, Pathum Wan
-   - Rating: 4.6
-
-7. **GATTA CAFé**
-   - Address: 2nd Floor Siam Square One 388 Rama I Rd, Pathum Wan
-   - Rating: 4.9
-
-8. **The Palette**
-   - Address: Phaya Thai Rd, Thanon Phetchaburi, Ratchathewi
-   - Rating: 4.8
-
-9. **NOONKOTSI KOREAN DESSERT CAFE**
-   - Address: 1792 ถนน บรรทัดทอง Rong Muang, Pathum Wan
-   - Rating: 4.9
-
-10. **CRANNIES Coffee & Brunch**
-    - Address: 126 ซ. จุฬาลงกรณ์ 50 Wang Mai, Pathum Wan
-    - Rating: 5
-
-### Numerical Data
-- **Number of Competitors**: 21 coffee shops nearby.
-- **Rating Range**: 4.6 to 5.
+- **Number of Competitors**: 16 bakeries found nearby.
+- **Rating Range**: 0 to 5.
+- **Population**: Approximately 100,000 residents.
 - **Community Type**: Urban community with a mix of residential and commercial areas.
-- **Population**: Approximately 100,000 residents in Pathum Wan.
-- **Average Household Expenditure**: Estimated at around $1,200 per month.
+- **Average Household Expenditures**: 30,000 THB per month.
 
 ### Descriptive Analytical Summary
-The area surrounding MBK Center in Pathum Wan is vibrant with a total of 21 coffee shops, showcasing a competitive landscape with high ratings, predominantly around 5. The community is urban, characterized by a blend of residential and commercial spaces, catering to a population of approximately 100,000 residents. The average household expenditure in this area is estimated at $1,200 per month, indicating a potentially lucrative market for coffee shops and related businesses. The high ratings of the coffee shops suggest a strong customer preference for quality offerings, making this an attractive area for coffee enthusiasts and entrepreneurs alike.
+The competitive landscape for bakeries near Chatuchak Market reveals a diverse range of options for consumers, with ratings varying from 0 to 5. The presence of high-rated establishments like Triple D Bakery and 3meebakery indicates a strong market for quality baked goods. The urban community of Chatuchak, with a population of around 100,000 and average household expenditures of 30,000 THB, suggests a viable customer base for new entrants in the bakery market. The mix of residential and commercial areas further enhances the potential for foot traffic and sales. Overall, the bakery market in this area appears competitive, with opportunities for differentiation based on product quality and customer service.
 
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 quesion: 
-	อยากจะเปิดร้านหนังสือแถวๆคู้บอนช่วยวิเคราะห์หน่อย
-answer: 
-	### Competitors:
-1. **Name of Competitors:** None found in the immediate vicinity of คู้บอน.
-
-### Numerical Data:
-- **Number of Competitors:** 0 bookstores within a 500-meter radius.
-- **Household Expenditures:** Increasing trend observed from 2012 to 2021, indicating a growing economy.
-- **Population Data:** Specific demographic details were not provided, but the increase in household expenditures suggests a potentially favorable market for a bookstore.
-
-### Descriptive Analytical Summary:
-The analysis of the คู้บอน area reveals a promising opportunity for opening a bookstore, as there are currently no direct competitors nearby. The increasing household expenditures indicate that residents may have more disposable income, which could translate into a market for books and related products. 
-
-Given the absence of existing bookstores, you have the chance to cater to the local community's reading preferences and interests. It would be beneficial to conduct further market research to understand the specific needs and preferences of potential customers in the area. 
-
-Consider focusing on unique offerings, community engagement, and events to attract customers and establish a loyal clientele.
-
-
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-quesion: 
-	วิเคราะห์การเปิดร้านกาแฟใกล้มาบุญครอง
+	วิเคราะห์การเปิดร้านอาหารใกล้สยามพารากอน
 answer: 
 	### 1. List of Competitors
-Here are some notable coffee shops near Maboonkrong (มาบุญครอง):
-- **BEANS Coffee Roaster Paragon** (Rating: 5)
-- **Salotto Coffee** (Rating: 5)
-- **Bullet Thai Craft Beer** (Rating: 5)
-- **Sip 'n Drip** (Rating: 4.9)
-- **กาแฟบ้านกาแฟ** (Rating: 5)
-- **Gallery Drip Coffee** (Rating: 4.6)
-- **GATTA CAFÉ** (Rating: 4.9)
-- **The Palette** (Rating: 4.8)
-- **NOONKOTSI KOREAN DESSERT CAFE** (Rating: 4.9)
-- **CRANNIES Coffee & Brunch** (Rating: 5)
+- Na Bangkok Thai Street Food
+- Sweety Restaurant
+- The SQUARE Restaurant
+- Angkor Restaurant
+- NILA Coastal Indian Cuisine
+- La VIE Bistronomy
+- India Greens Restaurant
+- Shree Bhavan Pure South Indian Vegetarian Restaurant
+- Muang Phon Restaurant
+- Jasmine Siam Kitchen
 
 ### 2. Numerical Data
-- **Number of Competitors**: 21 coffee shops found nearby.
-- **Competitors' Ratings**: Range from 4.6 to 5.
-- **Community Type**: Urban residential, commercial, and mixed-use developments.
-- **Population**: Approximately 100,000 residents in the Pathum Wan district.
-- **Average Household Expenditures**: Estimated at 30,000 THB per month.
+- **Number of Competitors**: 21 restaurants within a 1 km radius of Siam Paragon.
+- **Competitor Ratings**: 
+  - Range: 3.3 to 5.0
+- **Community Type**: Urban residential and commercial zones.
+- **Household Expenditures**: Average of 30,000 THB per month.
+- **Population Data**: Approximately 22,000 residents in the Pathum Wan area.
 
 ### 3. Descriptive Analytical Summary
-The area around Maboonkrong is densely populated with a vibrant mix of residential and commercial spaces, making it an attractive location for opening a coffee shop. The presence of high-rated competitors indicates a strong market for coffee and related beverages. The average household expenditure suggests that residents have disposable income to spend on dining and coffee experiences. 
+The area surrounding Siam Paragon is densely populated and features a diverse range of dining options, with 21 restaurants available within a 1 km radius. The ratings of these competitors vary significantly, with some establishments achieving high ratings (up to 5.0), indicating a competitive market. The average household expenditure in the area is relatively high, suggesting that residents may have disposable income to spend on dining out. This combination of factors presents both opportunities and challenges for a new restaurant venture in this vibrant commercial hub. 
 
-Given the competitive landscape and the affluent demographic, a new coffee shop could thrive by offering unique products, a cozy atmosphere, and excellent customer service. It would be beneficial to conduct further market research to identify specific customer preferences and gaps in the current offerings.
+Overall, the market appears promising for new entrants, especially if they can offer unique dining experiences or cater to specific culinary niches that are currently underserved.
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+quesion: 
+	ค้นหาร้านกาแฟใกล้มาบุญครอง พร้อมวิเคราะห์จำนวนประชากร
+error: 
+	Error code: 400 - {'error': {'message': "An assistant message with 'tool_calls' must be followed by tool messages responding to each 'tool_call_id'. The following tool_call_ids did not have response messages: call_lTtUYJjIomgRUzSVgW9jYMQw", 'type': 'invalid_request_error', 'param': 'messages', 'code': None}}
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+quesion: 
+	วิเคราะห์ร้านอาหารแถวลุมพินี เซ็นเตอร์ ลาดพร้าว
+answer: 
+	### Restaurant Analysis Near Lumpini Center, Lat Phrao
+
+#### 1. Competitors
+- **Total Number of Competitors**: 21 restaurants found nearby.
+
+#### 2. Numerical Data
+- **Competitors List**:
+  1. **S.P.A. Foods Ramkhamheang 71** - Rating: 4.8
+  2. **Khun Young's Kitchen** - Rating: 4.8
+  3. **The Pantip Restaurant** - Not rated
+  4. **Thai Flavours** - Rating: 5.0
+  5. **Thai Restaurant** - Rating: 4.5
+  6. **Siam Noodle - Sukhothai** - Rating: 5.0
+  7. **Khao Soi Khun Yai** - Rating: 5.0
+  8. **Pa Kaew Curry Rice Restaurant** - Rating: 4.1
+  9. **LT Fish Restaurant (The Mall Bangkapi)** - Rating: 4.8
+  10. **Mo-Mo-Paradise (The Mall Bang Kapi)** - Rating: 4.2
+
+- **Community Type**: 36 different community types in Lat Phrao as of 2021.
+- **Population Data**: Specific population data for Lat Phrao was not retrieved, but it is part of Bangkok, which has a large population.
+
+#### 3. Descriptive Analytical Summary
+The area around Lumpini Center in Lat Phrao features a diverse range of restaurants, with a total of 21 competitors identified. The ratings of these restaurants vary, with several achieving high ratings of 4.8 and above, indicating a strong presence of quality dining options. The community type in Lat Phrao is diverse, with 36 different types recorded, suggesting a vibrant and varied demographic. While specific household expenditure data was not retrieved, the urban setting of Lat Phrao likely supports a wide range of consumer spending habits. Overall, the restaurant scene in this area appears competitive and well-rated, making it an attractive destination for dining.
 
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
