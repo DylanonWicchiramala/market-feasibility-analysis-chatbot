@@ -19,26 +19,18 @@ import functools
 # for llm model
 from langchain_openai import ChatOpenAI
 # from langchain_community.chat_models import ChatOpenAI
-from langchain.agents.format_scratchpad import format_to_openai_function_messages
-from tools import find_place_from_text, nearby_search
-from typing import Dict, List, Tuple, Annotated, Sequence, TypedDict
-from langchain.agents import (
-    AgentExecutor,
-)
-from langchain.agents.output_parsers import OpenAIFunctionsAgentOutputParser
-from langchain_community.tools.convert_to_openai import format_tool_to_openai_function
+from tools import find_place_from_text, nearby_search, nearby_dense_community
+from typing import Annotated, Sequence, TypedDict
 from langchain_core.messages import (
     AIMessage, 
     HumanMessage,
     BaseMessage,
     ToolMessage
 )
-from langchain_core.pydantic_v1 import BaseModel, Field
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langgraph.graph import END, StateGraph, START
 
 ## Document vector store for context
-from langchain_core.runnables import RunnablePassthrough
 from langchain_chroma import Chroma
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import CSVLoader
@@ -81,7 +73,7 @@ retriever_tool = create_retriever_tool(
 )
 
 # Bind the tools to the model
-tools = [retriever_tool, find_place_from_text, nearby_search]  # Include both tools if needed
+tools = [retriever_tool, find_place_from_text, nearby_search, nearby_dense_community]  # Include both tools if needed
 # tools = [find_place_from_text, nearby_search]
 
 llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.0)
@@ -230,7 +222,7 @@ graph = workflow.compile()
 #     pass
 
 # %%
-# question = "อยากจะเปิดร้านหนังสือแถวๆคู้บอนช่วยวิเคราะห์หน่อย"
+# question = "วิเคราะห์การเปิดร้านอาหารใกล้สยามพารากอน"
 
 # graph = workflow.compile()
 
