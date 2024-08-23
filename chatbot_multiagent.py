@@ -19,7 +19,13 @@ import functools
 # for llm model
 from langchain_openai import ChatOpenAI
 # from langchain_community.chat_models import ChatOpenAI
-from tools import find_place_from_text, nearby_search, nearby_dense_community, google_search
+from tools import (
+    find_place_from_text, 
+    nearby_search, 
+    nearby_dense_community, 
+    google_search, 
+    population_doc_retriever
+)
 from typing import Annotated, Sequence, TypedDict
 from langchain_core.messages import (
     AIMessage, 
@@ -30,50 +36,11 @@ from langchain_core.messages import (
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langgraph.graph import END, StateGraph, START
 
-## Document vector store for context
-from langchain_chroma import Chroma
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_community.document_loaders import CSVLoader
-from langchain_openai import OpenAIEmbeddings
-import glob
-from langchain.tools.retriever import create_retriever_tool
-
-def format_docs(docs):
-    return "\n\n".join(doc.page_content for doc in docs)
-
-
-## Document csv
-# Specify the pattern
-file_pattern = "document/*.csv"
-file_paths = tuple(glob.glob(file_pattern))
-
-all_docs = []
-
-for file_path in file_paths:
-    loader = CSVLoader(file_path=file_path)
-    docs = loader.load()
-    all_docs.extend(docs)  # Add the documents to the list
-
-# Split text into chunks separated.
-text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=100)
-splits = text_splitter.split_documents(all_docs)
-
-# Text Vectorization.
-vectorstore = Chroma.from_documents(documents=splits, embedding=OpenAIEmbeddings())
-
-# Retrieve and generate using the relevant snippets of the blog.
-retriever = vectorstore.as_retriever()
 
 
 ## tools and LLM
-retriever_tool = create_retriever_tool(
-    retriever,
-    "search_population_community_household_expenditures_data",
-    "Use this tool to retrieve information about population, community and household expenditures. by searching distinct or province"
-)
-
 # Bind the tools to the model
-tools = [retriever_tool, find_place_from_text, nearby_search, nearby_dense_community, google_search]  # Include both tools if needed
+tools = [population_doc_retriever, find_place_from_text, nearby_search, nearby_dense_community, google_search]  # Include both tools if needed
 # tools = [find_place_from_text, nearby_search]
 
 llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.0)
@@ -164,7 +131,7 @@ def router(state) -> Literal["call_tool", "__end__", "continue"]:
     if last_message.tool_calls:
         # The previous agent is invoking a tool
         return "call_tool"
-    if "FINAL ANSWER" in last_message.content:
+    if "%SIjfE923hf" in last_message.content:
         # Any agent decided the work is done
         return "__end__"
     else:
@@ -262,7 +229,7 @@ def submitUserMessage(user_input: str) -> str:
     
     response = list(events[-1].values())[0]["messages"][0]
     response = response.content
-    response = response.replace("FINAL ANSWER", "")
+    response = response.replace("%SIjfE923hf", "")
     
     return response
 
