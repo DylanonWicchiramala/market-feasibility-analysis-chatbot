@@ -2,6 +2,7 @@ import time
 import gradio as gr
 from chatbot_multiagent import submitUserMessage
 
+
 def chat(message:str, history):
     print(message)
     return submitUserMessage(message)
@@ -29,8 +30,7 @@ with gr.Blocks() as demo:
 
 demo.launch()
         
-        
 # gr.ChatInterface(chat).launch()
-# interface = gr.ChatInterface(chat)
 
+# interface = gr.ChatInterface(chat)
 # interface.launch()

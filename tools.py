@@ -1,5 +1,11 @@
 import gplace
 from typing import TypedDict, Optional
+from langchain_google_community import GoogleSearchAPIWrapper
+import utils
+
+utils.load_env()
+
+search = GoogleSearchAPIWrapper()
 
 
 class NearbySearchInput(TypedDict):
@@ -12,6 +18,11 @@ class NearbySearchInput(TypedDict):
 class NearbyDenseCommunityInput(TypedDict):
     location_name: str
     radius: int
+    
+    
+class GoogleSearchInput(TypedDict):
+    keyword: str
+
 
 # %%
 def find_place_from_text(location:str):
@@ -115,14 +126,18 @@ def nearby_dense_community(input_dict: NearbyDenseCommunityInput) -> str:
         """
     return strout
 
+
+def google_search(input_dict: GoogleSearchInput):
+    """Search Google for recent results."""
+    return search.run(input_dict['keyword'])
+
+
 # %%
 # gplace_tools.py
-from langgraph.prebuilt import ToolNode
+from langchain_core.tools import Tool
 from langchain_core.tools import tool
-from langchain_community.tools import GooglePlacesTool
 
+google_search = tool(google_search)
 find_place_from_text = tool(find_place_from_text)
-# find_place_from_text = GooglePlacesTool()
 nearby_search = tool(nearby_search)
 nearby_dense_community = tool(nearby_dense_community)
-

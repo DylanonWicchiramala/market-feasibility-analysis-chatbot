@@ -19,7 +19,7 @@ import functools
 # for llm model
 from langchain_openai import ChatOpenAI
 # from langchain_community.chat_models import ChatOpenAI
-from tools import find_place_from_text, nearby_search, nearby_dense_community
+from tools import find_place_from_text, nearby_search, nearby_dense_community, google_search
 from typing import Annotated, Sequence, TypedDict
 from langchain_core.messages import (
     AIMessage, 
@@ -73,7 +73,7 @@ retriever_tool = create_retriever_tool(
 )
 
 # Bind the tools to the model
-tools = [retriever_tool, find_place_from_text, nearby_search, nearby_dense_community]  # Include both tools if needed
+tools = [retriever_tool, find_place_from_text, nearby_search, nearby_dense_community, google_search]  # Include both tools if needed
 # tools = [find_place_from_text, nearby_search]
 
 llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.0)
@@ -222,7 +222,7 @@ graph = workflow.compile()
 #     pass
 
 # %%
-# question = "วิเคราะห์การเปิดร้านอาหารใกล้สยามพารากอน"
+# question = "ร้านกาแฟใกล้เซ็นทรัลเวิลด์"
 
 # graph = workflow.compile()
 
