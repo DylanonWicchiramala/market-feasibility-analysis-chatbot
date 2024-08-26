@@ -10,3 +10,4 @@ langgraph
 langchain_google_community
 googlemaps
 beautifulsoup4
+Flask
