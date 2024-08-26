@@ -134,8 +134,7 @@ def nearby_dense_community(input_dict: NearbyDenseCommunityInput) -> str:
 
 
 def google_search(input_dict: GoogleSearchInput):
-    """Search Google for recent results."""
-    print(input_dict['keyword'])
+    """Search Google for a keyword."""
     return search.run(input_dict['keyword'])
 
 
@@ -171,6 +170,7 @@ def get_retriver_from_docs(docs):
 
 from langchain.tools.retriever import create_retriever_tool
 from langchain_core.tools import tool
+from langchain_core.tools import Tool
 
 
 docs = get_documents()
@@ -181,6 +181,11 @@ population_doc_retriever = create_retriever_tool(
     "search_population_community_household_expenditures_data",
     "Use this tool to retrieve information about population, community and household expenditures. by searching distinct or province"
 )
+# google_search = Tool(
+#     name="google_search",
+#     description="Search Google for recent results.",
+#     func=search.run,
+# )
 google_search = tool(google_search)
 find_place_from_text = tool(find_place_from_text)
 nearby_search = tool(nearby_search)
