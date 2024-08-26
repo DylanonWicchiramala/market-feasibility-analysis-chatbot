@@ -24,7 +24,7 @@ from tools import (
     nearby_search, 
     nearby_dense_community, 
     google_search, 
-    population_doc_retriever
+    population_doc_retriever,
 )
 from typing import Annotated, Sequence, TypedDict
 from langchain_core.messages import (
