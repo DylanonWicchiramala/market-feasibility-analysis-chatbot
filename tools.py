@@ -8,6 +8,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import CSVLoader
 from langchain_openai import OpenAIEmbeddings
 import glob
+from langchain_core.tools import tool
 
 utils.load_env()
 
@@ -26,19 +27,19 @@ class NearbyDenseCommunityInput(TypedDict):
     radius: int
     
     
-class GoogleSearchInput(TypedDict):
-    keyword: str
+# class GoogleSearchInput(TypedDict):
+#     keyword: str
 
 
 # %%
+# @tool
 def find_place_from_text(location:str):
-    """Finds a place and related data from the query text"""
-    
+    """Finds a place location and related data from the query text"""
     result = gplace.find_place_from_text(location)
     r = result['candidates'][0]
+    # location: {r['geometry']['location']}\n
     return f"""
-    address: {r['formatted_address']}\n
-    location: {r['geometry']['location']}\n
+    # address: {r['formatted_address']}\n
     location_name: {r['name']}\n
     """
     # return f"""
@@ -65,10 +66,10 @@ def find_place_from_text(location:str):
 #     return strout
 
 
+# @tool
 def nearby_search(input_dict: NearbySearchInput):
     """Searches for many places nearby the location based on a keyword. using keyword like \"coffee shop\", \"restaurants\". radius is the range to search from the location."""
-    
-    max_results = 10
+    max_results = 5
     keyword = input_dict['keyword']
     location = input_dict['location_name']
     radius = input_dict.get('radius', 2000)
@@ -103,13 +104,15 @@ def nearby_search(input_dict: NearbySearchInput):
         address: {address}\n
         rating: {rating}\n\n
         """
-    return strout
+    return strout[:800]
 
 
+# @tool
 def nearby_dense_community(input_dict: NearbyDenseCommunityInput) -> str:
     """ getting nearby dense community such as (community mall, hotel, school, etc), by location name, radius(in meters)
     return list of location community nearby, name, community type.
     """
+    max_results = 5
     location = input_dict['location_name']
     radius = input_dict['radius']
     
@@ -117,7 +120,7 @@ def nearby_dense_community(input_dict: NearbyDenseCommunityInput) -> str:
     result = gplace.nearby_dense_community(location_coords, radius)
     
     strout = ""
-    for r in result:
+    for r in result[:max_results]:
         # Use .get() to handle missing keys
         address = r.get('vicinity', 'N/A')
         location_types = r.get('types', 'N/A')
@@ -130,12 +133,17 @@ def nearby_dense_community(input_dict: NearbyDenseCommunityInput) -> str:
         name: {name}\n
         types: {location_types}\n
         """
-    return strout
+    return strout.strip()[:800]
 
 
-def google_search(input_dict: GoogleSearchInput):
-    """Search Google for a keyword."""
-    return search.run(input_dict['keyword'])
+# @tool
+def google_search(keyword:str):
+    """Search Google for recent results. Using keyword as a text query search in google."""
+    text = search.run(keyword)
+    unicode_chars_to_remove = ["\U000f1676", "\u2764", "\xa0"]
+    for char in unicode_chars_to_remove:
+        text = text.replace(char, "")
+    return text[:800]
 
 
 ## Document csv
@@ -169,7 +177,6 @@ def get_retriver_from_docs(docs):
 
 
 from langchain.tools.retriever import create_retriever_tool
-from langchain_core.tools import tool
 from langchain_core.tools import Tool
 
 
@@ -183,8 +190,24 @@ population_doc_retriever = create_retriever_tool(
 )
 # google_search = Tool(
 #     name="google_search",
-#     description="Search Google for recent results.",
-#     func=search.run,
+#     description="Search Google for recent results. Using keyword as a text query search in google.",
+#     func=google_search,
+# )
+# find_place_from_text = Tool(
+#     name="find_place_from_text",
+#     description="Finds a place location and related data from the query text",
+#     func=find_place_from_text,
+# )
+# nearby_search = Tool(
+#     name="nearby_search",
+#     description="""Searches for many places nearby the location based on a keyword. using keyword like \"coffee shop\", \"restaurants\". radius is the range to search from the location.""",
+#     func=nearby_search,
+# )
+# nearby_dense_community = Tool(
+#     name="nearby_dense_community",
+#     description="""getting nearby dense community such as (community mall, hotel, school, etc), by location name, radius(in meters)
+#     return list of location community nearby, name, community type""",
+#     func=nearby_dense_community,
 # )
 google_search = tool(google_search)
 find_place_from_text = tool(find_place_from_text)

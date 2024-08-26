@@ -41,7 +41,7 @@ from langgraph.graph import END, StateGraph, START
 ## tools and LLM
 # Bind the tools to the model
 tools = [population_doc_retriever, find_place_from_text, nearby_search, nearby_dense_community, google_search]  # Include both tools if needed
-# tools = [find_place_from_text, nearby_search]
+# tools = [population_doc_retriever, find_place_from_text, nearby_search, google_search]  # Include both tools if needed
 
 llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.0)
 
