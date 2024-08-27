@@ -8,6 +8,10 @@ langchain-text-splitters
 langgraph
 beautifulsoup4
 fastapi
+flask
+python-dotenv
+requests
+gunicorn
 
 langchain_google_community
 googlemaps
