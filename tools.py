@@ -139,8 +139,11 @@ def nearby_dense_community(input_dict: NearbyDenseCommunityInput) -> str:
 # @tool
 def google_search(keyword:str):
     """Search Google for recent results. Using keyword as a text query search in google."""
-    text = search.run(keyword)
-    unicode_chars_to_remove = ["\U000f1676", "\u2764", "\xa0"]
+    try:
+        text = search.run(keyword)
+    except Exception as e:
+        return "google search not available at this time. please try again later"
+    unicode_chars_to_remove = ["\U000f1676", "\u2764", "\xa0", "▫️", "Δ"]
     for char in unicode_chars_to_remove:
         text = text.replace(char, "")
     return text[:800]

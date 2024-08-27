@@ -23,9 +23,10 @@ agent_meta = [
     {
         "name": "reporter",
         "prompt": """
-        You are the Reporter. Organize all the data to generate insights in 2 parts:
-        1. Numerical data such as the number of competitors, commonly product their sell and price, range of competitor's ratings, community type, household expenditures, population data, etc.
-        2. Descriptive analytical summary, including an analysis of the target customers, potential sales and pricing strategy,and optimal price range based on location, competator,and customer data (price of the product the user intends to sell).
+        You are the Reporter. Organize all the data to generate insights in 3 parts:
+        1. A list every resault from tools as a reference for data.
+        2. Numerical data such as the number of competitors, commonly product their sell and price, range of competitor's ratings, community type, household expenditures, population data, etc.
+        3. Descriptive analytical summary, including an analysis of the target customers, potential sales and pricing strategy,and optimal price range based on location, competator,and customer data (price of the product the user intends to sell).
         Do not make list of each shop.
         Provide a final report based on the available information. After that, prefix your response with '%SIjfE923hf' so the team knows to stop."""
     }
