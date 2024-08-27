@@ -12,41 +12,6 @@ set_verbose(True)
 set_debug(False)
 
 # %%
-# def store_memory(result, user_id):
-#      history.update_one({"user_id":user_id}, {"$push":{
-#           "chat_history" : {"$each":[
-#                          (result["messages"][0].content),
-#                          (result["messages"][-1].content)
-#                             ]}}})
-
-# def QA(question, user_id):
-#      query = history.find_one({"user_id": user_id})
-#      if query is None:
-#           query = {
-#                "user_id": user_id,
-#                "chat_history": [],
-#           }
-#           history.insert_one(query)
-     
-#      chat_history = []
-#      for i, msg in enumerate(query["chat_history"]):
-#           chat_history.append(
-#                AIMessage(msg) if i % 2 == 1 else HumanMessage(msg)
-#           )
-
-#      result = graph.invoke({
-#           "messages": [
-#                HumanMessage(
-#                     content=question
-#                )
-#           ],
-#           "chat_history":chat_history,
-          
-#      },)
-#      store_memory(result, user_id)
-#      return result
-
-# %%
 from langchain import LLMChain
 from langchain_core.messages import HumanMessage
 import operator
@@ -274,8 +239,7 @@ def submitUserMessage(user_input: str) -> str:
                     user_input
                 )
             ],
-            "chat_history": [    
-            ]
+            "chat_history": chat_history
         },
         # Maximum number of steps to take in the graph
         {"recursion_limit": 20},
@@ -293,7 +257,7 @@ def submitUserMessage(user_input: str) -> str:
     return response
 
 
-question = "hello my frend"
-submitUserMessage(question)
+# question = "hello my frend"
+# submitUserMessage(question)
 
 
