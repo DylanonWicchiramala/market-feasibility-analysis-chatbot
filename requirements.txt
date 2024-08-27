@@ -12,6 +12,7 @@ flask
 python-dotenv
 requests
 gunicorn
+duckduckgo-search
 
 langchain_google_community
 googlemaps

@@ -1,6 +1,6 @@
 import requests
 
-url = "http://localhost:5000"
+url = "https://market-feasibility-analysis-chatbot.onrender.com/test"
 headers = {"Content-Type": "application/json"}
 data = {"message": "Hello, chatbot!"}
 
