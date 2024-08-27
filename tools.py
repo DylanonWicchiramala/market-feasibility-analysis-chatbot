@@ -181,6 +181,7 @@ def get_retriver_from_docs(docs):
 
 from langchain.tools.retriever import create_retriever_tool
 from langchain_core.tools import Tool
+from langchain_community.tools import DuckDuckGoSearchRun
 
 
 docs = get_documents()
@@ -191,6 +192,7 @@ population_doc_retriever = create_retriever_tool(
     "search_population_community_household_expenditures_data",
     "Use this tool to retrieve information about population, community and household expenditures. by searching distinct or province"
 )
+duckduckgo_search = DuckDuckGoSearchRun()
 # google_search = Tool(
 #     name="google_search",
 #     description="Search Google for recent results. Using keyword as a text query search in google.",

@@ -41,6 +41,20 @@ async def webhook():
         abort(400)
         
         
+@app.route('/test', methods=['POST'])
+def chatbot_test():
+    user_message = request.json.get('message', '')
+
+    if not user_message:
+        return jsonify({"error": "Message is required"}), 400
+
+    try:
+        response = submitUserMessage(user_message)
+        return jsonify({"response": response})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+        
+        
 @app.route('/health', methods=['GET'])
 def health_check():
     try:

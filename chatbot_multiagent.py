@@ -12,6 +12,42 @@ set_verbose(True)
 set_debug(False)
 
 # %%
+# def store_memory(result, user_id):
+#      history.update_one({"user_id":user_id}, {"$push":{
+#           "chat_history" : {"$each":[
+#                          (result["messages"][0].content),
+#                          (result["messages"][-1].content)
+#                             ]}}})
+
+# def QA(question, user_id):
+#      query = history.find_one({"user_id": user_id})
+#      if query is None:
+#           query = {
+#                "user_id": user_id,
+#                "chat_history": [],
+#           }
+#           history.insert_one(query)
+     
+#      chat_history = []
+#      for i, msg in enumerate(query["chat_history"]):
+#           chat_history.append(
+#                AIMessage(msg) if i % 2 == 1 else HumanMessage(msg)
+#           )
+
+#      result = graph.invoke({
+#           "messages": [
+#                HumanMessage(
+#                     content=question
+#                )
+#           ],
+#           "chat_history":chat_history,
+          
+#      },)
+#      store_memory(result, user_id)
+#      return result
+
+# %%
+from langchain import LLMChain
 from langchain_core.messages import HumanMessage
 import operator
 import functools
@@ -25,8 +61,9 @@ from tools import (
     nearby_dense_community, 
     google_search, 
     population_doc_retriever,
+    duckduckgo_search
 )
-from typing import Annotated, Sequence, TypedDict
+from typing import Annotated, Sequence, TypedDict, List
 from langchain_core.messages import (
     AIMessage, 
     HumanMessage,
@@ -34,19 +71,22 @@ from langchain_core.messages import (
     ToolMessage
 )
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain.memory import ConversationBufferMemory
 from langgraph.graph import END, StateGraph, START
 
 
 
 ## tools and LLM
 # Bind the tools to the model
-tools = [population_doc_retriever, find_place_from_text, nearby_search, nearby_dense_community, google_search]  # Include both tools if needed
-# tools = [population_doc_retriever, find_place_from_text, nearby_search, google_search]  # Include both tools if needed
+tools = [population_doc_retriever, find_place_from_text, nearby_search, nearby_dense_community, duckduckgo_search]  # Include both tools if needed
+# tools = [google_search]
 
 llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.0)
 
+
 ## Create agents
 def create_agent(llm, tools, system_message: str):
+    # memory = ConversationBufferMemory(memory_key='chat_history', return_messages=False)
     """Create an agent."""
     prompt = ChatPromptTemplate.from_messages(
         [
@@ -60,12 +100,20 @@ def create_agent(llm, tools, system_message: str):
                 " "
                 " You have access to the following tools: {tool_names}.\n{system_message}",
             ),
+            MessagesPlaceholder(variable_name="chat_history"),
             MessagesPlaceholder(variable_name="messages"),
         ]
     )
     prompt = prompt.partial(system_message=system_message)
     prompt = prompt.partial(tool_names=", ".join([tool.name for tool in tools]))
     #llm_with_tools = llm.bind(functions=[format_tool_to_openai_function(t) for t in tools])
+    llm_with_tools = llm.bind_tools(tools)
+    # agent = LLMChain(
+    #     prompt=prompt,
+    #     llm=llm_with_tools,
+    #     # memory=memory
+    # )
+    # return agent
     return prompt | llm.bind_tools(tools)
     #agent = prompt | llm_with_tools
     #return agent
@@ -76,6 +124,7 @@ def create_agent(llm, tools, system_message: str):
 # in the graph. We will create different nodes for each agent and tool
 class AgentState(TypedDict):
     messages: Annotated[Sequence[BaseMessage], operator.add]
+    chat_history: List[BaseMessage]
     sender: str
 
 
@@ -87,6 +136,7 @@ def agent_node(state, agent, name):
         pass
     else:
         result = AIMessage(**result.dict(exclude={"type", "name"}), name=name)
+        # result = AIMessage(**result.dict(), name=name)
     return {
         "messages": [result],
         # Since we have a strict workflow, we can
@@ -189,7 +239,7 @@ graph = workflow.compile()
 #     pass
 
 # %%
-# question = "ร้านกาแฟใกล้เซ็นทรัลเวิลด์"
+# question = "วิเคราะห์คู่แข่งของร้านเบเกอรี่ใกล้ตลาดจตุจักร"
 
 # graph = workflow.compile()
 
@@ -200,9 +250,12 @@ graph = workflow.compile()
 #                 question
 #             )
 #         ],
+#         "chat_history": [    
+#         ]
 #     },
 #     # Maximum number of steps to take in the graph
-#     {"recursion_limit": 20},
+#     {"recursion_limit": 50},
+#     debug=True
 # )
 # for s in events:
 #     # print(s)
@@ -210,6 +263,7 @@ graph = workflow.compile()
 #     a[1]['messages'][0].pretty_print()
 
 # %%
+chat_history=[]
 def submitUserMessage(user_input: str) -> str:
     graph = workflow.compile()
 
@@ -220,6 +274,8 @@ def submitUserMessage(user_input: str) -> str:
                     user_input
                 )
             ],
+            "chat_history": [    
+            ]
         },
         # Maximum number of steps to take in the graph
         {"recursion_limit": 20},
@@ -231,10 +287,13 @@ def submitUserMessage(user_input: str) -> str:
     response = response.content
     response = response.replace("%SIjfE923hf", "")
     
+    chat_history.append(HumanMessage(user_input))
+    chat_history.append(AIMessage(response))
+    
     return response
 
 
-# question = "วิเคราะห์ร้านอาหารแถวลุมพินี เซ็นเตอร์ ลาดพร้าว"
-# submitUserMessage(question)
+question = "hello my frend"
+submitUserMessage(question)
 
 
