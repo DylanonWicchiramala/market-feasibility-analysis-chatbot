@@ -6,8 +6,8 @@ langchain-openai
 langchain-chroma
 langchain-text-splitters
 langgraph
+beautifulsoup4
+fastapi
 
 langchain_google_community
 googlemaps
-beautifulsoup4
-Flask

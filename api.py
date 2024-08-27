@@ -1,20 +1,83 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, abort, jsonify
+import json
+import requests
+import os
+import dotenv
 from chatbot_multiagent import submitUserMessage
+
+dotenv.load_dotenv()
 
 app = Flask(__name__)
 
-@app.route('/', methods=['POST'])
-def chatbot():
-    user_message = request.json.get('message', '')
 
-    if not user_message:
-        return jsonify({"error": "Message is required"}), 400
+CHANNEL_ACCESS_TOKEN = os.environ.get("LINE_TOKEN")
+CHANNEL_SECRET = os.environ.get("LINE_SECRET")
 
+@app.route('/', methods=['POST', 'GET'])
+async def webhook():
+    if request.method == 'POST':
+        payload = request.json
+        # Log the entire payload for debugging
+        app.logger.info(f"Received payload: {json.dumps(payload, indent=2)}")
+        
+        try:
+               # Check Event (can be multiple event)
+               for event in payload['events']:
+                    user_id = event["source"]["userId"]
+                    # Get reply token (reply in 1 min)
+                    reply_token = event['replyToken']                        
+                    if event['type'] == 'message':
+                         message = event["message"]["text"]
+                         # Model Invoke
+                         result = submitUserMessage(message)
+                         PushMessage(reply_token, result)
+
+               return request.json, 200
+        
+        except:
+            app.logger.error(f"Error")
+            abort(400)
+    else:
+        abort(400)
+        
+        
+@app.route('/health', methods=['GET'])
+def health_check():
     try:
-        response = submitUserMessage(user_message)
-        return jsonify({"response": response})
+        # Perform any necessary checks here (e.g., database connection, etc.)
+        # For now, we just return a simple success message
+        return jsonify({"status": "healthy"}), 200
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        # If something goes wrong, return an error message
+        return jsonify({"status": "unhealthy", "error": str(e)}), 500
+                
 
+def PushMessage(reply_token, TextMessage):
+    LINE_API = 'https://api.line.me/v2/bot/message/reply'
+    Authorization = f'Bearer {CHANNEL_ACCESS_TOKEN}'    
+    headers = {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': Authorization
+    }
+    # remove * and # in message
+    answer = TextMessage[0]["output"].replace("*", "").replace("#", "")
+
+    data = {
+        "replyToken": reply_token,
+        "messages": [
+            {
+                "type": "text",
+                "text": answer,
+            }
+        ]
+    }
+
+    # Convert the dictionary to a JSON string
+    data = json.dumps(data)
+    
+    # Send the POST request to the LINE API
+    requests.post(LINE_API, headers=headers, data=data)
+
+# Run the Flask app
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5050)
+    app.run(port=8080, debug=True)
