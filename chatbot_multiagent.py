@@ -229,7 +229,10 @@ graph = workflow.compile()
 
 # %%
 chat_history=[]
-def submitUserMessage(user_input: str) -> str:
+def submitUserMessage(user_input: str, keep_chat_history:bool=True) -> str:
+    global chat_history
+    if not keep_chat_history:
+        chat_history = []
     graph = workflow.compile()
 
     events = graph.stream(
@@ -253,6 +256,7 @@ def submitUserMessage(user_input: str) -> str:
     
     chat_history.append(HumanMessage(user_input))
     chat_history.append(AIMessage(response))
+    chat_history = chat_history[-5:]
     
     return response
 

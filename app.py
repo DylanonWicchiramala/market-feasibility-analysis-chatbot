@@ -21,7 +21,7 @@ with gr.Blocks() as demo:
     clear = gr.ClearButton([msg, chatbot])
 
     def respond(message, chat_history):
-        bot_message = submitUserMessage(message)
+        bot_message = submitUserMessage(message, keep_chat_history=True)
         chat_history.append((message, bot_message))
         return "", chat_history
 
