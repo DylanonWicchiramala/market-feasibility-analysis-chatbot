@@ -256,7 +256,7 @@ def submitUserMessage(user_input: str, keep_chat_history:bool=True) -> str:
     
     chat_history.append(HumanMessage(user_input))
     chat_history.append(AIMessage(response))
-    chat_history = chat_history[-5:]
+    chat_history = chat_history[-10:]
     
     return response
 
