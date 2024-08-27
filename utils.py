@@ -11,5 +11,5 @@ def load_agent_meta():
 
 def load_env():
     # Load environment variables from the .env file
-    load_dotenv("./API_keys.env")
+    load_dotenv("./.env")
     # os.getenv('OPENAI_API_KEY')
