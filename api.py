@@ -34,16 +34,21 @@ async def webhook():
 
                return request.json, 200
         
-        except:
-            app.logger.error(f"Error")
-            abort(400)
+        except Exception as e:
+            app.logger.error(f"Error: {e}")
+            return jsonify({"error": e}), 500
     else:
-        abort(400)
+        return jsonify({"error": "method not allowed"}), 400
         
         
 @app.route('/test', methods=['POST'])
 def chatbot_test():
-    user_message = request.json.get('message', '')
+    try:
+        user_message = request.json.get('message', '')
+        
+    except Exception as e:
+        app.logger.error(f"Error: {e}")
+        return jsonify({"error": e}), 500
 
     if not user_message:
         return jsonify({"error": "Message is required"}), 400
