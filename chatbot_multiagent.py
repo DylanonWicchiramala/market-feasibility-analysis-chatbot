@@ -1,3 +1,4 @@
+#%%
 # load env ------------------------------------------------------------------------
 import os
 import utils
@@ -12,77 +13,34 @@ from langchain.globals import set_debug, set_verbose
 set_verbose(True)
 set_debug(False)
 
-from langchain_core.messages import HumanMessage
-import operator
 import functools
-
 # for llm model
 from langchain_openai import ChatOpenAI
 # from langchain_community.chat_models import ChatOpenAI
+from langchain_core.messages import (
+    AIMessage, 
+    HumanMessage,
+    ToolMessage
+)
+from langgraph.graph import END, StateGraph, START
 from tools import (
     find_place_from_text, 
     nearby_search, 
     nearby_dense_community, 
-    google_search, 
     population_doc_retriever,
-    duckduckgo_search
+    duckduckgo_search,
+    get_tools_output
 )
-from typing import Annotated, Sequence, TypedDict, List
-from langchain_core.messages import (
-    AIMessage, 
-    HumanMessage,
-    BaseMessage,
-    ToolMessage
+from agents import(
+    create_agent,
+    AgentState
 )
-from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-from langchain.memory import ConversationBufferMemory
-from langgraph.graph import END, StateGraph, START
-
-
 
 ## tools and LLM
 # Bind the tools to the model
 tools = [population_doc_retriever, find_place_from_text, nearby_search, nearby_dense_community, duckduckgo_search]  # Include both tools if needed
 
 llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.0)
-
-
-## Create agents ------------------------------------------------------------------------
-def create_agent(llm, tools, system_message: str):
-    # memory = ConversationBufferMemory(memory_key='chat_history', return_messages=False)
-    """Create an agent."""
-    prompt = ChatPromptTemplate.from_messages(
-        [
-            (
-                "system",
-                "You are a helpful AI assistant, collaborating with other assistants."
-                " Use the provided tools to progress towards answering the question."
-                " If you are unable to fully answer, that's OK, another assistant with different tools "
-                " will help where you left off. Execute what you can to make progress."
-                " If you or any of the other assistants have the final answer or deliverable,"
-                " "
-                " You have access to the following tools: {tool_names}.\n{system_message}",
-            ),
-            MessagesPlaceholder(variable_name="chat_history"),
-            MessagesPlaceholder(variable_name="messages"),
-        ]
-    )
-    prompt = prompt.partial(system_message=system_message)
-    prompt = prompt.partial(tool_names=", ".join([tool.name for tool in tools]))
-    #llm_with_tools = llm.bind(functions=[format_tool_to_openai_function(t) for t in tools])
-    llm_with_tools = llm.bind_tools(tools)
-    agent = prompt | llm_with_tools
-    return agent
-
-
-## Define state ------------------------------------------------------------------------
-# This defines the object that is passed between each node
-# in the graph. We will create different nodes for each agent and tool
-class AgentState(TypedDict):
-    messages: Annotated[Sequence[BaseMessage], operator.add]
-    chat_history: List[BaseMessage]
-    sender: str
-
 
 # Helper function to create a node for a given agent
 def agent_node(state, agent, name):
@@ -106,6 +64,7 @@ def agent_node(state, agent, name):
 from prompt import agent_meta
 agent_name = [meta['name'] for meta in agent_meta]
 
+# TODO: move agents to agents.py 
 agents={}
 agent_nodes={}
 
@@ -142,7 +101,6 @@ def router(state) -> Literal["call_tool", "__end__", "continue"]:
         return "__end__"
     else:
         return "continue"
-
 
 
 ## Workflow Graph ------------------------------------------------------------------------
@@ -189,7 +147,7 @@ graph = workflow.compile()
 
 # %%
 chat_history=[]
-def submitUserMessage(user_input: str, keep_chat_history:bool=True) -> str:
+def submitUserMessage(user_input: str, keep_chat_history:bool=True, return_reference:bool=False, verbose=False) -> str:
     global chat_history
     chat_history.append(HumanMessage(user_input))
     
@@ -210,13 +168,25 @@ def submitUserMessage(user_input: str, keep_chat_history:bool=True) -> str:
         {"recursion_limit": 20},
     )
     
-    events = [e for e in events]
+    if not verbose:
+        events = [e for e in events]
+        response = list(events[-1].values())[0]["messages"][0]
+    else:
+        for e in events:
+            # print(e)
+            a = list(e.items())[0]
+            a[1]['messages'][0].pretty_print()
+        
+        response = a[1]['messages'][0].content
     
-    response = list(events[-1].values())[0]["messages"][0]
+    
     response = response.content
     response = response.replace("%SIjfE923hf", "")
     
     chat_history.append(AIMessage(response))
     chat_history = chat_history[-10:]
     
-    return response
+    if return_reference:
+        return response, get_tools_output()
+    else:
+        return response

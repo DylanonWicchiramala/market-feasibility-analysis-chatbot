@@ -1,6 +1,5 @@
 import gplace
 from typing import TypedDict, Optional
-from langchain_google_community import GoogleSearchAPIWrapper
 import utils
 ## Document vector store for context
 from langchain_chroma import Chroma
@@ -8,11 +7,15 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import CSVLoader
 from langchain_openai import OpenAIEmbeddings
 import glob
+# from langchain_google_community import GoogleSearchAPIWrapper
 from langchain_core.tools import tool
+import functools
+from copy import copy
+
 
 utils.load_env()
 
-search = GoogleSearchAPIWrapper()
+# search = GoogleSearchAPIWrapper()
 
 
 class NearbySearchInput(TypedDict):
@@ -26,6 +29,25 @@ class NearbyDenseCommunityInput(TypedDict):
     location_name: str
     radius: int
     
+tools_outputs=""
+
+def get_tools_output():
+    global tools_outputs
+    result = copy(tools_outputs)
+    tools_outputs = ""
+    return result
+
+def save_tools_output(func):
+    @functools.wraps(func) 
+    def wrapper(*args, **kwargs):
+        global tools_outputs
+        # Call the original function and get its return value
+        result = func(*args, **kwargs)
+        # Append the result to tools_outputs
+        tools_outputs += str(result) + "\n"
+        # Return the original result
+        return result
+    return wrapper
     
 # class GoogleSearchInput(TypedDict):
 #     keyword: str
@@ -137,16 +159,16 @@ def nearby_dense_community(input_dict: NearbyDenseCommunityInput) -> str:
 
 
 # @tool
-def google_search(keyword:str):
-    """Search Google for recent results. Using keyword as a text query search in google."""
-    try:
-        text = search.run(keyword)
-    except Exception as e:
-        return "google search not available at this time. please try again later"
-    unicode_chars_to_remove = ["\U000f1676", "\u2764", "\xa0", "▫️", "Δ"]
-    for char in unicode_chars_to_remove:
-        text = text.replace(char, "")
-    return text[:800]
+# def google_search(keyword:str):
+#     """Search Google for recent results. Using keyword as a text query search in google."""
+#     try:
+#         text = search.run(keyword)
+#     except Exception as e:
+#         return "google search not available at this time. please try again later"
+#     unicode_chars_to_remove = ["\U000f1676", "\u2764", "\xa0", "▫️", "Δ"]
+#     for char in unicode_chars_to_remove:
+#         text = text.replace(char, "")
+#     return text[:800]
 
 
 ## Document csv
@@ -214,7 +236,7 @@ duckduckgo_search = DuckDuckGoSearchRun()
 #     return list of location community nearby, name, community type""",
 #     func=nearby_dense_community,
 # )
-google_search = tool(google_search)
+# google_search = tool(google_search)
 find_place_from_text = tool(find_place_from_text)
-nearby_search = tool(nearby_search)
-nearby_dense_community = tool(nearby_dense_community)
+nearby_search = tool(save_tools_output(nearby_search))
+nearby_dense_community = tool(save_tools_output(nearby_dense_community))

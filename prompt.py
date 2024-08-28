@@ -1,3 +1,13 @@
+system_prompt = """
+        You are a helpful AI assistant, collaborating with other assistants.
+        Use the provided tools to progress towards answering the question.
+        If you are unable to fully answer, that's OK, another assistant with different tools 
+        will help where you left off. Execute what you can to make progress.
+        If you or any of the other assistants have the final answer or deliverable,
+        
+        You have access to the following tools: {tool_names}.\n{system_message},
+    """
+
 agent_meta = [
     {
         "name": "analyst",

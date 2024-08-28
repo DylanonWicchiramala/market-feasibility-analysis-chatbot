@@ -30,7 +30,7 @@ async def webhook():
                     if event['type'] == 'message':
                          message = event["message"]["text"]
                          # Model Invoke
-                         result = submitUserMessage(message)
+                         result = submitUserMessage(message, keep_chat_history=True, return_reference=True)
                          result = utils.remove_markdown(result)
                          PushMessage(reply_token, result)
 
@@ -57,6 +57,9 @@ def chatbot_test():
 
     try:
         response = submitUserMessage(user_message)
+        if isinstance(response, list):
+            response = response[0]
+        
         return jsonify({"response": response})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -82,16 +85,31 @@ def PushMessage(reply_token, TextMessage):
     }
     # remove * and # in message
     answer = TextMessage
-
-    data = {
-        "replyToken": reply_token,
-        "messages": [
-            {
+    
+    if isinstance(answer, str):
+        data = {
+            "replyToken": reply_token,
+            "messages": [
+                {
                 "type": "text",
                 "text": answer,
-            }
-        ]
-    }
+                },
+            ]
+        }
+    elif len(answer)<=5:
+        data = {
+            "replyToken": reply_token,
+            "messages": [
+                {
+                "type": "text",
+                "text": ans,
+                } for ans in answer
+            ]
+        }
+    else:
+        print("if you see this, something was wrong.")
+    
+    tools_outputs = ""
 
     # Convert the dictionary to a JSON string
     data = json.dumps(data)
