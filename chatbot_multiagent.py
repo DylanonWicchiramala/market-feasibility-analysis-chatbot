@@ -1,18 +1,17 @@
-# %%
+# load env ------------------------------------------------------------------------
 import os
 import utils
 
 utils.load_env()
 os.environ['LANGCHAIN_TRACING_V2'] = "false"
 
-# %%
+
+# debug ------------------------------------------------------------------
 from langchain.globals import set_debug, set_verbose
 
 set_verbose(True)
 set_debug(False)
 
-# %%
-from langchain import LLMChain
 from langchain_core.messages import HumanMessage
 import operator
 import functools
@@ -44,12 +43,11 @@ from langgraph.graph import END, StateGraph, START
 ## tools and LLM
 # Bind the tools to the model
 tools = [population_doc_retriever, find_place_from_text, nearby_search, nearby_dense_community, duckduckgo_search]  # Include both tools if needed
-# tools = [google_search]
 
 llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.0)
 
 
-## Create agents
+## Create agents ------------------------------------------------------------------------
 def create_agent(llm, tools, system_message: str):
     # memory = ConversationBufferMemory(memory_key='chat_history', return_messages=False)
     """Create an agent."""
@@ -73,18 +71,11 @@ def create_agent(llm, tools, system_message: str):
     prompt = prompt.partial(tool_names=", ".join([tool.name for tool in tools]))
     #llm_with_tools = llm.bind(functions=[format_tool_to_openai_function(t) for t in tools])
     llm_with_tools = llm.bind_tools(tools)
-    # agent = LLMChain(
-    #     prompt=prompt,
-    #     llm=llm_with_tools,
-    #     # memory=memory
-    # )
-    # return agent
-    return prompt | llm.bind_tools(tools)
-    #agent = prompt | llm_with_tools
-    #return agent
+    agent = prompt | llm_with_tools
+    return agent
 
 
-## Define state
+## Define state ------------------------------------------------------------------------
 # This defines the object that is passed between each node
 # in the graph. We will create different nodes for each agent and tool
 class AgentState(TypedDict):
@@ -110,7 +101,7 @@ def agent_node(state, agent, name):
     }
 
 
-## Define Agents Node
+## Define Agents Node ------------------------------------------------------------------------
 # Research agent and node
 from prompt import agent_meta
 agent_name = [meta['name'] for meta in agent_meta]
@@ -154,7 +145,7 @@ def router(state) -> Literal["call_tool", "__end__", "continue"]:
 
 
 
-## Workflow Graph
+## Workflow Graph ------------------------------------------------------------------------
 workflow = StateGraph(AgentState)
 
 # add agent nodes
@@ -191,41 +182,10 @@ workflow.add_conditional_edges(
     lambda x: x["sender"],
     {name:name for name in agent_name},
 )
+
 workflow.add_edge(START, "analyst")
 graph = workflow.compile()
 
-# %%
-# from IPython.display import Image, display
-
-# try:
-#     display(Image(graph.get_graph(xray=True).draw_mermaid_png()))
-# except Exception:
-#     # This requires some extra dependencies and is optional
-#     pass
-
-# %%
-# question = "วิเคราะห์คู่แข่งของร้านเบเกอรี่ใกล้ตลาดจตุจักร"
-
-# graph = workflow.compile()
-
-# events = graph.stream(
-#     {
-#         "messages": [
-#             HumanMessage(
-#                 question
-#             )
-#         ],
-#         "chat_history": [    
-#         ]
-#     },
-#     # Maximum number of steps to take in the graph
-#     {"recursion_limit": 50},
-#     debug=True
-# )
-# for s in events:
-#     # print(s)
-#     a = list(s.items())[0]
-#     a[1]['messages'][0].pretty_print()
 
 # %%
 chat_history=[]
@@ -259,9 +219,3 @@ def submitUserMessage(user_input: str, keep_chat_history:bool=True) -> str:
     chat_history = chat_history[-10:]
     
     return response
-
-
-# question = "hello my frend"
-# submitUserMessage(question)
-
-
