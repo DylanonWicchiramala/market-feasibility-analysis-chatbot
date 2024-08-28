@@ -191,6 +191,8 @@ graph = workflow.compile()
 chat_history=[]
 def submitUserMessage(user_input: str, keep_chat_history:bool=True) -> str:
     global chat_history
+    chat_history.append(HumanMessage(user_input))
+    
     if not keep_chat_history:
         chat_history = []
     graph = workflow.compile()
@@ -214,7 +216,6 @@ def submitUserMessage(user_input: str, keep_chat_history:bool=True) -> str:
     response = response.content
     response = response.replace("%SIjfE923hf", "")
     
-    chat_history.append(HumanMessage(user_input))
     chat_history.append(AIMessage(response))
     chat_history = chat_history[-10:]
     

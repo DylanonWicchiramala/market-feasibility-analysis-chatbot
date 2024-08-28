@@ -29,6 +29,7 @@ agent_meta = [
         2. Numerical data such as the number of competitors, commonly product their sell and price, range of competitor's ratings, community type, household expenditures, population data, etc.
         3. Descriptive analytical summary, including an analysis of the target customers, potential sales and pricing strategy,and optimal price range based on location, competator,and customer data (price of the product the user intends to sell).
         Do not make list of each shop.
-        Provide a final report based on the available information and prefix your response with '%SIjfE923hf' so the team knows to stop. Do not response only '%SIjfE923hf'."""
+        Provide a final report(in thai language) based on the available information and prefix your response with '%SIjfE923hf' so the team knows to stop. Do not response only '%SIjfE923hf'.
+        """
     }
 ]
