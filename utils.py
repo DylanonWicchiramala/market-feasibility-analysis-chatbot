@@ -39,3 +39,15 @@ def remove_markdown(text:str):
         text = text.replace(sym,"")
     
     return text
+
+
+@append_output
+def strip(text:str):
+    return text.strip()
+
+
+@append_output
+def format_bot_response(text:str, remove_markdown:bool=False):
+    text = remove_markdown(text) if remove_markdown else text
+    text = strip(text)
+    return text

@@ -30,9 +30,9 @@ async def webhook():
                     if event['type'] == 'message':
                          message = event["message"]["text"]
                          # Model Invoke
-                         result = submitUserMessage(message, keep_chat_history=True, return_reference=True)
-                         result = utils.remove_markdown(result)
-                         PushMessage(reply_token, result)
+                         response = submitUserMessage(message, keep_chat_history=True, return_reference=True)
+                         response = utils.format_bot_response(response, remove_markdown=True)
+                         PushMessage(reply_token, response)
 
                return request.json, 200
         
@@ -57,6 +57,8 @@ def chatbot_test():
 
     try:
         response = submitUserMessage(user_message)
+        response = utils.format_bot_response(response, remove_markdown=True)
+        
         if isinstance(response, list):
             response = response[0]
         
