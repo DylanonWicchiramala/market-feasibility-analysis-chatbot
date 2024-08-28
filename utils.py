@@ -12,4 +12,11 @@ def load_agent_meta():
 def load_env():
     # Load environment variables from the .env file
     load_dotenv("./.env")
-    # os.getenv('OPENAI_API_KEY')
+    
+    
+def remove_markdown(text:str):
+    md_symbol = "#*"
+    for sym in md_symbol:
+        text.replace(sym,"")
+    
+    return text

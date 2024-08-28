@@ -4,6 +4,7 @@ import requests
 import os
 import dotenv
 from chatbot_multiagent import submitUserMessage
+import utils
 
 dotenv.load_dotenv()
 
@@ -30,6 +31,7 @@ async def webhook():
                          message = event["message"]["text"]
                          # Model Invoke
                          result = submitUserMessage(message)
+                         result = utils.remove_markdown(result)
                          PushMessage(reply_token, result)
 
                return request.json, 200

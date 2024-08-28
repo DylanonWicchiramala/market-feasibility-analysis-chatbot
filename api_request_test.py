@@ -2,7 +2,7 @@ import requests
 
 url = "https://market-feasibility-analysis-chatbot.onrender.com/test"
 headers = {"Content-Type": "application/json"}
-data = {"message": "Hello, chatbot!"}
+data = {"message": "วิเคราะห์การเปิดร้านอาหารแถวนวลจันทร์"}
 
 response = requests.post(url, json=data, headers=headers)
 
