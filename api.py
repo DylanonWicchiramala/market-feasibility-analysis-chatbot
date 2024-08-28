@@ -81,7 +81,7 @@ def PushMessage(reply_token, TextMessage):
         'Authorization': Authorization
     }
     # remove * and # in message
-    answer = TextMessage[0]["output"].replace("*", "").replace("#", "")
+    answer = TextMessage
 
     data = {
         "replyToken": reply_token,
