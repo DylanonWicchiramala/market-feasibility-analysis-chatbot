@@ -177,7 +177,7 @@ def submitUserMessage(user_input: str, keep_chat_history:bool=True, return_refer
             a = list(e.items())[0]
             a[1]['messages'][0].pretty_print()
         
-        response = a[1]['messages'][0].content
+        response = a[1]['messages'][0]
     
     
     response = response.content

@@ -105,12 +105,12 @@ def nearby_search(input_dict: NearbySearchInput):
     strout = "number of results more than {}\n".format(number_results) if number_results==60 else "number of results: {}\n".format(number_results)
     for r in result[:max_results]:
         # Use .get() to handle missing keys
-        address = r.get('vicinity', 'N/A').strip()
-        location_info = r.get('geometry', {}).get('location', 'N/A').strip()
-        name = r.get('name', 'N/A').strip()
-        opening_hours = r.get('opening_hours', 'N/A').strip()
-        rating = r.get('rating', 'N/A').strip()
-        plus_code = r.get('plus_code', {}).get('global_code', 'N/A').strip()
+        address = r.get('vicinity', 'N/A')
+        location_info = r.get('geometry', {}).get('location', 'N/A')
+        name = r.get('name', 'N/A')
+        opening_hours = r.get('opening_hours', 'N/A')
+        rating = r.get('rating', 'N/A')
+        plus_code = r.get('plus_code', {}).get('global_code', 'N/A')
         
         # strout += f"""
         # address: {address}\n
@@ -144,12 +144,12 @@ def nearby_dense_community(input_dict: NearbyDenseCommunityInput) -> str:
     strout = ""
     for r in result[:max_results]:
         # Use .get() to handle missing keys
-        address = r.get('vicinity', 'N/A').strip()
-        location_types = r.get('types', 'N/A').strip()
-        name = r.get('name', 'N/A').strip()
-        opening_hours = r.get('opening_hours', 'N/A').strip()
-        rating = r.get('rating', 'N/A').strip()
-        plus_code = r.get('plus_code', {}).get('global_code', 'N/A').strip()
+        address = r.get('vicinity', 'N/A')
+        location_types = r.get('types', 'N/A')
+        name = r.get('name', 'N/A')
+        opening_hours = r.get('opening_hours', 'N/A')
+        rating = r.get('rating', 'N/A')
+        plus_code = r.get('plus_code', {}).get('global_code', 'N/A')
         
         strout += f"""
         name: {name}\n
