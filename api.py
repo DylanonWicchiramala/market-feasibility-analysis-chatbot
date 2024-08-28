@@ -38,7 +38,7 @@ async def webhook():
         
         except Exception as e:
             app.logger.error(f"Error: {e}")
-            return jsonify({"error": e}), 500
+            return jsonify({"error": str(e)}), 500
     else:
         return jsonify({"error": "method not allowed"}), 400
         
@@ -50,7 +50,7 @@ def chatbot_test():
         
     except Exception as e:
         app.logger.error(f"Error: {e}")
-        return jsonify({"error": e}), 500
+        return jsonify({"error": str(e)}), 500
 
     if not user_message:
         return jsonify({"error": "Message is required"}), 400
