@@ -17,6 +17,6 @@ def load_env():
 def remove_markdown(text:str):
     md_symbol = "#*"
     for sym in md_symbol:
-        text.replace(sym,"")
+        text = text.replace(sym,"")
     
     return text
