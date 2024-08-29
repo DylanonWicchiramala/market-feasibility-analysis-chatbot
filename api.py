@@ -2,11 +2,10 @@ from flask import Flask, request, abort, jsonify
 import json
 import requests
 import os
-import dotenv
 from chatbot_multiagent import submitUserMessage
 import utils
 
-dotenv.load_dotenv()
+utils.load_env()
 
 app = Flask(__name__)
 
@@ -22,23 +21,23 @@ async def webhook():
         app.logger.info(f"Received payload: {json.dumps(payload, indent=2)}")
         
         try:
-               # Check Event (can be multiple event)
-               for event in payload['events']:
-                    user_id = event["source"]["userId"]
-                    # Get reply token (reply in 1 min)
-                    reply_token = event['replyToken']                        
-                    if event['type'] == 'message':
-                         message = event["message"]["text"]
-                         # Model Invoke
-                         result = submitUserMessage(message)
-                         result = utils.remove_markdown(result)
-                         PushMessage(reply_token, result)
+            # Check Event (can be multiple event)
+            for event in payload['events']:
+                user_id = event["source"]["userId"]
+                # Get reply token (reply in 1 min)
+                reply_token = event['replyToken']                        
+                if event['type'] == 'message':
+                    user_message = event["message"]["text"]
+                    # Model Invoke
+                    response = submitUserMessage(user_message, keep_chat_history=True, return_reference=True, verbose=os.environ['BOT_VERBOSE'])
+                    response = utils.format_bot_response(response, markdown=False)
+                    PushMessage(reply_token, response)
 
-               return request.json, 200
+            return request.json, 200
         
         except Exception as e:
             app.logger.error(f"Error: {e}")
-            return jsonify({"error": e}), 500
+            return jsonify({"error": str(e)}), 500
     else:
         return jsonify({"error": "method not allowed"}), 400
         
@@ -50,14 +49,20 @@ def chatbot_test():
         
     except Exception as e:
         app.logger.error(f"Error: {e}")
-        return jsonify({"error": e}), 500
+        return jsonify({"error": str(e)}), 500
 
     if not user_message:
         return jsonify({"error": "Message is required"}), 400
 
     try:
-        response = submitUserMessage(user_message)
+        response = submitUserMessage(user_message, keep_chat_history=True, return_reference=True, verbose=os.environ['BOT_VERBOSE'])
+        response = utils.format_bot_response(response, markdown=False)
+        
+        if isinstance(response, list):
+            response = response[0]
+        
         return jsonify({"response": response})
+    
     except Exception as e:
         return jsonify({"error": str(e)}), 500
         
@@ -82,16 +87,31 @@ def PushMessage(reply_token, TextMessage):
     }
     # remove * and # in message
     answer = TextMessage
-
-    data = {
-        "replyToken": reply_token,
-        "messages": [
-            {
+    
+    if isinstance(answer, str):
+        data = {
+            "replyToken": reply_token,
+            "messages": [
+                {
                 "type": "text",
                 "text": answer,
-            }
-        ]
-    }
+                },
+            ]
+        }
+    elif len(answer)<=5:
+        data = {
+            "replyToken": reply_token,
+            "messages": [
+                {
+                "type": "text",
+                "text": ans,
+                } for ans in answer
+            ]
+        }
+    else:
+        print("if you see this, something was wrong.")
+    
+    tools_outputs = ""
 
     # Convert the dictionary to a JSON string
     data = json.dumps(data)

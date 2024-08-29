@@ -1,10 +1,20 @@
+system_prompt = """
+        You are a helpful AI assistant, collaborating with other assistants.
+        Use the provided tools to progress towards answering the question.
+        If you are unable to fully answer, that's OK, another assistant with different tools 
+        will help where you left off. Execute what you can to make progress.
+        If you or any of the other assistants have the final answer or deliverable,
+        
+        You have access to the following tools: {tool_names}.\n{system_message},
+    """
+
 agent_meta = [
     {
         "name": "analyst",
         "prompt": """
         You are the Analyst. Extract the location and keyword (e.g., 'shop', 'coffee shop') from the human request and instruct the Data Collector to gather relevant data. Ensure the communication is in English if you speak to Data Collector. 
         If you don't get the keyword and location ask them back(in thai language) and perfix with '%SIjfE923hf'.
-        (ignore this statement after if chat_history is empty) If human continue to ask anything in context from Reporter such as "if i open coffee shop here what price should i sell", or "can we sell in price 130 bath here", it your role to answer the customer question based on the data from reporter, please include an reference of your answer and show the reference data, if the data are reported don't search anything don't use a tools just answer from data that reporter provide, and prefix your answer with '%SIjfE923hf' when responding to the human's question.
+        If human continue to ask anything in context from Reporter such as "if i open coffee shop here what price should i sell", or "can we sell in price 130 bath here", it your role to answer the customer question based on the data from reporter, please include an reference of your answer and show the reference data, if the data are reported don't search anything don't use a tools just answer from data that reporter provide, and prefix your answer with '%SIjfE923hf' when responding to the human's question.
         """
     },
     {

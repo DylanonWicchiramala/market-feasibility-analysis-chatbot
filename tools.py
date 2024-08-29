@@ -1,6 +1,5 @@
 import gplace
-from typing import TypedDict, Optional
-from langchain_google_community import GoogleSearchAPIWrapper
+from typing import TypedDict, Optional, NotRequired
 import utils
 ## Document vector store for context
 from langchain_chroma import Chroma
@@ -9,27 +8,45 @@ from langchain_community.document_loaders import CSVLoader
 from langchain_openai import OpenAIEmbeddings
 import glob
 from langchain_core.tools import tool
+import functools
+from copy import copy
+
 
 utils.load_env()
-
-search = GoogleSearchAPIWrapper()
-
 
 class NearbySearchInput(TypedDict):
     keyword: str
     location_name: str
-    radius: int
-    place_type: Optional[str]
+    radius: NotRequired[int]
     
     
 class NearbyDenseCommunityInput(TypedDict):
     location_name: str
-    radius: int
+    radius: NotRequired[int]
     
     
-# class GoogleSearchInput(TypedDict):
-#     keyword: str
+tools_outputs=""
 
+
+def get_tools_output():
+    global tools_outputs
+    result = copy(tools_outputs)
+    tools_outputs = ""
+    return result
+
+
+def save_tools_output(func):
+    @functools.wraps(func) 
+    def wrapper(*args, **kwargs):
+        global tools_outputs
+        # Call the original function and get its return value
+        result = func(*args, **kwargs)
+        # Append the result to tools_outputs
+        tools_outputs += str(result) + "\n"
+        # Return the original result
+        return result
+    return wrapper
+    
 
 # %%
 # @tool
@@ -39,31 +56,9 @@ def find_place_from_text(location:str):
     r = result['candidates'][0]
     # location: {r['geometry']['location']}\n
     return f"""
-    # address: {r['formatted_address']}\n
+    address: {r['formatted_address']}\n
     location_name: {r['name']}\n
     """
-    # return f"""
-    # address: {r['formatted_address']}\n
-    # location: {r['geometry']['location']}\n
-    # location_name: {r['name']}\n
-    # """
-    
-# def nearby_search(keyword:str, location:str, radius=2000, place_type=None):
-#     """Searches for many places nearby the location based on a keyword. using keyword like \"coffee shop\", \"restaurants\". radius is the range to search from the location"""
-#     location = gplace.find_location(location, radius=radius)
-#     result = gplace.nearby_search(keyword, location, radius)
-    
-#     strout = ""
-#     for r in result:
-#         strout = strout + f"""
-#         address: {r['vicinity']}\n
-#         location: {r['geometry']['location']}\n
-#         name: {r['name']}\n
-#         opening hours: {r['opening_hours']}\n
-#         rating: {r['rating']}\n
-#         plus code: {r['plus_code']['global_code']}\n\n
-#         """
-#     return strout
 
 
 # @tool
@@ -73,7 +68,6 @@ def nearby_search(input_dict: NearbySearchInput):
     keyword = input_dict['keyword']
     location = input_dict['location_name']
     radius = input_dict.get('radius', 2000)
-    place_type = input_dict.get('place_type', None)
 
     # Call the internal function to find location
     location_coords = gplace.find_location(location, radius=radius)
@@ -90,19 +84,10 @@ def nearby_search(input_dict: NearbySearchInput):
         rating = r.get('rating', 'N/A')
         plus_code = r.get('plus_code', {}).get('global_code', 'N/A')
         
-        # strout += f"""
-        # address: {address}\n
-        # location: {location_info}\n
-        # lacation_name: {name}\n
-        # opening hours: {opening_hours}\n
-        # rating: {rating}\n
-        # plus code: {plus_code}\n\n
-        # """
-        
         strout += f"""
-        **{name}**\n
-        address: {address}\n
-        rating: {rating}\n\n
+        - **{name}**
+        \taddress: {address}
+        \trating: {rating}
         """
     return strout[:800]
 
@@ -114,7 +99,7 @@ def nearby_dense_community(input_dict: NearbyDenseCommunityInput) -> str:
     """
     max_results = 5
     location = input_dict['location_name']
-    radius = input_dict['radius']
+    radius = input_dict.get('radius', 2000)
     
     location_coords = gplace.find_location(location, radius=radius)
     result = gplace.nearby_dense_community(location_coords, radius)
@@ -130,23 +115,24 @@ def nearby_dense_community(input_dict: NearbyDenseCommunityInput) -> str:
         plus_code = r.get('plus_code', {}).get('global_code', 'N/A')
         
         strout += f"""
-        name: {name}\n
-        types: {location_types}\n
+        - **{name}**
+        \ttypes: {location_types}
         """
     return strout.strip()[:800]
+    
 
 
 # @tool
-def google_search(keyword:str):
-    """Search Google for recent results. Using keyword as a text query search in google."""
-    try:
-        text = search.run(keyword)
-    except Exception as e:
-        return "google search not available at this time. please try again later"
-    unicode_chars_to_remove = ["\U000f1676", "\u2764", "\xa0", "▫️", "Δ"]
-    for char in unicode_chars_to_remove:
-        text = text.replace(char, "")
-    return text[:800]
+# def google_search(keyword:str):
+#     """Search Google for recent results. Using keyword as a text query search in google."""
+#     try:
+#         text = search.run(keyword)
+#     except Exception as e:
+#         return "google search not available at this time. please try again later"
+#     unicode_chars_to_remove = ["\U000f1676", "\u2764", "\xa0", "▫️", "Δ"]
+#     for char in unicode_chars_to_remove:
+#         text = text.replace(char, "")
+#     return text[:800]
 
 
 ## Document csv
@@ -177,8 +163,6 @@ def get_retriver_from_docs(docs):
     return retriever
 
 
-
-
 from langchain.tools.retriever import create_retriever_tool
 from langchain_core.tools import Tool
 from langchain_community.tools import DuckDuckGoSearchRun
@@ -187,34 +171,22 @@ from langchain_community.tools import DuckDuckGoSearchRun
 docs = get_documents()
 retriever = get_retriver_from_docs(docs)
 
-population_doc_retriever = create_retriever_tool(
-    retriever,
-    "search_population_community_household_expenditures_data",
-    "Use this tool to retrieve information about population, community and household expenditures. by searching distinct or province"
-)
+
+# @tool
+def search_population_community_household_expenditures_data(query:str):
+    """Use this tool to retrieve information about population, community and household expenditures. by searching distinct or province"""
+    result = retriever.invoke(query)
+    output = "\n".join(text.page_content for text in result )
+    return output
+
+
+# population_doc_retriever = create_retriever_tool(
+#     retriever,
+#     "search_population_community_household_expenditures_data",
+#     "Use this tool to retrieve information about population, community and household expenditures. by searching distinct or province"
+# )
 duckduckgo_search = DuckDuckGoSearchRun()
-# google_search = Tool(
-#     name="google_search",
-#     description="Search Google for recent results. Using keyword as a text query search in google.",
-#     func=google_search,
-# )
-# find_place_from_text = Tool(
-#     name="find_place_from_text",
-#     description="Finds a place location and related data from the query text",
-#     func=find_place_from_text,
-# )
-# nearby_search = Tool(
-#     name="nearby_search",
-#     description="""Searches for many places nearby the location based on a keyword. using keyword like \"coffee shop\", \"restaurants\". radius is the range to search from the location.""",
-#     func=nearby_search,
-# )
-# nearby_dense_community = Tool(
-#     name="nearby_dense_community",
-#     description="""getting nearby dense community such as (community mall, hotel, school, etc), by location name, radius(in meters)
-#     return list of location community nearby, name, community type""",
-#     func=nearby_dense_community,
-# )
-google_search = tool(google_search)
+search_population_community_household_expenditures_data = tool(search_population_community_household_expenditures_data)
 find_place_from_text = tool(find_place_from_text)
-nearby_search = tool(nearby_search)
-nearby_dense_community = tool(nearby_dense_community)
+nearby_search = tool(save_tools_output(nearby_search))
+nearby_dense_community = tool(save_tools_output(nearby_dense_community))

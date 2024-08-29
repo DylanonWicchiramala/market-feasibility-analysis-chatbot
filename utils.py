@@ -1,6 +1,24 @@
 from dotenv import load_dotenv
 import os
 import json
+import functools
+from typing import Any, List, Union, Tuple
+
+def append_output(func):
+    @functools.wraps(func)  # Preserve the original function's metadata
+    def wrapper(input: Union[Any, List[Any], Tuple[Any]], *args, **kwargs):
+        
+        # Check if the input is a list
+        if isinstance(input, list) or isinstance(input, tuple):
+            # Apply the function to each item in the list
+            results = [func(item, *args, **kwargs) for item in input]
+            return results
+        else:
+            # Apply the function to the single input object
+            result = func(input, *args, **kwargs)
+            return result
+
+    return wrapper
 
 
 def load_agent_meta():
@@ -14,9 +32,22 @@ def load_env():
     load_dotenv("./.env")
     
     
+@append_output 
 def remove_markdown(text:str):
     md_symbol = "#*"
     for sym in md_symbol:
-        text.replace(sym,"")
+        text = text.replace(sym,"")
     
+    return text
+
+
+@append_output
+def strip(text:str):
+    return text.strip()
+
+
+@append_output
+def format_bot_response(text:str, markdown:bool=True):
+    text = remove_markdown(text) if not markdown else text
+    text = strip(text)
     return text
