@@ -186,7 +186,7 @@ def search_population_community_household_expenditures_data(query:str):
 #     "Use this tool to retrieve information about population, community and household expenditures. by searching distinct or province"
 # )
 duckduckgo_search = DuckDuckGoSearchRun()
-search_population_community_household_expenditures_data = tool(search_population_community_household_expenditures_data)
+search_population_community_household_expenditures_data = tool(save_tools_output(search_population_community_household_expenditures_data))
 find_place_from_text = tool(find_place_from_text)
 nearby_search = tool(save_tools_output(nearby_search))
 nearby_dense_community = tool(save_tools_output(nearby_dense_community))
