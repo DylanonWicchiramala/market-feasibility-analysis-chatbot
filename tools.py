@@ -56,7 +56,7 @@ def find_place_from_text(location:str):
     r = result['candidates'][0]
     # location: {r['geometry']['location']}\n
     return f"""
-    # address: {r['formatted_address']}\n
+    address: {r['formatted_address']}\n
     location_name: {r['name']}\n
     """
 
@@ -85,9 +85,9 @@ def nearby_search(input_dict: NearbySearchInput):
         plus_code = r.get('plus_code', {}).get('global_code', 'N/A')
         
         strout += f"""
-        **{name}**
-        address: {address}
-        rating: {rating}
+        - **{name}**
+        \taddress: {address}
+        \trating: {rating}
         """
     return strout[:800]
 
@@ -115,8 +115,8 @@ def nearby_dense_community(input_dict: NearbyDenseCommunityInput) -> str:
         plus_code = r.get('plus_code', {}).get('global_code', 'N/A')
         
         strout += f"""
-        name: {name}
-        types: {location_types}
+        - **{name}**
+        \ttypes: {location_types}
         """
     return strout.strip()[:800]
 
