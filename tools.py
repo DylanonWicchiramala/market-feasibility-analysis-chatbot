@@ -1,3 +1,4 @@
+
 import gplace
 from typing import TypedDict, Optional, NotRequired
 import utils
@@ -6,11 +7,11 @@ from langchain_chroma import Chroma
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import CSVLoader
 from langchain_openai import OpenAIEmbeddings
+from langchain_community.tools import DuckDuckGoSearchRun
 import glob
 from langchain_core.tools import tool
 import functools
 from copy import copy
-
 
 utils.load_env()
 
@@ -135,6 +136,17 @@ def nearby_dense_community(input_dict: NearbyDenseCommunityInput) -> str:
 #     return text[:800]
 
 
+# @tool
+def duckduckgo_search(query:str):
+    """A wrapper around DuckDuckGo Search. Useful for when you need to answer questions about current events. Input should be a search query."""
+    engine = DuckDuckGoSearchRun()
+    unicode_chars_to_remove = ["\U000f1676", "\u2764", "\xa0", "▫️", "Δ", "#"]
+    result = engine(query)
+    for char in unicode_chars_to_remove:
+        result = result.replace(char, "")
+    return result[:800]
+
+
 ## Document csv
 def get_documents(file_pattern="document/*.csv"):
     file_paths = tuple(glob.glob(file_pattern))
@@ -165,7 +177,6 @@ def get_retriver_from_docs(docs):
 
 from langchain.tools.retriever import create_retriever_tool
 from langchain_core.tools import Tool
-from langchain_community.tools import DuckDuckGoSearchRun
 
 
 docs = get_documents()
@@ -180,12 +191,7 @@ def search_population_community_household_expenditures_data(query:str):
     return output
 
 
-# population_doc_retriever = create_retriever_tool(
-#     retriever,
-#     "search_population_community_household_expenditures_data",
-#     "Use this tool to retrieve information about population, community and household expenditures. by searching distinct or province"
-# )
-duckduckgo_search = DuckDuckGoSearchRun()
+duckduckgo_search = tool(duckduckgo_search)
 search_population_community_household_expenditures_data = tool(save_tools_output(search_population_community_household_expenditures_data))
 find_place_from_text = tool(find_place_from_text)
 nearby_search = tool(save_tools_output(nearby_search))
