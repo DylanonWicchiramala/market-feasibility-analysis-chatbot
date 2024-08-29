@@ -4,7 +4,7 @@ url = "https://market-feasibility-analysis-chatbot-2-jelvbvjqna-uc.a.run.app/tes
 # url = "http://127.0.0.1:8080/test"
 
 headers = {"Content-Type": "application/json"}
-data = {"message": "วิเคราะห์การเปิดร้านอาหารใกล้สยามพารากอน"}
+data = {"message": "สวัสดี"}
 
 response = requests.post(url, json=data, headers=headers)
 
