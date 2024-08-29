@@ -1,4 +1,3 @@
-#%%
 # load env ------------------------------------------------------------------------
 import os
 import utils
@@ -27,7 +26,7 @@ from tools import (
     find_place_from_text, 
     nearby_search, 
     nearby_dense_community, 
-    population_doc_retriever,
+    search_population_community_household_expenditures_data,
     duckduckgo_search,
     get_tools_output
 )
@@ -38,7 +37,7 @@ from agents import(
 
 ## tools and LLM
 # Bind the tools to the model
-tools = [population_doc_retriever, find_place_from_text, nearby_search, nearby_dense_community, duckduckgo_search]  # Include both tools if needed
+tools = [search_population_community_household_expenditures_data, find_place_from_text, nearby_search, nearby_dense_community, duckduckgo_search]  # Include both tools if needed
 
 llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.0)
 
@@ -145,7 +144,6 @@ workflow.add_edge(START, "analyst")
 graph = workflow.compile()
 
 
-# %%
 chat_history=[]
 def submitUserMessage(user_input: str, keep_chat_history:bool=True, return_reference:bool=False, verbose=False) -> str:
     global chat_history

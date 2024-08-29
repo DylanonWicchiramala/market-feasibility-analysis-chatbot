@@ -119,6 +119,7 @@ def nearby_dense_community(input_dict: NearbyDenseCommunityInput) -> str:
         \ttypes: {location_types}
         """
     return strout.strip()[:800]
+    
 
 
 # @tool
@@ -170,12 +171,22 @@ from langchain_community.tools import DuckDuckGoSearchRun
 docs = get_documents()
 retriever = get_retriver_from_docs(docs)
 
-population_doc_retriever = create_retriever_tool(
-    retriever,
-    "search_population_community_household_expenditures_data",
-    "Use this tool to retrieve information about population, community and household expenditures. by searching distinct or province"
-)
+
+# @tool
+def search_population_community_household_expenditures_data(query:str):
+    """Use this tool to retrieve information about population, community and household expenditures. by searching distinct or province"""
+    result = retriever.invoke(query)
+    output = "\n".join(text.page_content for text in result )
+    return output
+
+
+# population_doc_retriever = create_retriever_tool(
+#     retriever,
+#     "search_population_community_household_expenditures_data",
+#     "Use this tool to retrieve information about population, community and household expenditures. by searching distinct or province"
+# )
 duckduckgo_search = DuckDuckGoSearchRun()
+search_population_community_household_expenditures_data = tool(search_population_community_household_expenditures_data)
 find_place_from_text = tool(find_place_from_text)
 nearby_search = tool(save_tools_output(nearby_search))
 nearby_dense_community = tool(save_tools_output(nearby_dense_community))
