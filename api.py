@@ -55,7 +55,7 @@ def chatbot_test():
         return jsonify({"error": "Message is required"}), 400
 
     try:
-        response = submitUserMessage(user_message, keep_chat_history=True, return_reference=True, verbose=True)
+        response = submitUserMessage(user_message, keep_chat_history=True, return_reference=True, verbose=os.environ['BOT_VERBOSE'])
         response = utils.format_bot_response(response, markdown=False)
         
         if isinstance(response, list):
