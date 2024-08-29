@@ -47,7 +47,7 @@ def strip(text:str):
 
 
 @append_output
-def format_bot_response(text:str, remove_markdown:bool=False):
-    text = remove_markdown(text) if remove_markdown else text
+def format_bot_response(text:str, markdown:bool=True):
+    text = remove_markdown(text) if not markdown else text
     text = strip(text)
     return text

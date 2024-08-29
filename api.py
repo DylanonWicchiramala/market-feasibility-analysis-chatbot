@@ -2,11 +2,11 @@ from flask import Flask, request, abort, jsonify
 import json
 import requests
 import os
-import dotenv
+import utils
 from chatbot_multiagent import submitUserMessage
 import utils
 
-dotenv.load_dotenv()
+utils.load_env()
 
 app = Flask(__name__)
 
@@ -22,19 +22,19 @@ async def webhook():
         app.logger.info(f"Received payload: {json.dumps(payload, indent=2)}")
         
         try:
-               # Check Event (can be multiple event)
-               for event in payload['events']:
-                    user_id = event["source"]["userId"]
-                    # Get reply token (reply in 1 min)
-                    reply_token = event['replyToken']                        
-                    if event['type'] == 'message':
-                         message = event["message"]["text"]
-                         # Model Invoke
-                         response = submitUserMessage(message, keep_chat_history=True, return_reference=True)
-                         response = utils.format_bot_response(response, remove_markdown=True)
-                         PushMessage(reply_token, response)
+            # Check Event (can be multiple event)
+            for event in payload['events']:
+                user_id = event["source"]["userId"]
+                # Get reply token (reply in 1 min)
+                reply_token = event['replyToken']                        
+                if event['type'] == 'message':
+                    user_message = event["message"]["text"]
+                    # Model Invoke
+                    response = submitUserMessage(user_message, keep_chat_history=True, return_reference=True, verbose=os.environ['BOT_VERBOSE'])
+                    response = utils.format_bo_response(response, markdown=False)
+                    PushMessage(reply_token, response)
 
-               return request.json, 200
+            return request.json, 200
         
         except Exception as e:
             app.logger.error(f"Error: {e}")
@@ -56,8 +56,8 @@ def chatbot_test():
         return jsonify({"error": "Message is required"}), 400
 
     try:
-        response = submitUserMessage(user_message)
-        response = utils.format_bot_response(response, remove_markdown=True)
+        response = submitUserMessage(user_message, keep_chat_history=True, return_reference=True, verbose=True)
+        response = utils.format_bot_response(response, markdown=False)
         
         if isinstance(response, list):
             response = response[0]
