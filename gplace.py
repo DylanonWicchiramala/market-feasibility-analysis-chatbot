@@ -143,7 +143,7 @@ def nearby_search(keyword:str, location:str, radius=2000, place_type=None):
     return results
 
 
-def nearby_dense_community(location:str, radius:int=2000):
+def nearby_dense_community(location:str, radius:int=1000):
     # Retrieve the API key from environment variables
     api_key = os.getenv('GPLACES_API_KEY')
 
@@ -155,7 +155,7 @@ def nearby_dense_community(location:str, radius:int=2000):
 
     # Set up the parameters for the request
     params = {
-        "includedTypes": ["hotel", "mall", "school", "apartment"],
+        "includedTypes": ["hotel", "mall", "school", "apartment", "condo"],
         'location': location,
         'radius': radius,
         'key': api_key,
