@@ -63,6 +63,7 @@ def chatbot_test():
             response = response[0]
         
         return jsonify({"response": response})
+    
     except Exception as e:
         return jsonify({"error": str(e)}), 500
         
