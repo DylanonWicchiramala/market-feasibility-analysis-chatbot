@@ -41,13 +41,18 @@ def notify_process(func, sound_effect:str="aurora"):
         "Alert".lower() : "/System/Library/PrivateFrameworks/ToneLibrary.framework/Versions/A/Resources/AlertTones/Classic/Alert.m4r",
         "Anticipate".lower() : "/System/Library/PrivateFrameworks/ToneLibrary.framework/Versions/A/Resources/AlertTones/Classic/Anticipate.m4r",
         "Apex".lower() : "/System/Library/PrivateFrameworks/ToneLibrary.framework/Versions/A/Resources/Ringtones/Apex.m4r",
+        "chord" : "/System/Library/PrivateFrameworks/ToneLibrary.framework/Versions/A/Resources/AlertTones/Modern/Chord.m4r",
+        "note" : "/System/Library/PrivateFrameworks/ToneLibrary.framework/Versions/A/Resources/AlertTones/Modern/Note.m4r",
         "".lower() : "/System/Library/PrivateFrameworks/ToneLibrary.framework/Versions/A/Resources/AlertTones/Modern/Aurora.m4r",
     }
     
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         output = func(*args, **kwargs)
-        os.system('afplay '+ sound_effects[sound_effect.lower()])
+        try: 
+            os.system('afplay '+ sound_effects[sound_effect.lower()])
+        except:
+            print(f"function {func.__name__} process completed.")
         return output
     
     return wrapper
