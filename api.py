@@ -2,7 +2,6 @@ from flask import Flask, request, abort, jsonify
 import json
 import requests
 import os
-import utils
 from chatbot_multiagent import submitUserMessage
 import utils
 
@@ -31,7 +30,7 @@ async def webhook():
                     user_message = event["message"]["text"]
                     # Model Invoke
                     response = submitUserMessage(user_message, keep_chat_history=True, return_reference=True, verbose=os.environ['BOT_VERBOSE'])
-                    response = utils.format_bo_response(response, markdown=False)
+                    response = utils.format_bot_response(response, markdown=False)
                     PushMessage(reply_token, response)
 
             return request.json, 200
