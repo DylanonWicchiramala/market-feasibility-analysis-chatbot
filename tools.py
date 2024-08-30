@@ -1,6 +1,6 @@
-
+from typing import TypedDict, Optional, NotRequired, Literal
+import sale_forecasting
 import gplace
-from typing import TypedDict, Optional, NotRequired
 import utils
 ## Document vector store for context
 from langchain_chroma import Chroma
@@ -24,6 +24,12 @@ class NearbySearchInput(TypedDict):
 class NearbyDenseCommunityInput(TypedDict):
     location_name: str
     radius: NotRequired[int]
+    
+
+class RestaurantSaleProject(TypedDict):
+    base_price: float|int
+    category: Literal['Beverages', 'Biryani', 'Desert', 'Extras', 'Fish', 'Other Snacks', 'Pasta', 'Pizza', 'Rice Bowl', 'Salad', 'Sandwich', 'Seafood', 'Soup', 'Starters']
+    week:Optional[int|list[int]]
     
     
 tools_outputs=""
@@ -147,6 +153,23 @@ def duckduckgo_search(query:str):
     return result[:800]
 
 
+# @tool
+def restaurant_sale_project(input_dict:RestaurantSaleProject) -> str:
+    """ create a sale projection report of restaurant based on category of food (category:str), price of food (base_price:float). future week numbers you want to forecast (week:list[int])
+    """
+    price = input_dict['base_price']
+    result = sale_forecasting.restaurant_sale_project(**input_dict)
+    
+    report = f"sale projection of {input_dict['category']}:\nweek\tsale(forecast)\n"
+    
+    
+    for week, numberofsale in result.items():
+        sale = numberofsale*price
+        report += f"{week}\t{sale:,.0f}\n"
+    
+    return report
+
+
 ## Document csv
 def get_documents(file_pattern="document/*.csv"):
     file_paths = tuple(glob.glob(file_pattern))
@@ -191,6 +214,7 @@ def search_population_community_household_expenditures_data(query:str):
     return output
 
 
+restaurant_sale_project = tool(save_tools_output(restaurant_sale_project))
 duckduckgo_search = tool(duckduckgo_search)
 search_population_community_household_expenditures_data = tool(save_tools_output(search_population_community_household_expenditures_data))
 find_place_from_text = tool(find_place_from_text)
