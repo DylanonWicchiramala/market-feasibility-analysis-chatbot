@@ -13,6 +13,7 @@ python-dotenv
 requests
 gunicorn
 
+sklearn
 duckduckgo-search
 joblib
 langchain_google_community
