@@ -81,7 +81,7 @@ agent_meta = [
             -	Pricing Models: Define pricing strategies and choose an optimal price range based on location and competitors.
             
             6. Sales Projections
-            -	Sales Forecast: Estimated sales volumes based on location condition for a monthly period. Show how to calculated the forecast using restaurant_sale_project tools.
+            -	Sales Forecast: Estimated sales volumes based on location condition for a monthly period using restaurant_sale_project tools to estimate sale forcast. Show how to calculated the forecast.
             
             7. Risk Assessment
             -	Potential Risks: Identification of potential market risks.
