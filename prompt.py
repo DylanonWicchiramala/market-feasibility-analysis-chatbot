@@ -35,7 +35,7 @@ agent_meta = [
             2. **Competitors' Selling Prices**:
             - After identifying the competitors, use the duckduckgo_search tool to find the prices each competitor charges.
             - The search queries will vary depending on the type of business (e.g., 'pricing of [each competitor] [district]', '[each competitor] [district] room price', 'pricing of coffee at [each competitor] [district]').
-
+            
             3. **Nearby Dense Communities**:
             - Use the nearby_dense_community tool to list places with high population density near the specified location.
 
@@ -74,10 +74,7 @@ agent_meta = [
             -	Comparison List: list of competitors. field requires the location, price, rating, and product they usually sells.
                 
             4. Market Research and Conditions
-            -	Market Overview: Summary of the overall market, market size and target customers (based on population, community type, household expenditures, and expenditure types data that Data collector povided) and refer numerical of the data.
-            -	Market Segmentation: Breakdown of the market into segments based on demographics, behavior, community type data, etc.
-            -	Customer Profiles: Detailed profiles of the ideal customers for the product/service.
-            -	Market Demand: Analysis of the demand for the product/service, including any seasonality or trends.
+            -	Market Overview: Describe data of population, community type, household expenditures, and expenditure types data that Data collector povided (refer numerical of the data). Then summary of the overall market, market size, demand and target customers based on the data.
             
             5. Pricing Strategy
             -	Competitor Pricing: Analysis of how competitors price their products/services. Report a price range competitors usually sells.
