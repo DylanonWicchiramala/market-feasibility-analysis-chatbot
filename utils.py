@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 import os
 import json
 import functools
-from typing import Any, List, Union, Tuple
+from typing import Any, List, Union, Tuple, Literal
 
 sound_effects = {
     "blow" : "/System/Library/Sounds/blow.aiff",
@@ -28,7 +28,9 @@ sound_effects = {
     "".lower() : "/System/Library/PrivateFrameworks/ToneLibrary.framework/Versions/A/Resources/AlertTones/Modern/Aurora.m4r",
 }
 
-def notify(sound_effect:str="aurora", notification_description:str="notified."):
+def notify(
+    sound_effect:Literal["blow", "glass", "hero", "basso", "bottle", "frog", "funk", "morse", "ping", "pop", "purr", "sosumi", "submarine", "tink", "aurora", "alert", "anticipate", "apex", "chord", "note"]="aurora", 
+    notification_description:str="notified."):
     """ get macos notification.
     sound_effect: blow, glass, hero, basso, bottle, frog, funk, morse, ping, pop, purr, sosumi, submarine, tink, aurora, Alert, Anticipate, Apex, chord, note
     """
@@ -38,7 +40,7 @@ def notify(sound_effect:str="aurora", notification_description:str="notified."):
         print(notification_description)
 
 
-def notify_process(func, sound_effect:str="aurora"):
+def notify_process(func, sound_effect:Literal["blow", "glass", "hero", "basso", "bottle", "frog", "funk", "morse", "ping", "pop", "purr", "sosumi", "submarine", "tink", "aurora", "alert", "anticipate", "apex", "chord", "note"]="aurora"):
     """ get macos notify when wrapped function complete.
     sound_effect: blow, glass, hero, basso, bottle, frog, funk, morse, ping, pop, purr, sosumi, submarine, tink, aurora, Alert, Anticipate, Apex, chord, note
     """
