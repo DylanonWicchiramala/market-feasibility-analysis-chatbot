@@ -29,7 +29,6 @@ class NearbyDenseCommunityInput(TypedDict):
 class RestaurantSaleProject(TypedDict):
     base_price: float|int
     category: Literal['Beverages', 'Biryani', 'Desert', 'Extras', 'Fish', 'Other Snacks', 'Pasta', 'Pizza', 'Rice Bowl', 'Salad', 'Sandwich', 'Seafood', 'Soup', 'Starters']
-    week:Optional[int|list[int]]
     
     
 tools_outputs=""
@@ -155,7 +154,7 @@ def duckduckgo_search(query:str):
 
 # @tool
 def restaurant_sale_project(input_dict:RestaurantSaleProject) -> str:
-    """ create a sale projection report of restaurant based on category of food (category:str), price of food (base_price:float). future week numbers you want to forecast (week:list[int])
+    """ create a sale projection forcast report of restaurant based on category of food (category:str), price of food (base_price:float).
     """
     price = input_dict['base_price']
     result = sale_forecasting.restaurant_sale_project(**input_dict)

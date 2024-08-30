@@ -28,7 +28,8 @@ from tools import (
     nearby_dense_community, 
     search_population_community_household_expenditures_data,
     duckduckgo_search,
-    get_tools_output
+    get_tools_output,
+    restaurant_sale_project
 )
 from agents import(
     create_agent,
@@ -37,7 +38,7 @@ from agents import(
 
 ## tools and LLM
 # Bind the tools to the model
-tools = [search_population_community_household_expenditures_data, find_place_from_text, nearby_search, nearby_dense_community, duckduckgo_search]  # Include both tools if needed
+tools = [restaurant_sale_project, search_population_community_household_expenditures_data, find_place_from_text, nearby_search, nearby_dense_community, duckduckgo_search]  # Include both tools if needed
 
 llm = ChatOpenAI(model="gpt-4o-mini-2024-07-18", temperature=0.0)
 
