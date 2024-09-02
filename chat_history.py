@@ -1,194 +1,90 @@
-# load env ------------------------------------------------------------------------
 import os
 import utils
-
-utils.load_env()
-os.environ['LANGCHAIN_TRACING_V2'] = "false"
-
-
-# debug ------------------------------------------------------------------
-from langchain.globals import set_debug, set_verbose
-set_verbose(True)
-set_debug(False)
-
-import functools
-# for llm model
-from langchain_openai import ChatOpenAI
-# from langchain_community.chat_models import ChatOpenAI
+from pymongo.mongo_client import MongoClient
+from pymongo.server_api import ServerApi
+from pymongo import DeleteMany
 from langchain_core.messages import (
     AIMessage, 
     HumanMessage,
-    ToolMessage
 )
-from langgraph.graph import END, StateGraph, START
-from tools import (
-    find_place_from_text, 
-    nearby_search, 
-    nearby_dense_community, 
-    search_population_community_household_expenditures_data,
-    duckduckgo_search,
-    get_tools_output,
-    restaurant_sale_project
-)
-from agents import(
-    create_agent,
-    AgentState
-)
-from chat_history import save_chat_history, load_chat_history
+from datetime import datetime
 
-## tools and LLM
-# Bind the tools to the model
-tools = [restaurant_sale_project, search_population_community_household_expenditures_data, find_place_from_text, nearby_search, nearby_dense_community, duckduckgo_search]  # Include both tools if needed
+utils.load_env()
 
-llm = ChatOpenAI(
-    model="gpt-4o-mini-2024-07-18", 
-    temperature=0, 
-    top_p=0.0, 
+mongo = os.environ.get('MONGODB_PASS')
+uri = f"mongodb+srv://dylan:{mongo}@cluster0.wl8mbpy.mongodb.net/"
+
+
+# Create a new client and connect to the server
+client = MongoClient(uri, server_api=ServerApi('1'))
+db = client["FeasibilityAnalysis"]
+history = db["Chat History"]
+
+
+def save_chat_history(bot_response, user_id: str = "test"):
+    timestamp = datetime.now()
+
+    # Update the document in MongoDB
+    history.update_one(
+        {"user_id": user_id},
+        {"$push": {
+            "chat_history": {
+                "$each": [
+                    {"content": bot_response["messages"][0].content, "timestamp": timestamp},
+                    {"content": bot_response["messages"][-1].content, "timestamp": timestamp}
+                ]
+            }
+        }},
+        upsert=True  # Create a new document if no matching document is found
     )
-
-# Helper function to create a node for a given agent
-def agent_node(state, agent, name):
-    result = agent.invoke(state)
-    # We convert the agent output into a format that is suitable to append to the global state
-    if isinstance(result, ToolMessage):
-        pass
-    else:
-        result = AIMessage(**result.dict(exclude={"type", "name"}), name=name)
-        # result = AIMessage(**result.dict(), name=name)
-    return {
-        "messages": [result],
-        # Since we have a strict workflow, we can
-        # track the sender so we know who to pass to next.
-        "sender": name,
-    }
-
-
-## Define Agents Node ------------------------------------------------------------------------
-# Research agent and node
-from prompt import agent_meta
-agent_name = [meta['name'] for meta in agent_meta]
-
-# TODO: move agents to agents.py 
-agents={}
-agent_nodes={}
-
-for meta in agent_meta:
-    name = meta['name']
-    prompt = meta['prompt']
     
-    agents[name] = create_agent(
-            llm,
-            tools,
-            system_message=prompt,
+    
+def load_chat_history(chat_history:list=[], user_id:str="test"):
+    query = history.find_one({"user_id": user_id})
+    if query is None:
+        query = {
+            "user_id": user_id,
+            "chat_history": [],
+        }
+        history.insert_one(query)
+
+    for i, msg in enumerate(query["chat_history"]):
+        msg = msg['content']
+        chat_history.append(
+            AIMessage(msg) if i % 2 == 1 else HumanMessage(msg)
         )
     
-    agent_nodes[name] = functools.partial(agent_node, agent=agents[name], name=name)
+    return chat_history
 
 
-## Define Tool Node
-from langgraph.prebuilt import ToolNode
-from typing import Literal
+def delete_chat_history(username=None, time_before=None, delete_all=False):
+    """
+    Deletes chat history from the MongoDB collection.
 
-tool_node = ToolNode(tools)
+    Parameters:
+    - username (str, optional): The username whose chat history should be deleted.
+    - time_before (datetime, optional): Deletes history before this datetime.
+    - delete_all (bool, optional): If True, deletes all chat history.
 
-def router(state) -> Literal["call_tool", "__end__", "continue"]:
-    # This is the router
-    messages = state["messages"]
-    last_message = messages[-1]
-    if "continue" in last_message.content:
-        return "continue"
-    if last_message.tool_calls:
-        # The previous agent is invoking a tool
-        return "call_tool"
-    if "%SIjfE923hf" in last_message.content:
-        # Any agent decided the work is done
-        return "__end__"
-    else:
-        return "continue"
+    Returns:
+    - DeleteMany: The result of the delete operation.
+    """
 
+    query = {}
 
-## Workflow Graph ------------------------------------------------------------------------
-workflow = StateGraph(AgentState)
+    if delete_all:
+        return history.delete_many({})  # Delete all documents
 
-# add agent nodes
-for name, node in agent_nodes.items():
-    workflow.add_node(name, node)
-    
-workflow.add_node("call_tool", tool_node)
+    if username:
+        query['username'] = username
+
+    if time_before:
+        query['timestamp'] = {'$lt': time_before}
+
+    return history.delete_many(query)  # Delete documents matching the query
 
 
-workflow.add_conditional_edges(
-    "analyst",
-    router,
-    {"continue": "data_collector", "call_tool": "call_tool", "__end__": END}
-)
-
-workflow.add_conditional_edges(
-    "data_collector",
-    router,
-    {"call_tool": "call_tool", "continue": "reporter", "__end__": END}
-)
-
-workflow.add_conditional_edges(
-    "reporter",
-    router,
-    {"continue": "data_collector", "call_tool": "call_tool", "__end__": END}
-)
-
-workflow.add_conditional_edges(
-    "call_tool",
-    # Each agent node updates the 'sender' field
-    # the tool calling node does not, meaning
-    # this edge will route back to the original agent
-    # who invoked the tool
-    lambda x: x["sender"],
-    {name:name for name in agent_name},
-)
-
-workflow.add_edge(START, "analyst")
-graph = workflow.compile()
-
-
-def submitUserMessage(user_input: str, user_id:str, keep_chat_history=False, return_reference:bool=False, verbose=False) -> str:
-    
-    chat_history = load_chat_history(user_id=user_id) if keep_chat_history else []
-    
-    print(chat_history)
-    
-    graph = workflow.compile()
-
-    events = graph.stream(
-        {
-            "messages": [
-                HumanMessage(
-                    user_input
-                )
-            ],
-            "chat_history": chat_history
-        },
-        # Maximum number of steps to take in the graph
-        {"recursion_limit": 20},
-    )
-    
-    if not verbose:
-        events = [e for e in events]
-        response = list(events[-1].values())[0]
-    else:
-        for e in events:
-            # print(e)
-            a = list(e.items())[0]
-            a[1]['messages'][0].pretty_print()
-        
-        response = a[1]
-    
-    
-    
-    save_chat_history(bot_response=response, user_id=user_id)
-    
-    response = response["messages"][0].content
-    response = response.replace("%SIjfE923hf", "")
-    
-    if return_reference:
-        return response, get_tools_output()
-    else:
-        return response
+# Example usage:
+# delete_all_history = delete_chat_history(delete_all=True)
+# delete_user_history = delete_chat_history(username="user1")
+# delete_old_history = delete_chat_history(time_before=datetime(2023, 8, 1))
