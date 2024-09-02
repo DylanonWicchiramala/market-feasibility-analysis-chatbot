@@ -21,7 +21,7 @@ def restaurant_sale_project(
         'Soup',
         'Starters'
         ],  
-    week:int|list=[1, 52]):
+    week:int|list=[1, 5, 52]):
 
     def getModel():
         
