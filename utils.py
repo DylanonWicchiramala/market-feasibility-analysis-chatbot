@@ -80,7 +80,7 @@ def load_agent_meta():
 
 def load_env():
     # Load environment variables from the .env file
-    load_dotenv("./.env")
+    return load_dotenv("./.env") 
     
     
 @bundle_input 

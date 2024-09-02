@@ -8,7 +8,6 @@ os.environ['LANGCHAIN_TRACING_V2'] = "false"
 
 # debug ------------------------------------------------------------------
 from langchain.globals import set_debug, set_verbose
-
 set_verbose(True)
 set_debug(False)
 
@@ -35,6 +34,7 @@ from agents import(
     create_agent,
     AgentState
 )
+from chat_history import save_chat_history, load_chat_history
 
 ## tools and LLM
 # Bind the tools to the model
@@ -149,13 +149,10 @@ workflow.add_edge(START, "analyst")
 graph = workflow.compile()
 
 
-chat_history=[]
-def submitUserMessage(user_input: str, keep_chat_history:bool=True, return_reference:bool=False, verbose=False) -> str:
-    global chat_history
-    chat_history.append(HumanMessage(user_input))
+def submitUserMessage(user_input: str, user_id:str="test", keep_chat_history:bool=False, return_reference:bool=False, verbose=False) -> str:
     
-    if not keep_chat_history:
-        chat_history = []
+    chat_history = load_chat_history(user_id=user_id) if keep_chat_history else []
+    
     graph = workflow.compile()
 
     events = graph.stream(
@@ -173,21 +170,19 @@ def submitUserMessage(user_input: str, keep_chat_history:bool=True, return_refer
     
     if not verbose:
         events = [e for e in events]
-        response = list(events[-1].values())[0]["messages"][0]
+        response = list(events[-1].values())[0]
     else:
         for e in events:
             # print(e)
             a = list(e.items())[0]
             a[1]['messages'][0].pretty_print()
         
-        response = a[1]['messages'][0]
+        response = a[1]
     
+    save_chat_history(bot_response=response, user_id=user_id)
     
-    response = response.content
+    response = response["messages"][0].content
     response = response.replace("%SIjfE923hf", "")
-    
-    chat_history.append(AIMessage(response))
-    chat_history = chat_history[-10:]
     
     if return_reference:
         return response, get_tools_output()
