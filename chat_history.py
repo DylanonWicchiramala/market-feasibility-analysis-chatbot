@@ -149,9 +149,11 @@ workflow.add_edge(START, "analyst")
 graph = workflow.compile()
 
 
-def submitUserMessage(user_input: str, load_chat_history=False, return_reference:bool=False, verbose=False) -> str:
+def submitUserMessage(user_input: str, user_id:str, keep_chat_history=False, return_reference:bool=False, verbose=False) -> str:
     
-    chat_history = load_chat_history() if load_chat_history else []
+    chat_history = load_chat_history(user_id=user_id) if keep_chat_history else []
+    
+    print(chat_history)
     
     graph = workflow.compile()
 
@@ -170,17 +172,20 @@ def submitUserMessage(user_input: str, load_chat_history=False, return_reference
     
     if not verbose:
         events = [e for e in events]
-        response = list(events[-1].values())[0]["messages"][0]
+        response = list(events[-1].values())[0]
     else:
         for e in events:
             # print(e)
             a = list(e.items())[0]
             a[1]['messages'][0].pretty_print()
         
-        response = a[1]['messages'][0]
+        response = a[1]
     
     
-    response = response.content
+    
+    save_chat_history(bot_response=response, user_id=user_id)
+    
+    response = response["messages"][0].content
     response = response.replace("%SIjfE923hf", "")
     
     if return_reference:

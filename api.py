@@ -29,7 +29,7 @@ async def webhook():
                 if event['type'] == 'message':
                     user_message = event["message"]["text"]
                     # Model Invoke
-                    response = submitUserMessage(user_message, keep_chat_history=True, return_reference=True, verbose=os.environ['BOT_VERBOSE'])
+                    response = submitUserMessage(user_message, user_id=user_id, keep_chat_history=True, return_reference=True, verbose=os.environ['BOT_VERBOSE'])
                     response = utils.format_bot_response(response, markdown=False)
                     PushMessage(reply_token, response)
 
@@ -55,14 +55,14 @@ def chatbot_test():
         return jsonify({"error": "Message is required"}), 400
 
     try:
-        response = submitUserMessage(user_message, keep_chat_history=True, return_reference=True, verbose=os.environ['BOT_VERBOSE'])
+        response = submitUserMessage(user_message, user_id="test", keep_chat_history=True, return_reference=True, verbose=os.environ['BOT_VERBOSE'])
         response = utils.format_bot_response(response, markdown=False)
         
         if isinstance(response, list):
             response = response[0]
         
         return jsonify({"response": response})
-    
+
     except Exception as e:
         return jsonify({"error": str(e)}), 500
         
