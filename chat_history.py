@@ -7,7 +7,7 @@ from langchain_core.messages import (
     AIMessage, 
     HumanMessage,
 )
-from datetime import datetime
+from datetime import datetime, timedelta
 
 utils.load_env()
 
@@ -84,8 +84,5 @@ def delete_chat_history(username=None, time_before=None, delete_all=False):
     return history.delete_many(query)  # Delete documents matching the query
 
 
-# Example usage:
-# delete_all_history = delete_chat_history(delete_all=True)
-# delete_user_history = delete_chat_history(username="user1")
-# delete_old_history = delete_chat_history(time_before=datetime(2023, 8, 1))
-# delete_chat_history(delete_all=True)
+# delete chat history older than 30 days.
+delete_chat_history(time_before=datetime.now() - timedelta(days=30))
