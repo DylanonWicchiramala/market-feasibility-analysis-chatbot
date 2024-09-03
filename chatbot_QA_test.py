@@ -82,9 +82,9 @@ with open('./testset/user_question_testsets.txt', 'r') as file:
     quesion_test = file.readlines()    
 
 # random.seed(12)
-endpoint="https://market-feasibility-analysis-chatbot-2-jelvbvjqna-uc.a.run.app/test"
+# endpoint="https://market-feasibility-analysis-chatbot-212399072243.asia-east1.run.app/test"
 
-results, exet_rept = API_test(quesion_test, num_samples=10, result_save_path='testset/api_QA_test_result.txt', endpoint=endpoint); utils.notify("aurora")
-# results, exet_rept = QA_sample_test(quesion_test, num_samples=20, result_save_path="testset/QA_test_result.txt"); utils.notify("aurora")
+# results, exet_rept = API_test(quesion_test, num_samples=15, result_save_path='testset/api_QA_test_result.txt', endpoint=endpoint); utils.notify("aurora")
+results, exet_rept = QA_sample_test(quesion_test, num_samples=15, result_save_path="testset/QA_test_result.txt"); utils.notify("aurora")
 
 

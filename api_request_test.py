@@ -5,7 +5,7 @@ import requests
 url = "http://127.0.0.1:8080/test"
 
 headers = {"Content-Type": "application/json"}
-data = {"message": "said what did i just said again please."}
+data = {"message": "Search for grocery stores near Victory Monument and analyze the population"}
 
 response = requests.post(url, json=data, headers=headers)
 

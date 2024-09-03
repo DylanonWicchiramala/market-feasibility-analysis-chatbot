@@ -152,6 +152,7 @@ graph = workflow.compile()
 def submitUserMessage(user_input: str, user_id:str="test", keep_chat_history:bool=False, return_reference:bool=False, verbose=False) -> str:
     
     chat_history = load_chat_history(user_id=user_id) if keep_chat_history else []
+    chat_history = chat_history[-8:]
     
     graph = workflow.compile()
 

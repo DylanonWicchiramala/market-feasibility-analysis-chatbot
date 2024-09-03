@@ -32,7 +32,7 @@ async def webhook():
                     response = submitUserMessage(user_message, user_id=user_id, keep_chat_history=True, return_reference=True, verbose=os.environ['BOT_VERBOSE'])
                     response = utils.format_bot_response(response, markdown=False)
                     PushMessage(reply_token, response)
-
+            
             return request.json, 200
         
         except Exception as e:
@@ -54,17 +54,17 @@ def chatbot_test():
     if not user_message:
         return jsonify({"error": "Message is required"}), 400
 
-    try:
-        response = submitUserMessage(user_message, user_id="test", keep_chat_history=True, return_reference=True, verbose=os.environ['BOT_VERBOSE'])
-        response = utils.format_bot_response(response, markdown=False)
-        
-        if isinstance(response, list):
-            response = response[0]
-        
-        return jsonify({"response": response})
+    # try:
+    response = submitUserMessage(user_message, user_id="test", keep_chat_history=True, return_reference=True, verbose=os.environ['BOT_VERBOSE'])
+    response = utils.format_bot_response(response, markdown=False)
+    
+    if isinstance(response, list):
+        response = response[0]
+    
+    return jsonify({"response": response})
 
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    # except Exception as e:
+    #     return jsonify({"error": str(e)}), 500
         
         
 @app.route('/health', methods=['GET'])
