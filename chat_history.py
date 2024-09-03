@@ -21,7 +21,7 @@ db = client["FeasibilityAnalysis"]
 history = db["Chat History"]
 
 
-def save_chat_history(bot_response, user_id: str = "test"):
+def save_chat_history(bot_message:str, human_message:str, user_id: str = "test"):
     timestamp = datetime.now()
 
     # Update the document in MongoDB
@@ -30,8 +30,8 @@ def save_chat_history(bot_response, user_id: str = "test"):
         {"$push": {
             "chat_history": {
                 "$each": [
-                    {"content": bot_response["messages"][0].content, "timestamp": timestamp},
-                    {"content": bot_response["messages"][-1].content, "timestamp": timestamp}
+                    {"content": human_message, "timestamp": timestamp},
+                    {"content": bot_message, "timestamp": timestamp}
                 ]
             }
         }},
@@ -88,3 +88,4 @@ def delete_chat_history(username=None, time_before=None, delete_all=False):
 # delete_all_history = delete_chat_history(delete_all=True)
 # delete_user_history = delete_chat_history(username="user1")
 # delete_old_history = delete_chat_history(time_before=datetime(2023, 8, 1))
+# delete_chat_history(delete_all=True)

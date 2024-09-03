@@ -179,10 +179,10 @@ def submitUserMessage(user_input: str, user_id:str="test", keep_chat_history:boo
         
         response = a[1]
     
-    save_chat_history(bot_response=response, user_id=user_id)
-    
     response = response["messages"][0].content
     response = response.replace("%SIjfE923hf", "")
+    
+    save_chat_history(bot_message=response, human_message=user_input, user_id=user_id)
     
     if return_reference:
         return response, get_tools_output()
