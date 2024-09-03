@@ -4,6 +4,8 @@ import requests
 import os
 from chatbot_multiagent import submitUserMessage
 import utils
+from chat_history import delete_chat_history
+from datetime import datetime, timedelta
 
 utils.load_env()
 
@@ -32,6 +34,9 @@ async def webhook():
                     response = submitUserMessage(user_message, user_id=user_id, keep_chat_history=True, return_reference=True, verbose=os.environ['BOT_VERBOSE'])
                     response = utils.format_bot_response(response, markdown=False)
                     PushMessage(reply_token, response)
+            
+            # delete chat history older than 30 days.
+            delete_chat_history(time_before=datetime.now() - timedelta(days=30))
 
             return request.json, 200
         
