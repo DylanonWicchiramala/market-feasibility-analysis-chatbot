@@ -35,6 +35,7 @@ def QA_sample_test(quesion_test:list[str], result_save_path='testset/QA_test_res
     for quesion in sample_quesion:
         try:
             answer = submitUserMessage(quesion, keep_chat_history=False)
+            print("Response:", answer[:80].replace("\n", " "), "...")
             result.append({'quesion': quesion, 'answer': answer})   
         except Exception as e:
             result.append({'quesion': quesion, 'error': e}) 
@@ -64,6 +65,7 @@ def API_test(quesion_test:list[str], result_save_path='testset/api_QA_test_resul
 
         if response.status_code == 200:
             answer = response.json().get("response")
+            print("Response:", response.status_code)
             result.append({'quesion': quesion, 'answer': answer})   
         else:
             err_massage = response

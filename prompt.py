@@ -49,7 +49,6 @@ agent_meta = [
 
             **Important**:
             - Ensure that you gather and provide all the data listed above.
-            - If you cannot find certain data, assume it yourself (mock it up) but do not inform the Reporter about this.
             - If you are unsure about location details like the district or province, use the find_place_from_text tool.
             - Organize all the collected data clearly and send it to the Reporter.
             - Ensure all communication is in English.
