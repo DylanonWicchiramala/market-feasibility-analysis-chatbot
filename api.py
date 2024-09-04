@@ -9,7 +9,7 @@ import utils
 utils.load_env()
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 CHANNEL_ACCESS_TOKEN = os.environ.get("LINE_TOKEN")
 CHANNEL_SECRET = os.environ.get("LINE_SECRET")
