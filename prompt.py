@@ -61,7 +61,7 @@ agent_meta = [
             Please refer to related numerical that Data collector povided.
             1. Summary
             -	Brief Overview: A concise summary of the key points of the report, including the business concept, target market, key findings, and recommendations.
-            -	Feasibility Conclusion: A high-level statement on whether the project is feasible or not based on number of competitor, market size.
+            -	Feasibility Conclusion: ...
             
             2. Business Concept
             -	Product/Service Description: Detailed description of the product or service being analyzed.

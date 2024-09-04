@@ -3,16 +3,16 @@ import gradio as gr
 from chatbot_multiagent import submitUserMessage
 
 
-def chat(message:str, history):
-    print(message)
-    return submitUserMessage(message)
+# def chat(message:str, history):
+#     print(message)
+#     return submitUserMessage(message)
 
 
-def slow_echo_chat(message, history):
-    answer = submitUserMessage(message)
-    for i in range(len(answer)):
-        time.sleep(0.01)
-        yield answer[: i+1]
+# def slow_echo_chat(message, history):
+#     answer = submitUserMessage(message)
+#     for i in range(len(answer)):
+#         time.sleep(0.01)
+#         yield answer[: i+1]
         
         
 with gr.Blocks() as demo:
@@ -21,7 +21,7 @@ with gr.Blocks() as demo:
     clear = gr.ClearButton([msg, chatbot])
 
     def respond(message, chat_history):
-        bot_message = submitUserMessage(message, keep_chat_history=True, return_reference=False)
+        bot_message = submitUserMessage(message, keep_chat_history=False, return_reference=False)
         chat_history.append((message, bot_message))
         return "", chat_history
 
