@@ -1,7 +1,9 @@
-from typing import TypedDict, Optional, NotRequired, Literal
-import sale_forecasting
-import gplace
+# Internal module
+from tools import sale_forecasting
+from tools import gplace
 import utils
+
+from typing import TypedDict, Optional, NotRequired, Literal
 ## Document vector store for context
 from langchain_chroma import Chroma
 from langchain_text_splitters import RecursiveCharacterTextSplitter

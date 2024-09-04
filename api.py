@@ -49,22 +49,23 @@ def chatbot_test():
         
     except Exception as e:
         app.logger.error(f"Error: {e}")
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": f"{e}"}), 500
 
     if not user_message:
         return jsonify({"error": "Message is required"}), 400
 
-    # try:
-    response = submitUserMessage(user_message, user_id="test", keep_chat_history=True, return_reference=True, verbose=os.environ['BOT_VERBOSE'])
-    response = utils.format_bot_response(response, markdown=False)
-    
-    if isinstance(response, list):
-        response = response[0]
-    
-    return jsonify({"response": response})
+    try:
+        response = submitUserMessage(user_message, user_id="test", keep_chat_history=True, return_reference=True, verbose=os.environ['BOT_VERBOSE'])
+        response = utils.format_bot_response(response, markdown=False)
+        
+        if isinstance(response, list):
+            response = response[0]
+        
+        return jsonify({"response": response})
 
-    # except Exception as e:
-    #     return jsonify({"error": str(e)}), 500
+    except Exception as e:
+        app.logger.error(f"Error: {e}")
+        return jsonify({"error": f"{e}"}), 500
         
         
 @app.route('/health', methods=['GET'])
