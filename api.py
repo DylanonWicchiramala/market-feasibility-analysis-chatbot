@@ -1,4 +1,5 @@
 from flask import Flask, request, abort, jsonify
+from flask_cors import CORS
 import json
 import requests
 import os
@@ -8,7 +9,7 @@ import utils
 utils.load_env()
 
 app = Flask(__name__)
-
+CORS(app)
 
 CHANNEL_ACCESS_TOKEN = os.environ.get("LINE_TOKEN")
 CHANNEL_SECRET = os.environ.get("LINE_SECRET")
@@ -42,7 +43,7 @@ async def webhook():
         return jsonify({"error": "method not allowed"}), 400
         
         
-@app.route('/test', methods=['POST'])
+@app.route('/test', methods=['POST', 'GET'])
 def chatbot_test():
     try:
         user_message = request.json.get('message', '')
