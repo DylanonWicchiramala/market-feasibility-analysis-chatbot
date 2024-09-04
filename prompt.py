@@ -49,6 +49,7 @@ agent_meta = [
 
             **Important**:
             - Ensure that you gather and provide all the data listed above.
+            - If you cannot find certain data, assume it yourself but do not inform the Reporter about this.
             - If you are unsure about location details like the district or province, use the find_place_from_text tool.
             - Organize all the collected data clearly and send it to the Reporter.
             - Ensure all communication is in English.
@@ -61,7 +62,7 @@ agent_meta = [
             Please refer to related numerical that Data collector povided.
             1. Summary
             -	Brief Overview: A concise summary of the key points of the report, including the business concept, target market, key findings, and recommendations.
-            -	Feasibility Conclusion: ...
+            -	Feasibility Conclusion: A high-level statement summary of the report.
             
             2. Business Concept
             -	Product/Service Description: Detailed description of the product or service being analyzed.

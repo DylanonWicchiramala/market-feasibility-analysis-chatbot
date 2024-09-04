@@ -35,11 +35,11 @@ def QA_sample_test(quesion_test:list[str], result_save_path='testset/QA_test_res
     for quesion in sample_quesion:
         try:
             answer = submitUserMessage(quesion, keep_chat_history=False)
-            print("Response:", answer[:80].replace("\n", " "), "...")
+            print("Response: ", answer[:200].replace("\n", " "), "...")
             result.append({'quesion': quesion, 'answer': answer})   
         except Exception as e:
             result.append({'quesion': quesion, 'error': e}) 
-            print("Error: ", e)  
+            print("Error: ", str(e)[:300].replace("\n", " "), "...")
         
     exet = time() - stt
     exet_rept = f"average execution time: {exet/num_samples}sec."
@@ -60,16 +60,16 @@ def API_test(quesion_test:list[str], result_save_path='testset/api_QA_test_resul
         headers = {"Content-Type": "application/json"}
         data = {"message": quesion}
 
-        sleep(2)
+        sleep(1)
         response = requests.post(endpoint, json=data, headers=headers)
 
         if response.status_code == 200:
             answer = response.json().get("response")
-            print("Response:", response.status_code)
+            print("Response ", response.status_code, ": ", answer[:200].replace("\n", " "), "...")
             result.append({'quesion': quesion, 'answer': answer})   
         else:
-            err_massage = response
-            print("Error:", err_massage)
+            err_massage = response.json().get("error")
+            print("Error ", response.status_code, ": ", err_massage[:300].replace("\n", " "), "...")
             result.append({'quesion': quesion, 'error': err_massage}) 
             
     exet = time() - stt
@@ -83,10 +83,8 @@ def API_test(quesion_test:list[str], result_save_path='testset/api_QA_test_resul
 with open('./testset/user_question_testsets.txt', 'r') as file:
     quesion_test = file.readlines()    
 
-# random.seed(12)
-# endpoint="https://market-feasibility-analysis-chatbot-212399072243.asia-east1.run.app/test"
+endpoint="https://market-feasibility-analysis-chatbot-212399072243.asia-east1.run.app/test"
+endpoint="http://127.0.0.1:8080/test"
 
-# results, exet_rept = API_test(quesion_test, num_samples=15, result_save_path='testset/api_QA_test_result.txt', endpoint=endpoint); utils.notify("aurora")
+# results, exet_rept = API_test(quesion_test, num_samples=10, result_save_path='testset/api_QA_test_result.txt', endpoint=endpoint); utils.notify("aurora")
 results, exet_rept = QA_sample_test(quesion_test, num_samples=10, result_save_path="testset/QA_test_result.txt"); utils.notify("aurora")
-
-

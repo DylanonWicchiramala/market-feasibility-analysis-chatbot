@@ -13,6 +13,7 @@ python-dotenv
 requests
 gunicorn
 pymongo
+flask-cors
 
 scikit-learn
 duckduckgo-search
