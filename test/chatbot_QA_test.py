@@ -1,4 +1,9 @@
 # %%
+# append project work dir path
+from os.path import dirname, realpath, sep, pardir
+import sys
+sys.path.append(dirname(realpath(__file__)) + sep + pardir)
+
 from chatbot_multiagent import submitUserMessage
 import requests
 import random
@@ -6,7 +11,7 @@ from math import inf
 from time import time, sleep
 import utils
 
-def save_test_result(test_result, path:str = 'testset/QA_test_result.txt'):
+def save_test_result(test_result, path:str = 'test/testset/QA_test_result.txt'):
     results, exet_rept = test_result
     # Open the file in write mode
     with open(path, 'w') as file:
@@ -25,7 +30,7 @@ def save_test_result(test_result, path:str = 'testset/QA_test_result.txt'):
     print(f"Results saved to {path}")
 
 
-def QA_sample_test(quesion_test:list[str], result_save_path='testset/QA_test_result.txt', num_samples:int=inf):
+def QA_sample_test(quesion_test:list[str], result_save_path='test/testset/QA_test_result.txt', num_samples:int=inf):
     stt = time()
     # Ensure there are at least 5 lines in the list
     num_samples = min(num_samples, len(quesion_test))
@@ -49,7 +54,7 @@ def QA_sample_test(quesion_test:list[str], result_save_path='testset/QA_test_res
     return result, exet_rept
 
 
-def API_test(quesion_test:list[str], result_save_path='testset/api_QA_test_result.txt', num_samples:int=inf, endpoint="https://market-feasibility-analysis-chatbot-2-jelvbvjqna-uc.a.run.app/test"):
+def API_test(quesion_test:list[str], result_save_path='test/testset/api_QA_test_result.txt', num_samples:int=inf, endpoint="https://market-feasibility-analysis-chatbot-2-jelvbvjqna-uc.a.run.app/test"):
     stt = time()
     # Ensure there are at least 5 lines in the list
     num_samples = min(num_samples, len(quesion_test))
@@ -80,11 +85,11 @@ def API_test(quesion_test:list[str], result_save_path='testset/api_QA_test_resul
     return result, exet_rept
 
 # %%
-with open('./testset/user_question_testsets.txt', 'r') as file:
+with open('./test/testset/user_question_testsets.txt', 'r') as file:
     quesion_test = file.readlines()    
 
 endpoint="https://market-feasibility-analysis-chatbot-212399072243.asia-east1.run.app/test"
-endpoint="http://127.0.0.1:8080/test"
+# endpoint="http://127.0.0.1:8080/test"
 
-# results, exet_rept = API_test(quesion_test, num_samples=10, result_save_path='testset/api_QA_test_result.txt', endpoint=endpoint); utils.notify("aurora")
-results, exet_rept = QA_sample_test(quesion_test, num_samples=10, result_save_path="testset/QA_test_result.txt"); utils.notify("aurora")
+results, exet_rept = API_test(quesion_test, num_samples=20, result_save_path='testset/api_QA_test_result.txt', endpoint=endpoint); utils.notify("aurora")
+# results, exet_rept = QA_sample_test(quesion_test, num_samples=10, result_save_path="test/testset/QA_test_result.txt"); utils.notify("aurora")
