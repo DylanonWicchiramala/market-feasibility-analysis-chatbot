@@ -1,4 +1,4 @@
-from dotenv import load_dotenv
+from dotenv import load_dotenv as __load_dotenv
 import os
 import json
 import functools
@@ -80,7 +80,7 @@ def load_agent_meta():
 
 def load_env():
     # Load environment variables from the .env file
-    return load_dotenv("./.env") 
+    return __load_dotenv("./.env") 
     
     
 @bundle_input 
