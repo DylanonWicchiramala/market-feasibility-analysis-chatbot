@@ -56,32 +56,42 @@ def load_chat_history(chat_history:list=[], user_id:str="test"):
     return chat_history
 
 
-def delete_chat_history(username=None, time_before=None, delete_all=False):
+def delete_chat_history(user_id=None, time_before=None, delete_all=False):
     """
     Deletes chat history from the MongoDB collection.
 
     Parameters:
-    - username (str, optional): The username whose chat history should be deleted.
-    - time_before (datetime, optional): Deletes history before this datetime.
-    - delete_all (bool, optional): If True, deletes all chat history.
+    - user_id (str, optional): The user_id whose chat history should be deleted.
+    - time_before (datetime, optional): Deletes chat history before this datetime.
+    - delete_all (bool, optional): If True, deletes all chat history for the user.
 
     Returns:
-    - DeleteMany: The result of the delete operation.
+    - UpdateMany: The result of the update operation.
     """
-
     query = {}
 
+    # If deleting all chat history for a specific user or all users
     if delete_all:
-        return history.delete_many({})  # Delete all documents
+        if user_id:
+            query = {'user_id': user_id}
+        else:
+            query = {}
 
-    if username:
-        query['username'] = username
+        # Remove entire chat history field
+        return history.update_many(query, {'$unset': {'chat_history': 1}})
+
+    # If filtering by user and time_before
+    if user_id:
+        query['user_id'] = user_id
 
     if time_before:
-        query['timestamp'] = {'$lt': time_before}
-
+        query['chat_history.timestamp'] = {'$lt': time_before}
+        # Remove specific entries from the chat history array based on the timestamp
+        return history.update_many(query, {'$pull': {'chat_history': {'timestamp': {'$lt': time_before}}}})
+    
     return history.delete_many(query)  # Delete documents matching the query
 
 
 # delete chat history older than 30 days.
-delete_chat_history(time_before=datetime.now() - timedelta(days=7))
+delete_chat_history(time_before=datetime.now() - timedelta(days=3))
+delete_chat_history(user_id="test")
