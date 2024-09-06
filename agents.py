@@ -26,7 +26,7 @@ import functools
 llm = ChatOpenAI(
     model="gpt-4o-mini-2024-07-18", 
     temperature=0, 
-    top_p=0.0, 
+    top_p=0, 
     )
 
 ## Create agents ------------------------------------------------------------------------
@@ -50,6 +50,8 @@ def create_agent(llm, tools, system_message: str):
         prompt = prompt.partial(tool_names=", ".join([tool.name for tool in tools]))
         #llm_with_tools = llm.bind(functions=[format_tool_to_openai_function(t) for t in tools])
         llm = llm.bind_tools(tools)
+    else:
+        prompt = prompt.partial(tool_names="<no available tools for you>")
     
     agent = prompt | llm
     return agent
