@@ -148,7 +148,7 @@ def duckduckgo_search(query:str):
     """A wrapper around DuckDuckGo Search. Useful for when you need to answer questions about current events. Input should be a search query."""
     engine = DuckDuckGoSearchRun()
     unicode_chars_to_remove = ["\U000f1676", "\u2764", "\xa0", "▫️", "Δ", "#"]
-    result = engine(query)
+    result = engine.invoke(query)
     for char in unicode_chars_to_remove:
         result = result.replace(char, "")
     return result[:800]
