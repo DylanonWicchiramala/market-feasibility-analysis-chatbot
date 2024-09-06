@@ -11,9 +11,6 @@ from langchain.globals import set_debug, set_verbose
 set_verbose(True)
 set_debug(False)
 
-import functools
-# for llm model
-from langchain_openai import ChatOpenAI
 # from langchain_community.chat_models import ChatOpenAI
 from langchain_core.messages import (
     AIMessage, 
@@ -21,75 +18,20 @@ from langchain_core.messages import (
     ToolMessage
 )
 from langgraph.graph import END, StateGraph, START
-from tools import (
-    find_place_from_text, 
-    nearby_search, 
-    nearby_dense_community, 
-    search_population_community_household_expenditures_data,
-    duckduckgo_search,
-    get_tools_output,
-    restaurant_sale_project
-)
+from tools import get_tools_output
 from agents import(
-    create_agent,
-    AgentState
+    AgentState,
+    agents,
+    agent_name
 )
+from tools import all_tools
 from chat_history import save_chat_history, load_chat_history
-
-## tools and LLM
-# Bind the tools to the model
-tools = [restaurant_sale_project, search_population_community_household_expenditures_data, find_place_from_text, nearby_search, nearby_dense_community, duckduckgo_search]  # Include both tools if needed
-
-llm = ChatOpenAI(
-    model="gpt-4o-mini-2024-07-18", 
-    temperature=0, 
-    top_p=0.0, 
-    )
-
-# Helper function to create a node for a given agent
-def agent_node(state, agent, name):
-    result = agent.invoke(state)
-    # We convert the agent output into a format that is suitable to append to the global state
-    if isinstance(result, ToolMessage):
-        pass
-    else:
-        result = AIMessage(**result.dict(exclude={"type", "name"}), name=name)
-        # result = AIMessage(**result.dict(), name=name)
-    return {
-        "messages": [result],
-        # Since we have a strict workflow, we can
-        # track the sender so we know who to pass to next.
-        "sender": name,
-    }
-
-
-## Define Agents Node ------------------------------------------------------------------------
-# Research agent and node
-from prompt import agent_meta
-agent_name = [meta['name'] for meta in agent_meta]
-
-# TODO: move agents to agents.py 
-agents={}
-agent_nodes={}
-
-for meta in agent_meta:
-    name = meta['name']
-    prompt = meta['prompt']
-    
-    agents[name] = create_agent(
-            llm,
-            tools,
-            system_message=prompt,
-        )
-    
-    agent_nodes[name] = functools.partial(agent_node, agent=agents[name], name=name)
-
 
 ## Define Tool Node
 from langgraph.prebuilt import ToolNode
 from typing import Literal
 
-tool_node = ToolNode(tools)
+tool_node = ToolNode(all_tools)
 
 def router(state) -> Literal["call_tool", "__end__", "continue"]:
     # This is the router
@@ -111,8 +53,8 @@ def router(state) -> Literal["call_tool", "__end__", "continue"]:
 workflow = StateGraph(AgentState)
 
 # add agent nodes
-for name, node in agent_nodes.items():
-    workflow.add_node(name, node)
+for name, value in agents.items():
+    workflow.add_node(name, value['node'])
     
 workflow.add_node("call_tool", tool_node)
 
@@ -152,7 +94,7 @@ graph = workflow.compile()
 def submitUserMessage(user_input: str, user_id:str="test", keep_chat_history:bool=False, return_reference:bool=False, verbose=False) -> str:
     
     chat_history = load_chat_history(user_id=user_id) if keep_chat_history else []
-    chat_history = chat_history[-4:]
+    chat_history = chat_history[-8:]
     
     graph = workflow.compile()
 
