@@ -149,7 +149,14 @@ workflow.add_edge(START, "analyst")
 graph = workflow.compile()
 
 
-def submitUserMessage(user_input: str, user_id:str="test", keep_chat_history:bool=False, return_reference:bool=False, verbose=False) -> str:
+def submitUserMessage(
+    user_input:str, 
+    user_id:str="test", 
+    keep_chat_history:bool=False, 
+    return_reference:bool=False, 
+    verbose:bool=False,
+    recursion_limit:int=18
+    ) -> str:
     
     chat_history = load_chat_history(user_id=user_id) if keep_chat_history else []
     chat_history = chat_history[-8:]
@@ -166,7 +173,7 @@ def submitUserMessage(user_input: str, user_id:str="test", keep_chat_history:boo
             "chat_history": chat_history
         },
         # Maximum number of steps to take in the graph
-        {"recursion_limit": 20},
+        {"recursion_limit": recursion_limit},
     )
     
     if not verbose:

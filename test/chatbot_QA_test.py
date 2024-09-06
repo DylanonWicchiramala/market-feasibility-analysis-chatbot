@@ -40,11 +40,11 @@ def QA_sample_test(quesion_test:list[str], result_save_path='test/testset/QA_tes
     for quesion in sample_quesion:
         try:
             answer = submitUserMessage(quesion, keep_chat_history=False)
-            print("Response: ", answer[:200].replace("\n", " "), "...")
+            print("Response: ", answer[:100].replace("\n", " "), "...")
             result.append({'quesion': quesion, 'answer': answer})   
         except Exception as e:
             result.append({'quesion': quesion, 'error': e}) 
-            print("Error: ", str(e)[:300].replace("\n", " "), "...")
+            print("Error: ", str(e)[:1000].replace("\n", " "), "...")
         
     exet = time() - stt
     exet_rept = f"average execution time: {exet/num_samples}sec."
@@ -70,11 +70,11 @@ def API_test(quesion_test:list[str], result_save_path='test/testset/api_QA_test_
 
         if response.status_code == 200:
             answer = response.json().get("response")
-            print("Response ", response.status_code, ": ", answer[:200].replace("\n", " "), "...")
+            print("Response ", response.status_code, ": ", answer[:100].replace("\n", " "), "...")
             result.append({'quesion': quesion, 'answer': answer})   
         else:
             err_massage = response.json().get("error")
-            print("Error ", response.status_code, ": ", err_massage[:300].replace("\n", " "), "...")
+            print("Error ", response.status_code, ": ", err_massage[:1000].replace("\n", " "), "...")
             result.append({'quesion': quesion, 'error': err_massage}) 
             
     exet = time() - stt
