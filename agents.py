@@ -44,10 +44,14 @@ def create_agent(llm, tools, system_message: str):
         ]
     )
     prompt = prompt.partial(system_message=system_message)
-    prompt = prompt.partial(tool_names=", ".join([tool.name for tool in tools]))
-    #llm_with_tools = llm.bind(functions=[format_tool_to_openai_function(t) for t in tools])
-    llm_with_tools = llm.bind_tools(tools)
-    agent = prompt | llm_with_tools
+    
+    # return llm without tools
+    if tools:
+        prompt = prompt.partial(tool_names=", ".join([tool.name for tool in tools]))
+        #llm_with_tools = llm.bind(functions=[format_tool_to_openai_function(t) for t in tools])
+        llm = llm.bind_tools(tools)
+    
+    agent = prompt | llm
     return agent
 
 
@@ -86,7 +90,7 @@ reporter = agents['reporter']
     
 analyst['node'] = create_agent(
         llm,
-        [restaurant_sale_projection],
+        [find_place_from_text, restaurant_sale_projection],
         system_message=analyst['prompt'],
     )
 
