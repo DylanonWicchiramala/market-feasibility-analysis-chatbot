@@ -11,7 +11,7 @@ from langchain.globals import set_debug, set_verbose
 set_verbose(True)
 set_debug(False)
 
-# from langchain_community.chat_models import ChatOpenAI
+
 from langchain_core.messages import (
     AIMessage, 
     HumanMessage,
@@ -33,18 +33,63 @@ from typing import Literal
 
 tool_node = ToolNode(all_tools)
 
-def router(state) -> Literal["call_tool", "__end__", "continue"]:
+
+def analyst_router(state) -> Literal["call_tool", "__end__", "data_collector"]:
     # This is the router
     messages = state["messages"]
     last_message = messages[-1]
-    if "continue" in last_message.content:
+    if "FINALANSWER" in last_message.content:
+        return "__end__"
+    if last_message.tool_calls:
+        return "call_tool"
+    if "data_collector" in last_message.content:
+        return "data_collector"
+    else:
         return "continue"
+    
+    
+def data_collector_router(state) -> Literal["call_tool", "reporter"]:
+    # This is the router
+    messages = state["messages"]
+    last_message = messages[-1]
+    if last_message.tool_calls:
+        return "call_tool"
+    if "reporter" in last_message.content:
+        return "reporter"
+    else:
+        return "continue"
+    
+    
+def reporter_router(state) -> Literal["call_tool", "data_collector"]:
+    # This is the router
+    messages = state["messages"]
+    last_message = messages[-1]
+    if "FINALANSWER" in last_message.content:
+        return "__end__"
+    if last_message.tool_calls:
+        return "call_tool"
+    if "data_collector" in last_message.content:
+        return "data_collector"
+    else:
+        return "continue"
+
+
+def router(state) -> Literal["call_tool", "__end__", "data_collector", "reporter", "analyst"]:
+    # This is the router
+    messages = state["messages"]
+    last_message = messages[-1]
+    if "FINALANSWER" in last_message.content:
+        # Any agent decided the work is done
+        return "__end__"
     if last_message.tool_calls:
         # The previous agent is invoking a tool
         return "call_tool"
-    if "%SIjfE923hf" in last_message.content:
-        # Any agent decided the work is done
-        return "__end__"
+    if "data_collector" in last_message.content:
+        return "data_collector"
+    if "reporter" in last_message.content:
+        return "reporter"
+    if "analyst" in last_message.content:
+        return "analyst"
     else:
         return "continue"
 
@@ -61,20 +106,33 @@ workflow.add_node("call_tool", tool_node)
 
 workflow.add_conditional_edges(
     "analyst",
-    router,
-    {"continue": "data_collector", "call_tool": "call_tool", "__end__": END}
+    analyst_router,
+    {
+        "call_tool": "call_tool", 
+        "data_collector":"data_collector",
+        "__end__": END,
+        "continue": "data_collector", 
+        }
 )
 
 workflow.add_conditional_edges(
     "data_collector",
-    router,
-    {"call_tool": "call_tool", "continue": "reporter", "__end__": END}
+    data_collector_router,
+    {
+        "call_tool": "call_tool", 
+        "reporter":"reporter",
+        "continue": "reporter", 
+        }
 )
 
 workflow.add_conditional_edges(
     "reporter",
-    router,
-    {"continue": "data_collector", "call_tool": "call_tool", "__end__": END}
+    reporter_router,
+    {
+        "__end__": END,
+        "data_collector":"data_collector",
+        "continue": "data_collector", 
+        }
 )
 
 workflow.add_conditional_edges(
@@ -123,7 +181,7 @@ def submitUserMessage(user_input: str, user_id:str="test", keep_chat_history:boo
         response = a[1]
     
     response = response["messages"][0].content
-    response = response.replace("%SIjfE923hf", "")
+    response = response.replace("FINALANSWER", "")
     
     if keep_chat_history:
         save_chat_history(bot_message=response, human_message=user_input, user_id=user_id)
