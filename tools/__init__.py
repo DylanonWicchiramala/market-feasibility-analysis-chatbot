@@ -10,6 +10,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import CSVLoader
 from langchain_openai import OpenAIEmbeddings
 from langchain_community.tools import DuckDuckGoSearchRun
+from langchain_experimental.utilities import PythonREPL
 import glob
 from langchain_core.tools import tool
 import functools
@@ -155,6 +156,12 @@ def duckduckgo_search(query:str):
 
 
 # @tool
+def python_repl(cmd:str):
+    """A Python shell. Use this to execute python commands. Input should be a valid python command. If you want to see the output of a value, you should print it out with `print(...)`."""
+    return python_repl.run(cmd),
+
+
+# @tool
 def restaurant_sale_projection(input_dict:RestaurantSaleProject) -> str:
     """ create a sale and number of orders projection forcast report of restaurant based on category of food (category:str), price of food (base_price:float).
     """
@@ -214,6 +221,7 @@ def search_population_community_household_expenditures_data(query:str):
     return output
 
 
+python_repl = tool(python_repl)
 restaurant_sale_projection = tool(save_tools_output(restaurant_sale_projection))
 duckduckgo_search = tool(duckduckgo_search)
 search_population_community_household_expenditures_data = tool(save_tools_output(search_population_community_household_expenditures_data))
@@ -221,4 +229,4 @@ find_place_from_text = tool(find_place_from_text)
 nearby_search = tool(save_tools_output(nearby_search))
 nearby_dense_community = tool(save_tools_output(nearby_dense_community))
 
-all_tools = [restaurant_sale_projection, search_population_community_household_expenditures_data, find_place_from_text, nearby_search, nearby_dense_community, duckduckgo_search]  # Include both tools if needed
+all_tools = [python_repl, restaurant_sale_projection, search_population_community_household_expenditures_data, find_place_from_text, nearby_search, nearby_dense_community, duckduckgo_search]  # Include both tools if needed

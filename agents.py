@@ -6,6 +6,7 @@ from tools import (
     search_population_community_household_expenditures_data,
     duckduckgo_search,
     restaurant_sale_projection,
+    python_repl,
     all_tools
 )
 from langchain_core.messages import (
@@ -87,6 +88,7 @@ agent_name = list(agents.keys())
 
 
 analyst = agents['analyst']
+profit_calculator = agents['profit_calculator']
 data_collector = agents['data_collector']
 reporter = agents['reporter']
     
@@ -94,6 +96,12 @@ analyst['node'] = create_agent(
         llm,
         [find_place_from_text, restaurant_sale_projection],
         system_message=analyst['prompt'],
+    )
+
+profit_calculator['node'] = create_agent(
+        llm,
+        [python_repl, restaurant_sale_projection],
+        system_message=profit_calculator['prompt'],
     )
 
 data_collector['node'] = create_agent(
@@ -109,5 +117,6 @@ reporter['node'] = create_agent(
     )
 
 analyst['node'] = functools.partial(agent_node, agent=analyst['node'], name='analyst')
+profit_calculator['node'] = functools.partial(agent_node, agent=profit_calculator['node'], name='profit_calculator')
 data_collector['node'] = functools.partial(agent_node, agent=data_collector['node'], name='data_collector')
 reporter['node'] = functools.partial(agent_node, agent=reporter['node'], name='reporter')

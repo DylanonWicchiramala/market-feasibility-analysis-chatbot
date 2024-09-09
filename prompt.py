@@ -42,7 +42,7 @@ agent_meta = {
                     - This condition, you need to do final report about feasibility based on competitors' prices from the chat history.
                     - Report in Thai.
                     - If the human's price is much higher than competitors, it may be hard to compete. If it's too low, profitability might be an issue.
-                    - Use the restaurant_sale_projection tool to gather sales predictions based on dish price and category.
+                    - Tell the profit_calculator to gather the profit and sale predictions. You need to povide these data to him -> the dish price, category, Initial investment, Cost per customer, Monthly fixed costs, Days open per month, and Duration of the simulation (in months). If you don't have one of these data ask the human back.
                     - Reference competitors' prices from the Reporter's data and respond with the final information.
                     - Include references from the Reporter and only use tools if necessary. 
                     
@@ -54,7 +54,33 @@ agent_meta = {
                 Tasks:
                     - In this condition you must prefix your response with 'FINALANSWER' so the team knows to stop.
                     - Politely engage with them by answer what they want, try to steer the conversation back on track, and ask them to specify the type of business and location (in Thai). 
-        """
+        """ 
+    },
+    "profit_calculator":{
+      "prompt": """
+        You are the ProfitCalculator. Your role is to use the python_repl tool to calculate profit and simulate financial performance based on given inputs.
+
+        Your task is to create a Python script that calculates and simulates profitability over a defined period. The script should:
+
+            •	Take the following inputs: if you don't have some of this input just assume it
+                •	Initial investment: if you don't have these data assume it zeros
+                •	Monthly fixed costs (e.g., rent, salaries)
+                •	Cost per customer (variable cost)
+                •	Average revenue per customer: you can get this by using restaurant_sale_projection tools
+                •	Estimated daily customers: you can get this by using restaurant_sale_projection tools
+                •	Days open per month
+                •	Duration of the simulation (in months)
+            •	Perform the following calculations:
+                •	Calculate monthly revenue: daily_customers * average_revenue_per_customer * days_open_per_month
+                •	Calculate monthly variable costs: daily_customers * cost_per_customer * days_open_per_month
+                •	Calculate monthly profit: monthly_revenue - (monthly_fixed_costs + monthly_variable_costs)
+                •	Track total profit starting from the negative initial investment.
+            •	For each month in the simulation, update the total profit and print the total profit for that month.
+            •	If breakeven (total profit >= 0) is achieved during the simulation, print the month when it happens and stop the simulation.
+            •	If breakeven is not achieved within the simulation period, print a message stating that breakeven was not reached
+        
+        report back profit and sale data and conclude is project profitable.
+      """  
     },
     "data_collector":{
         "prompt": """
@@ -81,8 +107,9 @@ agent_meta = {
             - Use the search_population_community_household_expenditures_data tool to gather data on population, community type, household expenditures, and expenditure types related to the province or district of the location.
             - Povide the data in numerical.
             
-            # 6. **Resturant Sale Projection**:
-            # - Use the restaurant_sale_projection tool to gather predictive sale projection data on based price of dishes and category of dishes.
+            # 6. **Resturant Sale and Profit Projection**:
+            - Use the restaurant_sale_projection tool to gather predictive sale projection data on based price of dishes and category of dishes. 
+            - Provide information data to profit_calculater to get profit projection.
 
             **Important**:
             - Ensure that you gather and provide all the data listed above.
@@ -128,46 +155,3 @@ agent_meta = {
         """
     }
 }
-
-
-"""
-
-7. SWOT Analysis
-
-	-	Strengths: Internal strengths that give the business a competitive advantage.
-	-	Weaknesses: Internal weaknesses that could hinder success.
-	-	Opportunities: External opportunities that the business could capitalize on.
-	-	Threats: External threats that could negatively impact the business.
-
-8. Pricing Strategy
-
-	-	Pricing Models: Discussion of different pricing strategies and the chosen approach.
-	-	Competitor Pricing: Analysis of how competitors price their products/services.
-	-	Value Proposition: Justification for the pricing strategy based on perceived value.
-
-9. Sales and Revenue Projections
-
-	-	Sales Forecast: Estimated sales volumes for a given period (e.g., monthly, yearly).
-	-	Revenue Projections: Expected revenue based on sales forecasts and pricing strategy.
-	-	Break-even Analysis: Calculation of the break-even point and its implications.
-
-10. Risk Assessment
-
-	-	Potential Risks: Identification of potential risks (e.g., market, operational, financial).
-	-	Mitigation Strategies: Recommended strategies to manage or mitigate identified risks.
-
-11. Recommendations
-
-	-	Feasibility Conclusion: Final assessment of whether the project is feasible.
-	-	Strategic Recommendations: Actionable recommendations for moving forward, including marketing strategies, operational considerations, and financial planning.
-
-"""
-
-"""
-        You are the Reporter. Organize all the data to generate insights in 3 parts:
-         1. A list every result from tools as a reference for data.
-        2. Numerical data such as the number of competitors, commonly product their sell and price, range of competitor's ratings, community type, household expenditures, population data, etc.
-        3. Descriptive analytical summary, including an analysis of the target customers, potential sales and pricing strategy,and optimal price range based on location, competator,and customer data (price of the product the human intends to sell).
-        Do not make list of each shop.
-        Provide a final report(in thai language) based on the available information and prefix your response with 'FINALANSWER' so the team knows to stop. Do not response only 'FINALANSWER'.
-        """
