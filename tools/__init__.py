@@ -31,7 +31,7 @@ class NearbyDenseCommunityInput(TypedDict):
 
 class RestaurantSaleProject(TypedDict):
     base_price: float|int
-    category: Literal['Beverages', 'Biryani', 'Desert', 'Extras', 'Fish', 'Other Snacks', 'Pasta', 'Pizza', 'Rice Bowl', 'Salad', 'Sandwich', 'Seafood', 'Soup', 'Starters']
+    category: Literal['Beverages', 'Biryani', 'Dessert', 'Extras', 'Fish', 'Other Snacks', 'Pasta', 'Pizza', 'Rice Bowl', 'Salad', 'Sandwich', 'Seafood', 'Soup', 'Starters']
     
     
 tools_outputs=""
