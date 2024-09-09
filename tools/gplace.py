@@ -155,7 +155,7 @@ def nearby_dense_community(location:str, radius:int=1000):
 
     # Set up the parameters for the request
     params = {
-        "includedTypes": ["hotel", "mall", "school", "apartment", "condo"],
+        "includedTypes": ["lodging", "mall", "school"],
         'location': location,
         'radius': radius,
         'key': api_key,

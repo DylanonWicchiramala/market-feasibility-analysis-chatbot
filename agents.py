@@ -6,6 +6,7 @@ from tools import (
     search_population_community_household_expenditures_data,
     duckduckgo_search,
     restaurant_sale_projection,
+    python_repl,
     all_tools
 )
 from langchain_core.messages import (
@@ -87,6 +88,7 @@ agent_name = list(agents.keys())
 
 
 analyst = agents['analyst']
+investment_planner = agents['investment_planner']
 data_collector = agents['data_collector']
 reporter = agents['reporter']
     
@@ -96,9 +98,15 @@ analyst['node'] = create_agent(
         system_message=analyst['prompt'],
     )
 
+investment_planner['node'] = create_agent(
+        llm,
+        [python_repl, restaurant_sale_projection],
+        system_message=investment_planner['prompt'],
+    )
+
 data_collector['node'] = create_agent(
         llm,
-        all_tools,
+        [restaurant_sale_projection, search_population_community_household_expenditures_data, find_place_from_text, nearby_search, nearby_dense_community, duckduckgo_search] ,
         system_message=data_collector['prompt'],
     )
 
@@ -109,5 +117,6 @@ reporter['node'] = create_agent(
     )
 
 analyst['node'] = functools.partial(agent_node, agent=analyst['node'], name='analyst')
+investment_planner['node'] = functools.partial(agent_node, agent=investment_planner['node'], name='investment_planner')
 data_collector['node'] = functools.partial(agent_node, agent=data_collector['node'], name='data_collector')
 reporter['node'] = functools.partial(agent_node, agent=reporter['node'], name='reporter')

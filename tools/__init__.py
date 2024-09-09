@@ -10,6 +10,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import CSVLoader
 from langchain_openai import OpenAIEmbeddings
 from langchain_community.tools import DuckDuckGoSearchRun
+from langchain_experimental.utilities import PythonREPL
 import glob
 from langchain_core.tools import tool
 import functools
@@ -112,7 +113,23 @@ def nearby_dense_community(input_dict: NearbyDenseCommunityInput) -> str:
     location_coords = gplace.find_location(location, radius=radius)
     result = gplace.nearby_dense_community(location_coords, radius)
     
-    strout = ""
+    # Initializing the total sum
+    sum = 0
+
+    # Sample traffic_score dictionary
+    traffic_score = {
+        "lodging": 400,
+        "mall": 1000,
+        "school": 3000
+    }
+
+    for item in result:
+        # Check if any type in 'types' matches the keys in traffic_score
+        for place_type in item['types']:
+            if place_type in traffic_score:
+                sum += traffic_score[place_type]
+
+    strout = f"There are {sum} people traffic nearby in the dense community."
     for r in result[:max_results]:
         # Use .get() to handle missing keys
         address = r.get('vicinity', 'N/A')
@@ -152,6 +169,12 @@ def duckduckgo_search(query:str):
     for char in unicode_chars_to_remove:
         result = result.replace(char, "")
     return result[:800]
+
+
+# @tool
+def python_repl(cmd:str):
+    """A Python shell. Use this if you want to calculate something. Input should be a valid python command. If you want to see the output of a value, you should print it out with `print(...)`."""
+    return PythonREPL().run(cmd),
 
 
 # @tool
@@ -214,6 +237,7 @@ def search_population_community_household_expenditures_data(query:str):
     return output
 
 
+python_repl = tool(python_repl)
 restaurant_sale_projection = tool(save_tools_output(restaurant_sale_projection))
 duckduckgo_search = tool(duckduckgo_search)
 search_population_community_household_expenditures_data = tool(save_tools_output(search_population_community_household_expenditures_data))
@@ -221,4 +245,4 @@ find_place_from_text = tool(find_place_from_text)
 nearby_search = tool(save_tools_output(nearby_search))
 nearby_dense_community = tool(save_tools_output(nearby_dense_community))
 
-all_tools = [restaurant_sale_projection, search_population_community_household_expenditures_data, find_place_from_text, nearby_search, nearby_dense_community, duckduckgo_search]  # Include both tools if needed
+all_tools = [python_repl, restaurant_sale_projection, search_population_community_household_expenditures_data, find_place_from_text, nearby_search, nearby_dense_community, duckduckgo_search]  # Include both tools if needed
