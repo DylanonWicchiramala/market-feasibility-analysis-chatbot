@@ -148,25 +148,24 @@ def duckduckgo_search(query:str):
     """A wrapper around DuckDuckGo Search. Useful for when you need to answer questions about current events. Input should be a search query."""
     engine = DuckDuckGoSearchRun()
     unicode_chars_to_remove = ["\U000f1676", "\u2764", "\xa0", "▫️", "Δ", "#"]
-    result = engine(query)
+    result = engine.invoke(query)
     for char in unicode_chars_to_remove:
         result = result.replace(char, "")
     return result[:800]
 
 
 # @tool
-def restaurant_sale_project(input_dict:RestaurantSaleProject) -> str:
-    """ create a sale projection forcast report of restaurant based on category of food (category:str), price of food (base_price:float).
+def restaurant_sale_projection(input_dict:RestaurantSaleProject) -> str:
+    """ create a sale and number of orders projection forcast report of restaurant based on category of food (category:str), price of food (base_price:float).
     """
     price = input_dict['base_price']
     result = sale_forecasting.restaurant_sale_project(**input_dict)
     
-    report = f"sale projection of {input_dict['category']}:\nweek\tsale(forecast)\n"
+    report = f"sale projection of {input_dict['category']}:\nweek\tnumber of order\tsale(forecast)\n"
     
-    
-    for week, numberofsale in result.items():
-        sale = numberofsale*price
-        report += f"{week}\t{sale:,.0f}\n"
+    for week, num_order in result.items():
+        sale = num_order*price
+        report += f"{week}\t{num_order:,.0f}\t{sale:,.0f}\n"
     
     return report
 
@@ -215,9 +214,11 @@ def search_population_community_household_expenditures_data(query:str):
     return output
 
 
-restaurant_sale_project = tool(save_tools_output(restaurant_sale_project))
+restaurant_sale_projection = tool(save_tools_output(restaurant_sale_projection))
 duckduckgo_search = tool(duckduckgo_search)
 search_population_community_household_expenditures_data = tool(save_tools_output(search_population_community_household_expenditures_data))
 find_place_from_text = tool(find_place_from_text)
 nearby_search = tool(save_tools_output(nearby_search))
 nearby_dense_community = tool(save_tools_output(nearby_dense_community))
+
+all_tools = [restaurant_sale_projection, search_population_community_household_expenditures_data, find_place_from_text, nearby_search, nearby_dense_community, duckduckgo_search]  # Include both tools if needed
