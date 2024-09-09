@@ -129,7 +129,7 @@ def nearby_dense_community(input_dict: NearbyDenseCommunityInput) -> str:
             if place_type in traffic_score:
                 sum += traffic_score[place_type]
 
-    strout = f"There are {sum} people nearby in the dense community."
+    strout = f"There are {sum} people traffic nearby in the dense community."
     for r in result[:max_results]:
         # Use .get() to handle missing keys
         address = r.get('vicinity', 'N/A')
@@ -173,8 +173,8 @@ def duckduckgo_search(query:str):
 
 # @tool
 def python_repl(cmd:str):
-    """A Python shell. Use this to execute python commands. Input should be a valid python command. If you want to see the output of a value, you should print it out with `print(...)`."""
-    return python_repl.run(cmd),
+    """A Python shell. Use this if you want to calculate something. Input should be a valid python command. If you want to see the output of a value, you should print it out with `print(...)`."""
+    return PythonREPL().run(cmd),
 
 
 # @tool

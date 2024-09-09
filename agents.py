@@ -88,7 +88,7 @@ agent_name = list(agents.keys())
 
 
 analyst = agents['analyst']
-profit_calculator = agents['profit_calculator']
+investment_planner = agents['investment_planner']
 data_collector = agents['data_collector']
 reporter = agents['reporter']
     
@@ -98,15 +98,15 @@ analyst['node'] = create_agent(
         system_message=analyst['prompt'],
     )
 
-profit_calculator['node'] = create_agent(
+investment_planner['node'] = create_agent(
         llm,
         [python_repl, restaurant_sale_projection],
-        system_message=profit_calculator['prompt'],
+        system_message=investment_planner['prompt'],
     )
 
 data_collector['node'] = create_agent(
         llm,
-        all_tools,
+        [restaurant_sale_projection, search_population_community_household_expenditures_data, find_place_from_text, nearby_search, nearby_dense_community, duckduckgo_search] ,
         system_message=data_collector['prompt'],
     )
 
@@ -117,6 +117,6 @@ reporter['node'] = create_agent(
     )
 
 analyst['node'] = functools.partial(agent_node, agent=analyst['node'], name='analyst')
-profit_calculator['node'] = functools.partial(agent_node, agent=profit_calculator['node'], name='profit_calculator')
+investment_planner['node'] = functools.partial(agent_node, agent=investment_planner['node'], name='investment_planner')
 data_collector['node'] = functools.partial(agent_node, agent=data_collector['node'], name='data_collector')
 reporter['node'] = functools.partial(agent_node, agent=reporter['node'], name='reporter')

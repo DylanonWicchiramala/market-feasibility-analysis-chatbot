@@ -34,53 +34,15 @@ from typing import Literal
 tool_node = ToolNode(all_tools)
 
 
-def analyst_router(state) -> Literal["call_tool", "__end__", "data_collector"]:
-    # This is the router
-    messages = state["messages"]
-    last_message = messages[-1]
-    if "FINALANSWER" in last_message.content:
-        return "__end__"
-    if last_message.tool_calls:
-        return "call_tool"
-    if "data_collector" in last_message.content:
-        return "data_collector"
-    else:
-        return "continue"
-    
-    
-def data_collector_router(state) -> Literal["call_tool", "reporter"]:
-    # This is the router
-    messages = state["messages"]
-    last_message = messages[-1]
-    if last_message.tool_calls:
-        return "call_tool"
-    if "reporter" in last_message.content:
-        return "reporter"
-    else:
-        return "continue"
-    
-    
-def reporter_router(state) -> Literal["call_tool", "data_collector"]:
-    # This is the router
-    messages = state["messages"]
-    last_message = messages[-1]
-    if "FINALANSWER" in last_message.content:
-        return "__end__"
-    if last_message.tool_calls:
-        return "call_tool"
-    if "data_collector" in last_message.content:
-        return "data_collector"
-    else:
-        return "continue"
-
-
-def router(state) -> Literal["call_tool", "__end__", "data_collector", "reporter", "analyst"]:
+def router(state) -> Literal["call_tool", "__end__", "data_collector", "reporter", "analyst", "investment_planner"]:
     # This is the router
     messages = state["messages"]
     last_message = messages[-1]
     if "FINALANSWER" in last_message.content:
         # Any agent decided the work is done
         return "__end__"
+    if "investment_planner" in last_message.content:
+        return "investment_planner"
     if last_message.tool_calls:
         # The previous agent is invoking a tool
         return "call_tool"
@@ -106,20 +68,34 @@ workflow.add_node("call_tool", tool_node)
 
 workflow.add_conditional_edges(
     "analyst",
-    analyst_router,
+    router,
     {
-        "call_tool": "call_tool", 
+        "investment_planner":"investment_planner",
         "data_collector":"data_collector",
+        "call_tool": "call_tool", 
         "__end__": END,
         "continue": "data_collector", 
         }
 )
 
 workflow.add_conditional_edges(
-    "data_collector",
-    data_collector_router,
+    "investment_planner",
+    router,
     {
         "call_tool": "call_tool", 
+        "data_collector":"data_collector",
+        "analyst":"analyst",
+        "reporter":"reporter",
+        "continue": "data_collector", 
+        }
+)
+
+workflow.add_conditional_edges(
+    "data_collector",
+    router,
+    {
+        "call_tool": "call_tool", 
+        "investment_planner":"investment_planner",
         "reporter":"reporter",
         "continue": "reporter", 
         }
@@ -127,7 +103,7 @@ workflow.add_conditional_edges(
 
 workflow.add_conditional_edges(
     "reporter",
-    reporter_router,
+    router,
     {
         "__end__": END,
         "data_collector":"data_collector",
@@ -181,7 +157,6 @@ def submitUserMessage(
         response = list(events[-1].values())[0]
     else:
         for e in events:
-            # print(e)
             a = list(e.items())[0]
             a[1]['messages'][0].pretty_print()
         
