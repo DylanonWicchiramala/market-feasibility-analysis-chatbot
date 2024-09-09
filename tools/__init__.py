@@ -113,7 +113,23 @@ def nearby_dense_community(input_dict: NearbyDenseCommunityInput) -> str:
     location_coords = gplace.find_location(location, radius=radius)
     result = gplace.nearby_dense_community(location_coords, radius)
     
-    strout = ""
+    # Initializing the total sum
+    sum = 0
+
+    # Sample traffic_score dictionary
+    traffic_score = {
+        "lodging": 400,
+        "mall": 1000,
+        "school": 3000
+    }
+
+    for item in result:
+        # Check if any type in 'types' matches the keys in traffic_score
+        for place_type in item['types']:
+            if place_type in traffic_score:
+                sum += traffic_score[place_type]
+
+    strout = f"There are {sum} people nearby in the dense community."
     for r in result[:max_results]:
         # Use .get() to handle missing keys
         address = r.get('vicinity', 'N/A')
