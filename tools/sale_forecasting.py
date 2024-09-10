@@ -8,7 +8,7 @@ def restaurant_sale_project(
     category: Literal[
         'Beverages',
         'Biryani',
-        'Desert',
+        'Dessert',
         'Extras',
         'Fish',
         'Other Snacks',
@@ -21,6 +21,7 @@ def restaurant_sale_project(
         'Soup',
         'Starters'
         ],  
+    human_traffic:int=3000,
     week:int|list=[1, 5, 52]):
 
     def getModel():
@@ -49,6 +50,7 @@ def restaurant_sale_project(
         data = {
             "week": week,
             "base_price": base_price,
+             "human_traffic":human_traffic,
         }
         
         ca_key = [ 'category_Biryani',
