@@ -88,7 +88,6 @@ agent_name = list(agents.keys())
 
 
 analyst = agents['analyst']
-investment_planner = agents['investment_planner']
 data_collector = agents['data_collector']
 reporter = agents['reporter']
     
@@ -96,12 +95,6 @@ analyst['node'] = create_agent(
         llm,
         [find_place_from_text, restaurant_sale_projection],
         system_message=analyst['prompt'],
-    )
-
-investment_planner['node'] = create_agent(
-        llm,
-        [python_repl, restaurant_sale_projection],
-        system_message=investment_planner['prompt'],
     )
 
 data_collector['node'] = create_agent(
@@ -117,6 +110,5 @@ reporter['node'] = create_agent(
     )
 
 analyst['node'] = functools.partial(agent_node, agent=analyst['node'], name='analyst')
-investment_planner['node'] = functools.partial(agent_node, agent=investment_planner['node'], name='investment_planner')
 data_collector['node'] = functools.partial(agent_node, agent=data_collector['node'], name='data_collector')
 reporter['node'] = functools.partial(agent_node, agent=reporter['node'], name='reporter')

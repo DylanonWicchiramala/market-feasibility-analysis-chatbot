@@ -34,15 +34,13 @@ from typing import Literal
 tool_node = ToolNode(all_tools)
 
 
-def router(state) -> Literal["call_tool", "__end__", "data_collector", "reporter", "analyst", "investment_planner"]:
+def router(state) -> Literal["call_tool", "__end__", "data_collector", "reporter", "analyst"]:
     # This is the router
     messages = state["messages"]
     last_message = messages[-1]
     if "FINALANSWER" in last_message.content:
         # Any agent decided the work is done
         return "__end__"
-    if "investment_planner" in last_message.content:
-        return "investment_planner"
     if last_message.tool_calls:
         # The previous agent is invoking a tool
         return "call_tool"
@@ -70,22 +68,9 @@ workflow.add_conditional_edges(
     "analyst",
     router,
     {
-        "investment_planner":"investment_planner",
         "data_collector":"data_collector",
         "call_tool": "call_tool", 
         "__end__": END,
-        "continue": "data_collector", 
-        }
-)
-
-workflow.add_conditional_edges(
-    "investment_planner",
-    router,
-    {
-        "call_tool": "call_tool", 
-        "data_collector":"data_collector",
-        "analyst":"analyst",
-        "reporter":"reporter",
         "continue": "data_collector", 
         }
 )
@@ -95,7 +80,6 @@ workflow.add_conditional_edges(
     router,
     {
         "call_tool": "call_tool", 
-        "investment_planner":"investment_planner",
         "reporter":"reporter",
         "continue": "reporter", 
         }
@@ -131,7 +115,7 @@ def submitUserMessage(
     keep_chat_history:bool=False, 
     return_reference:bool=False, 
     verbose:bool=False,
-    recursion_limit:int=20
+    recursion_limit:int=18
     ) -> str:
     
     chat_history = load_chat_history(user_id=user_id) if keep_chat_history else []

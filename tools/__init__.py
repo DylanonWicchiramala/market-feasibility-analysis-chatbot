@@ -21,18 +21,20 @@ utils.load_env()
 class NearbySearchInput(TypedDict):
     keyword: str
     location_name: str
-    radius: NotRequired[int]
+    radius: Optional[int]
     
     
 class NearbyDenseCommunityInput(TypedDict):
     location_name: str
-    radius: NotRequired[int]
+    radius: Optional[int]
     
 
 class RestaurantSaleProject(TypedDict):
-    base_price: float|int
+    base_price_per_unit: float|int
     category: Literal['Beverages', 'Biryani', 'Dessert', 'Extras', 'Fish', 'Other Snacks', 'Pasta', 'Pizza', 'Rice Bowl', 'Salad', 'Sandwich', 'Seafood', 'Soup', 'Starters']
     human_traffic:int
+    cost_per_unit:Optional[int]
+    monthly_fix_cost:Optional[int]
     
     
 tools_outputs=""
@@ -74,7 +76,7 @@ def find_place_from_text(location:str):
 # @tool
 def nearby_search(input_dict: NearbySearchInput):
     """Searches for many places nearby the location based on a keyword. using keyword like \"coffee shop\", \"restaurants\". radius is the range to search from the location."""
-    max_results = 5
+    max_results = 10
     keyword = input_dict['keyword']
     location = input_dict['location_name']
     radius = input_dict.get('radius', 2000)
@@ -107,7 +109,7 @@ def nearby_dense_community(input_dict: NearbyDenseCommunityInput) -> str:
     """ getting nearby dense community such as (community mall, hotel, school, etc), by location name, radius(in meters)
     return list of location community nearby, name, community type.
     """
-    max_results = 5
+    max_results = 10
     location = input_dict['location_name']
     radius = input_dict.get('radius', 2000)
     
@@ -180,16 +182,38 @@ def python_repl(cmd:str):
 
 # @tool
 def restaurant_sale_projection(input_dict:RestaurantSaleProject) -> str:
-    """ create a sale and number of orders projection forcast report of restaurant based on category of food (category:str), price of food (base_price:float), estimate number of human around dense communities(human_traffic:int).
+    """ create a sale, profit and number of orders projection forcast report of restaurant based on.
+        category of food (category:str), 
+        price of food (base_price_per_unit:float), 
+        estimate number of human around dense communities(human_traffic:int).
+        (this argument below are optional, use to calcualte profit)
+        cost per unit sale (cost_per_unit:optional int)
+        monthly fix cost such as rent (monthly_fix_cost:optinoal int)
     """
-    price = input_dict['base_price']
-    result = sale_forecasting.restaurant_sale_project(**input_dict)
+    base_price = input_dict['base_price_per_unit']
+    category = input_dict['category']
+    human_traffic = input_dict['human_traffic']
+    cost_per_unit = input_dict.get("cost_per_unit", None)
+    monthly_fix_cost = input_dict.get("monthly_fix_cost", 0)
     
-    report = f"sale projection of {input_dict['category']}:\nweek\tnumber of order\tsale(forecast)\n"
+    result = sale_forecasting.restaurant_sale_project(base_price, category, human_traffic)
+    
+    if cost_per_unit:
+        report = f"sale projection of {input_dict['category']}:\nweek\tnumber of order\tsale(forecast)\tprofit\n"
+    else:
+        report = f"sale projection of {input_dict['category']}:\nweek\tnumber of order\tsale(forecast)\n"
     
     for week, num_order in result.items():
-        sale = num_order*price
-        report += f"{week}\t{num_order:,.0f}\t{sale:,.0f}\n"
+        sale = num_order*base_price
+        report += f"{week}\t{num_order:,.0f}\t{sale:,.0f}"
+        
+        # creat a profit report
+        if cost_per_unit:
+            cost = num_order*cost_per_unit + monthly_fix_cost/4.5
+            profit = sale - cost
+            report += f"\t{profit:,.0f}\n"
+        else:
+            report += "\n"
     
     return report
 
