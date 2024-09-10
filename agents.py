@@ -86,7 +86,6 @@ class AgentState(TypedDict):
 
 agent_name = list(agents.keys())
 
-
 analyst = agents['analyst']
 data_collector = agents['data_collector']
 reporter = agents['reporter']
