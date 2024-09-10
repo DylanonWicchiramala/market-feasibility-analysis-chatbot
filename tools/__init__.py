@@ -32,6 +32,7 @@ class NearbyDenseCommunityInput(TypedDict):
 class RestaurantSaleProject(TypedDict):
     base_price: float|int
     category: Literal['Beverages', 'Biryani', 'Dessert', 'Extras', 'Fish', 'Other Snacks', 'Pasta', 'Pizza', 'Rice Bowl', 'Salad', 'Sandwich', 'Seafood', 'Soup', 'Starters']
+    human_traffic:int
     
     
 tools_outputs=""
@@ -179,7 +180,7 @@ def python_repl(cmd:str):
 
 # @tool
 def restaurant_sale_projection(input_dict:RestaurantSaleProject) -> str:
-    """ create a sale and number of orders projection forcast report of restaurant based on category of food (category:str), price of food (base_price:float).
+    """ create a sale and number of orders projection forcast report of restaurant based on category of food (category:str), price of food (base_price:float), estimate number of human around dense communities(human_traffic:int).
     """
     price = input_dict['base_price']
     result = sale_forecasting.restaurant_sale_project(**input_dict)
