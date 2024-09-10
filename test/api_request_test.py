@@ -11,7 +11,7 @@ url = "https://market-feasibility-analysis-chatbot-2-jelvbvjqna-uc.a.run.app/tes
 # url = "http://127.0.0.1:8080/test"
 
 headers = {"Content-Type": "application/json"}
-data = {"message": "ทำ feasibility report เกี่ยวร้านเกมแถวสยาม"}
+data = {"message": "สวัสดี"}
 
 stt = time()
 response = requests.post(url, json=data, headers=headers)
