@@ -27,7 +27,7 @@ from agents import(
 )
 from tools import all_tools
 from chat_history import MongoDBSaver
-# from chat_history import save_chat_history, load_chat_history
+from datetime import datetime, timedelta
 
 ## Define Tool Node
 from langgraph.prebuilt import ToolNode
@@ -123,6 +123,10 @@ def submitUserMessage(
     if keep_chat_history:
         checkpointer = MongoDBSaver()
         graph = workflow.compile(checkpointer=checkpointer)
+        
+        # auto delete old chat history
+        checkpointer.delete(thread_id="test", time_before=datetime.now() - timedelta(minutes=60))
+        checkpointer.delete(time_before=datetime.now() - timedelta(days=7))
     else:
         graph = workflow.compile()
 

@@ -45,11 +45,11 @@ class MongoDBSaver(BaseCheckpointSaver):
     @classmethod
     @contextmanager
     def from_conn_info(
-        cls, *, uri: str=uri, db_name: str="FeasibilityAnalysis"
+        cls, *, host: str, port: int, db_name: str
     ) -> Iterator["MongoDBSaver"]:
         client = None
         try:
-            client = MongoClient(uri, server_api=ServerApi('1'))
+            client = MongoClient(host=host, port=port)
             yield MongoDBSaver(client, db_name)
         finally:
             if client:
@@ -302,13 +302,13 @@ class MongoDBSaver(BaseCheckpointSaver):
         # If deleting all chat history for a specific user or all users
         if delete_all:
             # Remove entire chat history field
-            print("database delete all")
+            # print("database delete all")
             return [
                 self.db["checkpoints"].delete_many({}),
                 self.db["checkpoint_writes"].delete_many({}),
             ]
             
-        print("database delete thread_id=", thread_id, ", before = ", time_before)
+        # print("database delete thread_id=", thread_id, ", before = ", time_before)
         return [
             self.db["checkpoints"].delete_many(query),
             self.db["checkpoint_writes"].delete_many(query),
@@ -318,5 +318,6 @@ class MongoDBSaver(BaseCheckpointSaver):
 if __name__=="__main__":
     # delete old chat history
     checkpointer = MongoDBSaver()
-    checkpointer.delete(thread_id="test", time_before=timedelta(hours=6))
-    checkpointer.delete(time_before=timedelta(days=7))
+    checkpointer.delete(thread_id="test", time_before=datetime.now() - timedelta(minutes=60))
+    checkpointer.delete(time_before=datetime.now() - timedelta(days=7))
+    checkpointer.close()
