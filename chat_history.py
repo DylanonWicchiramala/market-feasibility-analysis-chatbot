@@ -27,13 +27,6 @@ mongo = os.environ.get('MONGODB_PASS')
 uri = f"mongodb+srv://dylan:{mongo}@cluster0.wl8mbpy.mongodb.net/"
 
 
-# Create a new client and connect to the server
-client = MongoClient(uri, server_api=ServerApi('1'))
-# db = client["FeasibilityAnalysis"]
-# history = db["Chat History"]
-
-
-
 class MongoDBSaver(BaseCheckpointSaver):
     """A checkpoint saver that stores checkpoints in a MongoDB database."""
 
@@ -42,28 +35,29 @@ class MongoDBSaver(BaseCheckpointSaver):
 
     def __init__(
         self,
-        client: MongoClient=client,
+        uri: str=uri, 
         db_name: str="FeasibilityAnalysis",
     ) -> None:
         super().__init__()
-        self.client = client
+        self.client = MongoClient(uri, server_api=ServerApi('1'))
         self.db = self.client[db_name]
 
     @classmethod
     @contextmanager
     def from_conn_info(
-        cls, *, host: str, port: int, db_name: str
+        cls, *, uri: str=uri, db_name: str="FeasibilityAnalysis"
     ) -> Iterator["MongoDBSaver"]:
         client = None
         try:
-            client = MongoClient(host=host, port=port)
+            client = MongoClient(uri, server_api=ServerApi('1'))
             yield MongoDBSaver(client, db_name)
         finally:
             if client:
                 client.close()
                 
     def close(self):
-        self.client.close()
+        if self.client:
+            self.client.close()
 
     def get_tuple(self, config: RunnableConfig) -> Optional[CheckpointTuple]:
         """Get a checkpoint tuple from the database.
