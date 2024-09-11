@@ -113,7 +113,7 @@ def submitUserMessage(
     keep_chat_history:bool=False, 
     return_reference:bool=False, 
     verbose:bool=False,
-    recursion_limit:int=18
+    recursion_limit:int=20
     ) -> str:
     
     chat_history = load_chat_history(user_id=user_id) if keep_chat_history else []
