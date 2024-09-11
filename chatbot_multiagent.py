@@ -11,29 +11,27 @@ from langchain.globals import set_debug, set_verbose
 set_verbose(True)
 set_debug(False)
 
-
 from langchain_core.messages import (
     AIMessage, 
     HumanMessage,
     ToolMessage
 )
 from langgraph.graph import END, StateGraph, START
-from langgraph.checkpoint.memory import MemorySaver
-from tools import get_tools_output
 from agents import(
     AgentState,
     agents,
     agent_name
 )
-from tools import all_tools
-from chat_history import MongoDBSaver
-from datetime import datetime, timedelta
+from tools import get_tools_output, all_tools
+from chat_history import save_chat_history, load_chat_history
+from langgraph.checkpoint.memory import MemorySaver
 
 ## Define Tool Node
 from langgraph.prebuilt import ToolNode
 from typing import Literal
 
 tool_node = ToolNode(all_tools)
+
 
 def router(state) -> Literal["call_tool", "__end__", "data_collector", "reporter", "analyst"]:
     # This is the router
@@ -108,8 +106,6 @@ workflow.add_conditional_edges(
 
 workflow.add_edge(START, "analyst")
 graph = workflow.compile()
-memory = MemorySaver()
-
 
 def submitUserMessage(
     user_input:str, 
@@ -120,17 +116,13 @@ def submitUserMessage(
     recursion_limit:int=18
     ) -> str:
     
-    if keep_chat_history:
-        checkpointer = MongoDBSaver()
-        graph = workflow.compile(checkpointer=checkpointer)
-        
-        # auto delete old chat history
-        checkpointer.delete(thread_id="test", time_before=datetime.now() - timedelta(minutes=60))
-        checkpointer.delete(time_before=datetime.now() - timedelta(days=7))
-    else:
-        graph = workflow.compile()
+    chat_history = load_chat_history(user_id=user_id) if keep_chat_history else []
+    chat_history = chat_history[-8:]
+    
+    # memory only keep chat history only along agents.
+    internal_level_memory = MemorySaver()
+    graph = workflow.compile(checkpointer=internal_level_memory)
 
-    config = {"configurable": {"thread_id": user_id}, "recursion_limit": recursion_limit}
     events = graph.stream(
         {
             "messages": [
@@ -138,29 +130,29 @@ def submitUserMessage(
                     user_input
                 )
             ],
-            # "chat_history": chat_history
-        }, 
-        config,
-        stream_mode="values",
+            "chat_history": chat_history
+        },
+        # Maximum number of steps to take in the graph
+        {"recursion_limit": recursion_limit, "thread_id":"a"},
     )
-
+    
     if not verbose:
         events = [e for e in events]
         response = list(events[-1].values())[0]
     else:
         for e in events:
             a = list(e.items())[0]
-            a[1][-1].pretty_print()
-            
+            a[1]['messages'][0].pretty_print()
+        
         response = a[1]
-            
-    response = response[-1].content
+    
+    response = response["messages"][0].content
     response = response.replace("FINALANSWER:", "")
     response = response.replace("FINALANSWER,", "")
     response = response.replace("FINALANSWER", "")
-        
+    
     if keep_chat_history:
-        checkpointer.close()
+        save_chat_history(bot_message=response, human_message=user_input, user_id=user_id)
     
     if return_reference:
         return response, get_tools_output()
