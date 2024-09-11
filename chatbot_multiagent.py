@@ -18,6 +18,7 @@ from langchain_core.messages import (
     ToolMessage
 )
 from langgraph.graph import END, StateGraph, START
+from langgraph.checkpoint.memory import MemorySaver
 from tools import get_tools_output
 from agents import(
     AgentState,
@@ -25,14 +26,14 @@ from agents import(
     agent_name
 )
 from tools import all_tools
-from chat_history import save_chat_history, load_chat_history
+from chat_history import MongoDBSaver
+# from chat_history import save_chat_history, load_chat_history
 
 ## Define Tool Node
 from langgraph.prebuilt import ToolNode
 from typing import Literal
 
 tool_node = ToolNode(all_tools)
-
 
 def router(state) -> Literal["call_tool", "__end__", "data_collector", "reporter", "analyst"]:
     # This is the router
@@ -107,6 +108,7 @@ workflow.add_conditional_edges(
 
 workflow.add_edge(START, "analyst")
 graph = workflow.compile()
+memory = MemorySaver()
 
 
 def submitUserMessage(
@@ -118,11 +120,13 @@ def submitUserMessage(
     recursion_limit:int=18
     ) -> str:
     
-    chat_history = load_chat_history(user_id=user_id) if keep_chat_history else []
-    chat_history = chat_history[-8:]
-    
-    graph = workflow.compile()
+    if keep_chat_history:
+        checkpointer = MongoDBSaver()
+        graph = workflow.compile(checkpointer=checkpointer)
+    else:
+        graph = workflow.compile()
 
+    config = {"configurable": {"thread_id": user_id}, "recursion_limit": recursion_limit}
     events = graph.stream(
         {
             "messages": [
@@ -130,29 +134,29 @@ def submitUserMessage(
                     user_input
                 )
             ],
-            "chat_history": chat_history
-        },
-        # Maximum number of steps to take in the graph
-        {"recursion_limit": recursion_limit},
+            # "chat_history": chat_history
+        }, 
+        config,
+        stream_mode="values",
     )
-    
+
     if not verbose:
         events = [e for e in events]
         response = list(events[-1].values())[0]
     else:
         for e in events:
             a = list(e.items())[0]
-            a[1]['messages'][0].pretty_print()
-        
+            a[1][-1].pretty_print()
+            
         response = a[1]
-    
-    response = response["messages"][0].content
+            
+    response = response[-1].content
     response = response.replace("FINALANSWER:", "")
     response = response.replace("FINALANSWER,", "")
     response = response.replace("FINALANSWER", "")
-    
+        
     if keep_chat_history:
-        save_chat_history(bot_message=response, human_message=user_input, user_id=user_id)
+        checkpointer.close()
     
     if return_reference:
         return response, get_tools_output()
