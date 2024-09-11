@@ -148,6 +148,7 @@ def submitUserMessage(
     
     response = response["messages"][0].content
     response = response.replace("FINALANSWER:", "")
+    response = response.replace("FINALANSWER,", "")
     response = response.replace("FINALANSWER", "")
     
     if keep_chat_history:
