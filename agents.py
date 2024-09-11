@@ -40,7 +40,7 @@ def create_agent(llm, tools, system_message: str):
                 "system",
                 system_prompt,
             ),
-            # MessagesPlaceholder(variable_name="chat_history"),
+            MessagesPlaceholder(variable_name="chat_history"),
             MessagesPlaceholder(variable_name="messages"),
         ]
     )
