@@ -11,21 +11,20 @@ from langchain.globals import set_debug, set_verbose
 set_verbose(True)
 set_debug(False)
 
-
 from langchain_core.messages import (
     AIMessage, 
     HumanMessage,
     ToolMessage
 )
 from langgraph.graph import END, StateGraph, START
-from tools import get_tools_output
 from agents import(
     AgentState,
     agents,
     agent_name
 )
-from tools import all_tools
+from tools import get_tools_output, all_tools
 from chat_history import save_chat_history, load_chat_history
+from langgraph.checkpoint.memory import MemorySaver
 
 ## Define Tool Node
 from langgraph.prebuilt import ToolNode
@@ -108,7 +107,6 @@ workflow.add_conditional_edges(
 workflow.add_edge(START, "analyst")
 graph = workflow.compile()
 
-
 def submitUserMessage(
     user_input:str, 
     user_id:str="test", 
@@ -121,7 +119,9 @@ def submitUserMessage(
     chat_history = load_chat_history(user_id=user_id) if keep_chat_history else []
     chat_history = chat_history[-8:]
     
-    graph = workflow.compile()
+    # memory only keep chat history only along agents.
+    internal_level_memory = MemorySaver()
+    graph = workflow.compile(checkpointer=internal_level_memory)
 
     events = graph.stream(
         {
@@ -133,7 +133,7 @@ def submitUserMessage(
             "chat_history": chat_history
         },
         # Maximum number of steps to take in the graph
-        {"recursion_limit": recursion_limit},
+        {"recursion_limit": recursion_limit, "thread_id":"a"},
     )
     
     if not verbose:
