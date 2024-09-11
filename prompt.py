@@ -52,8 +52,8 @@ agent_meta = {
                     - สวัสดีคุณทำอะไรได้บ้าง
                     
                 Tasks:
-                    - In this condition you must prefix your response with 'FINALANSWER' so the team knows to stop.
-                    - Politely engage with them by answer what they want, try to steer the conversation back on track, and ask them to specify the type of business and location (in Thai). 
+                    - In this condition you must prefix your response with 'FINALANSWER'.
+                    - Politely engage with them by answer what they want prefix your response with 'FINALANSWER, try to steer the conversation back on track prefix your response with 'FINALANSWER, and ask them to specify the type of business and location (in Thai) and prefix your response with 'FINALANSWER. 
         """ 
     },
     "data_collector":{
