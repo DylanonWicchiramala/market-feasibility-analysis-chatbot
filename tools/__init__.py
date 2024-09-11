@@ -21,20 +21,20 @@ utils.load_env()
 class NearbySearchInput(TypedDict):
     keyword: str
     location_name: str
-    radius: Optional[int]
+    radius: NotRequired[int]
     
     
 class NearbyDenseCommunityInput(TypedDict):
     location_name: str
-    radius: Optional[int]
+    radius: NotRequired[int]
     
 
 class RestaurantSaleProject(TypedDict):
     base_price_per_unit: float|int
     category: Literal['Beverages', 'Biryani', 'Dessert', 'Extras', 'Fish', 'Other Snacks', 'Pasta', 'Pizza', 'Rice Bowl', 'Salad', 'Sandwich', 'Seafood', 'Soup', 'Starters']
     human_traffic:int
-    cost_per_unit:Optional[int]
-    monthly_fix_cost:Optional[int]
+    cost_per_unit:NotRequired[int]
+    monthly_fix_cost:NotRequired[int]
     
     
 tools_outputs=""
@@ -187,18 +187,18 @@ def restaurant_sale_projection(input_dict:RestaurantSaleProject) -> str:
         price of food (base_price_per_unit:float), 
         estimate number of human around dense communities(human_traffic:int).
         (this argument below are optional, use to calcualte profit)
-        cost per unit sale (cost_per_unit:optional int)
-        monthly fix cost such as rent (monthly_fix_cost:optinoal int)
+        cost per unit sale (cost_per_unit:optional int) assign cost_per_unit=0 if you don't know the cost
+        monthly fix cost such as rent (monthly_fix_cost:optinoal int) assign monthly_fix_cost=0 if you don't know the cost
     """
     base_price = input_dict['base_price_per_unit']
     category = input_dict['category']
     human_traffic = input_dict['human_traffic']
-    cost_per_unit = input_dict.get("cost_per_unit", None)
+    cost_per_unit = input_dict.get("cost_per_unit", 0)
     monthly_fix_cost = input_dict.get("monthly_fix_cost", 0)
     
     result = sale_forecasting.restaurant_sale_project(base_price, category, human_traffic)
     
-    if cost_per_unit:
+    if (cost_per_unit!=0 or monthly_fix_cost!=0):
         report = f"sale projection of {input_dict['category']}:\nweek\tnumber of order\tsale(forecast)\tprofit\n"
     else:
         report = f"sale projection of {input_dict['category']}:\nweek\tnumber of order\tsale(forecast)\n"
