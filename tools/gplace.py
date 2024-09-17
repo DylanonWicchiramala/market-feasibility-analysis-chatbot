@@ -159,7 +159,7 @@ def nearby_dense_community(location:str, radius:int=1000):
         'location': location,
         'radius': radius,
         'key': api_key,
-        "rankPreference": "DISTANCE"
+        "rankPreference": "POPULARITY"
     }
 
     # Send the GET request to the Google Maps API
