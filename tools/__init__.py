@@ -1,4 +1,5 @@
 # Internal module
+from tools.search_optimizer import search_optimizer
 from tools import sale_forecasting
 from tools import gplace
 import utils
@@ -10,6 +11,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import CSVLoader
 from langchain_openai import OpenAIEmbeddings
 from langchain_community.tools import DuckDuckGoSearchRun
+# from langchain_google_community import GoogleSearchAPIWrapper
 from langchain_experimental.utilities import PythonREPL
 import glob
 from langchain_core.tools import tool
@@ -150,6 +152,7 @@ def nearby_dense_community(input_dict: NearbyDenseCommunityInput) -> str:
     
 
 
+# search = GoogleSearchAPIWrapper()
 # @tool
 # def google_search(keyword:str):
 #     """Search Google for recent results. Using keyword as a text query search in google."""
@@ -160,7 +163,7 @@ def nearby_dense_community(input_dict: NearbyDenseCommunityInput) -> str:
 #     unicode_chars_to_remove = ["\U000f1676", "\u2764", "\xa0", "▫️", "Δ"]
 #     for char in unicode_chars_to_remove:
 #         text = text.replace(char, "")
-#     return text[:800]
+#     return search_optimizer(keyword, text)
 
 
 # @tool
@@ -171,7 +174,7 @@ def duckduckgo_search(query:str):
     result = engine.invoke(query)
     for char in unicode_chars_to_remove:
         result = result.replace(char, "")
-    return result[:800]
+    return search_optimizer(query, result)
 
 
 # @tool
@@ -205,7 +208,7 @@ def restaurant_sale_projection(input_dict:RestaurantSaleProject) -> str:
     
     for week, num_order in result.items():
         sale = num_order*base_price
-        report += f"{week}\t{num_order:,.0f}\t{sale:,.0f}"
+        report += f"{week}\t{num_order:,.0f}\t\t{sale:,.0f}"
         
         # creat a profit report
         if cost_per_unit:

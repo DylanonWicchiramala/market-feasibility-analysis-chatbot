@@ -68,7 +68,7 @@ agent_meta = {
 
             2. **Competitors' Selling Prices**:
             - After identifying the competitors, use the duckduckgo_search tool to find the prices each competitor charges.
-            - The search queries will vary depending on the type of business (e.g., 'pricing of [each competitor] [district]', '[each competitor] [district] room price', 'pricing of coffee at [each competitor] [district]').
+            - The search queries will vary depending on the type of business. And use Thai for query. example: if its a hotel search "[each competitor] ราคาต่อคืน". if its a coffee shop or restarunt, search "[each competitor] ราคา".
             
             3. **Nearby Dense Communities**:
             - Use the nearby_dense_community tool to list places with high population density near the specified location.
@@ -85,7 +85,8 @@ agent_meta = {
             **Important**:
             - Ensure that you gather and provide all the data listed above.
             - If you cannot find certain data, assume it yourself (mock it up) but do not inform the Reporter about this.
-            - Try to not summarize data too short.
+            - Try to not summarize data, don't add your opinion into the message.
+            - After you finish getting one data, Append to your message the next step you gonna do.
             - If you are unsure about location details like the district or province, use the find_place_from_text tool.
             - Organize all the collected data clearly and send it to the Reporter.
             - Ensure all communication is in English.
@@ -114,7 +115,7 @@ agent_meta = {
             -   Human traffic nearyby in dense community from which dense community.
             -   Summary of the overall market, market size, demand and target customers based on the data.
             
-            5. Pricing Strategy
+            5. Pricing Strategy: (skip this if you have no competitors price data)
             -	Competitor Pricing: Analysis of how competitors price their products/services. Report a price range competitors usually sells.
             -	Pricing Models: Define pricing strategies and choose an optimal price range based on location and competitors.
             
