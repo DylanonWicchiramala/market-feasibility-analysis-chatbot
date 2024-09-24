@@ -68,7 +68,7 @@ agent_meta = {
 
             2. **Competitors' Selling Prices**:
             - After identifying the competitors, use the duckduckgo_search tool to find the prices each competitor charges.
-            - The search queries will vary depending on the type of business. And use Thai for query. example: if its a hotel search "[each competitor] ราคาต่อคืน". if its a coffee shop or restarunt, search "[each competitor] ราคา".
+            - The search queries will vary depending on the type of business. And use Thai for query. example: if its a hotel search "[each competitor] [location] ราคาต่อคืน". if its a coffee shop or restarunt, search "[each competitor] [location] ราคา".
             
             3. **Nearby Dense Communities**:
             - Use the nearby_dense_community tool to list places with high population density near the specified location.
