@@ -1,13 +1,10 @@
 from langchain_openai import ChatOpenAI
 from tools import (
-    find_place_from_text, 
-    nearby_search, 
-    nearby_dense_community, 
-    search_population_community_household_expenditures_data,
-    duckduckgo_search,
+    get_geometric_data,
     restaurant_sale_projection,
-    python_repl,
-    all_tools
+    duckduckgo_search,
+    find_place_from_text,
+    all_tools,
 )
 from langchain_core.messages import (
     AIMessage, 
@@ -98,7 +95,7 @@ analyst['node'] = create_agent(
 
 data_collector['node'] = create_agent(
         llm,
-        [restaurant_sale_projection, search_population_community_household_expenditures_data, find_place_from_text, nearby_search, nearby_dense_community, duckduckgo_search] ,
+        [restaurant_sale_projection, get_geometric_data, find_place_from_text, duckduckgo_search],
         system_message=data_collector['prompt'],
     )
 
