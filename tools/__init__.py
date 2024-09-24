@@ -10,15 +10,24 @@ from langchain_chroma import Chroma
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import CSVLoader
 from langchain_openai import OpenAIEmbeddings
-from langchain_community.tools import DuckDuckGoSearchRun
+from langchain_community.tools import DuckDuckGoSearchRun, DuckDuckGoSearchResults
+from langchain_community.utilities import DuckDuckGoSearchAPIWrapper
 # from langchain_google_community import GoogleSearchAPIWrapper
 from langchain_experimental.utilities import PythonREPL
 import glob
 from langchain_core.tools import tool
 import functools
 from copy import copy
+import os 
+import itertools
 
 utils.load_env()
+
+class GetGeometricDataInput(TypedDict):
+    keyword: str
+    location_name: str
+    radius: NotRequired[int]
+
 
 class NearbySearchInput(TypedDict):
     keyword: str
@@ -88,7 +97,7 @@ def nearby_search(input_dict: NearbySearchInput):
     result = gplace.nearby_search(keyword, location_coords, radius)
     
     number_results = len(result)
-    strout = "number of results more than {}\n".format(number_results) if number_results==60 else "number of results: {}\n".format(number_results)
+    strout = f"number of {keyword} more than {number_results}\n" if number_results==60 else f"number of {keyword}: {number_results}\n"
     for r in result[:max_results]:
         # Use .get() to handle missing keys
         address = r.get('vicinity', 'N/A')
@@ -170,11 +179,12 @@ def nearby_dense_community(input_dict: NearbyDenseCommunityInput) -> str:
 def duckduckgo_search(query:str):
     """A wrapper around DuckDuckGo Search. Useful for when you need to answer questions about current events. Input should be a search query."""
     engine = DuckDuckGoSearchRun()
-    unicode_chars_to_remove = ["\U000f1676", "\u2764", "\xa0", "▫️", "Δ", "#"]
     result = engine.invoke(query)
+    unicode_chars_to_remove = ["\U000f1676", "\u2764", "\xa0", "▫️", "Δ", "#"]
     for char in unicode_chars_to_remove:
         result = result.replace(char, "")
-    return search_optimizer(query, result)
+    result = search_optimizer(query, result).replace("NOT_MATCH", "").strip()
+    return result
 
 
 # @tool
@@ -222,22 +232,36 @@ def restaurant_sale_projection(input_dict:RestaurantSaleProject) -> str:
 
 
 ## Document csv
-def get_documents(file_pattern="document/*.csv"):
-    file_paths = tuple(glob.glob(file_pattern))
+def get_documents(doc_dir="./document/"):
+    get_path = lambda a: os.path.join(doc_dir, a)
+    all_docs = [
+        CSVLoader(
+            file_path=get_path("community type by district.csv"),
+            source_column="เขต",
+            # metadata_columns=,
+            
+        ).load(),
+        CSVLoader(
+            file_path=get_path("thailand household expenditures by province.csv"),
+            source_column="จังหวัด",
+            # metadata_columns=,
+            
+        ).load(),
+        CSVLoader(
+            file_path=get_path("thailand population data by district.csv"),
+            source_column="เขต",
+            # metadata_columns=,
+            
+        ).load()
+    ]
+    all_docs = list(itertools.chain(*all_docs))
 
-    all_docs = []
-
-    for file_path in file_paths:
-        loader = CSVLoader(file_path=file_path)
-        docs = loader.load()
-        all_docs.extend(docs)  # Add the documents to the list
-        
     return all_docs
 
 
 def get_retriver_from_docs(docs):
     # Split text into chunks separated.
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=100)
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=200, chunk_overlap=150)
     splits = text_splitter.split_documents(docs)
 
     # Text Vectorization.
@@ -261,16 +285,62 @@ retriever = get_retriver_from_docs(docs)
 def search_population_community_household_expenditures_data(query:str):
     """Use this tool to retrieve information about population, community and household expenditures. by searching distinct or province"""
     result = retriever.invoke(query)
-    output = "\n".join(text.page_content for text in result )
+    output = result[0].page_content
     return output
 
 
-python_repl = tool(python_repl)
+# @tool
+def get_geometric_data(input_dict:GetGeometricDataInput):
+    """ this function is to get all geometric related data such as nearby competitor, dense community nearby, community type in distrinct, etc.
+    """
+    keyword:str = input_dict["keyword"]
+    location_name:str = input_dict['location_name']
+    radius:int = input_dict.get('radius', 2000)
+    
+    result = gplace.find_place_from_text(location_name)
+    r = result['candidates'][0]
+    address:str = r['formatted_address']
+    completed_location_name:str = r['name']
+    
+    nearby_competitor:str = nearby_search({
+        "keyword": keyword,
+        "location_name": location_name,
+        "radius": int(radius),
+    })
+    dense_community:str = nearby_dense_community({
+        'location_name': location_name,
+        'radius': radius,
+    })
+    community_type = search_population_community_household_expenditures_data("community type " + address)
+    household_expenditures = search_population_community_household_expenditures_data("household expenditures by province " + address)
+    population = search_population_community_household_expenditures_data("population data by district " + address)
+    
+    return f"""
+    location: {completed_location_name}
+
+    **nearby competitors**
+    {nearby_competitor}
+    
+    **nearby dense communities**
+    {dense_community}
+    
+    **commnity type**
+    {community_type}
+    
+    **household expenditures**
+    {household_expenditures}
+    
+    **population**
+    {population}
+    """
+
+# python_repl = tool(python_repl)
+# search_population_community_household_expenditures_data = tool(save_tools_output(search_population_community_household_expenditures_data))
+# nearby_search = tool(save_tools_output(nearby_search))
+# nearby_dense_community = tool(save_tools_output(nearby_dense_community))
+get_geometric_data = tool(get_geometric_data)
 restaurant_sale_projection = tool(save_tools_output(restaurant_sale_projection))
 duckduckgo_search = tool(duckduckgo_search)
-search_population_community_household_expenditures_data = tool(save_tools_output(search_population_community_household_expenditures_data))
 find_place_from_text = tool(find_place_from_text)
-nearby_search = tool(save_tools_output(nearby_search))
-nearby_dense_community = tool(save_tools_output(nearby_dense_community))
 
-all_tools = [python_repl, restaurant_sale_projection, search_population_community_household_expenditures_data, find_place_from_text, nearby_search, nearby_dense_community, duckduckgo_search]  # Include both tools if needed
+all_tools = [restaurant_sale_projection, find_place_from_text, get_geometric_data, duckduckgo_search]  # Include both tools if needed

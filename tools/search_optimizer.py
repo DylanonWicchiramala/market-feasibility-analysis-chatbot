@@ -28,7 +28,8 @@ def search_optimizer(search_query: str, search_result: str) -> str:
         [
             (
                 "system",
-                """You are a search optimizer agent. Your task is to read search results and provide a shorten summary.
+                """You are a search optimizer agent. Your task is to read search results and provide a shorten summary that related the search query.
+                If there are not related, just povide the summary from search results, Then prefix your response with `NOT_MATCH`
                 """
             ),
             (

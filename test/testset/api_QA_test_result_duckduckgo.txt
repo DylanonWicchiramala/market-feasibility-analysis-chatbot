@@ -28,12 +28,12 @@ answer:
  3. การวิเคราะห์การแข่งขัน
 - ภูมิทัศน์การแข่งขัน: คู่แข่งมีความแข็งแกร่งในด้านการบริการและราคา
 - รายการเปรียบเทียบคู่แข่ง:
-  - Grand Mercure Bangkok Atrium: ราคา 3,436 THB, คะแนน 4.3
-  - The Residence on Thonglor by UHG: ราคา 2,500 THB, คะแนน 4.1
-  - The Salil Hotel Sukhumvit 57: ราคา 2,700 THB, คะแนน 4.7
-  - Al Meroz Hotel Bangkok: ราคา 4,000 THB, คะแนน 4.5
-  - Emporium Suites by Chatrium: ราคา 4,500 THB, คะแนน 4.4
-  - Mövenpick Ekkamai Bangkok: ราคา 3,000 THB, คะแนน 4.0
+  - Grand Mercure Bangkok Atrium: ราคา 3,436 THB, คะแนน 4.3  (❌real price start at 2000-2700)
+  - The Residence on Thonglor by UHG: ราคา 2,500 THB, คะแนน 4.1 (✅real price start at 2300-2700)
+  - The Salil Hotel Sukhumvit 57: ราคา 2,700 THB, คะแนน 4.7 (✅real price start at 2600-3000)
+  - Al Meroz Hotel Bangkok: ราคา 4,000 THB, คะแนน 4.5 (❌not in Thonglor, price start at 1800)
+  - Emporium Suites by Chatrium: ราคา 4,500 THB, คะแนน 4.4 (✅price start at 3700-4600)
+  - Mövenpick Ekkamai Bangkok: ราคา 3,000 THB, คะแนน 4.0 (✅price start at 1600-2400)
 
  4. การวิจัยและสภาพตลาด
 - ภาพรวมตลาด: ประชากรในกรุงเทพฯ ประมาณ 8.3 ล้านคน มีการใช้จ่ายเฉลี่ยต่อครัวเรือนประมาณ 30,000 THB ต่อเดือน
@@ -71,12 +71,12 @@ answer:
  3. การวิเคราะห์การแข่งขัน
 - ภูมิทัศน์การแข่งขัน: คู่แข่งมีคะแนนเฉลี่ยอยู่ระหว่าง 4.3 ถึง 4.8 โดยมีราคาขายอยู่ระหว่าง $5 - $30
 - รายการเปรียบเทียบคู่แข่ง:
-  - Jasmine Siam Kitchen: ราคา $5 - $15
-  - I Food Bar & Restaurant: ราคา $6 - $20
-  - SoCal: ราคา $10 - $30
-  - Stock.Room: ราคา $30 และต่ำกว่า
-  - Bangkok'78: ราคา $6 - $20
-  - Shichi Japanese Restaurant: ราคา $10 - $25
+  - Jasmine Siam Kitchen: ราคา $5 - $15 (✅price 159-549thb 4-16usd)
+  - I Food Bar & Restaurant: ราคา $6 - $20 (✅฿60.00 – ฿548.00 1.8-16usd)
+  - SoCal: ราคา $10 - $30 (✅price star at 320Baht 9.74 USD, buffet 890Baht 27.08 USD per person)
+  - Stock.Room: ราคา $30 และต่ำกว่า (❌1250 Baht 38.04 USD)
+  - Bangkok'78: ราคา $6 - $20 (✅stat at 210baht 6.4usd) 
+  - Shichi Japanese Restaurant: ราคา $10 - $25 (in range 250-8000thb 6-24usd✅)
 
  4. การวิจัยตลาดและสภาพแวดล้อม
 - ภาพรวมตลาด: ประชากรในพื้นที่ประมาณ 50,000 คน โดยมีการใช้จ่ายเฉลี่ยต่อครัวเรือนในหมวดอาหารประมาณ $300 ต่อเดือน
@@ -159,9 +159,9 @@ answer:
   - Mozza By Cocotte: ราคาไม่ระบุ, คะแนน 4.4
   - The SQUARE Restaurant: ราคาไม่ระบุ, คะแนน 4.4
   - Jasmine Siam Kitchen: ราคาไม่ระบุ, คะแนน 4.7
-  - Jaedang Samyan: ราคา 95-129 บาท, คะแนน 4.2
+  - Jaedang Samyan: ราคา 95-129 บาท, คะแนน 4.2 (100-300baht ✅)
   - Victoria By Cocotte: ราคาไม่ระบุ, คะแนน 4.5
-  - Bangkok'78: ราคา 200-600 บาท, คะแนน 5.0
+  - Bangkok'78: ราคา 200-600 บาท, คะแนน 5.0 (✅stat at 210baht 6.4usd) 
 
  4. การวิจัยตลาดและสภาพแวดล้อม
 - ภาพรวมตลาด: ประชากรในเขตปทุมวันประมาณ 45,000 คน
@@ -200,12 +200,12 @@ answer:
  3. การวิเคราะห์การแข่งขัน
 - ภูมิทัศน์การแข่งขัน: มีร้านกาแฟหลายแห่งในพื้นที่ที่มีคะแนนสูงและราคาที่แข่งขันได้
 - รายการเปรียบเทียบคู่แข่ง:
-  - GATTA CAFÉ: ราคา 100-200 THB, คะแนน 4.9
-  - The Cassette Coffee Bar: ราคา 100-200 THB, คะแนน 4.2
-  - MONGKOL COFFEE: ราคา 150-300 THB, คะแนน 4.9
-  - Coffee Booms: ราคา 100-200 THB, คะแนน 4.9
-  - Pacamara Coffee Roasters: ราคา 100-200 THB, คะแนน 4.5
-  - Uni Coffee Roastery: ราคา 100-200 THB, คะแนน 4.8
+  - GATTA CAFÉ: ราคา 100-200 THB, คะแนน 4.9 (100-200 THB per person ✅)
+  - The Cassette Coffee Bar: ราคา 100-200 THB, คะแนน 4.2 (100-200 THB per person ✅)
+  - MONGKOL COFFEE: ราคา 150-300 THB, คะแนน 4.9 (start at 50 less than 100 ❌)
+  - Coffee Booms: ราคา 100-200 THB, คะแนน 4.9 (60-100 ✅)
+  - : ราคา 100-200 THB, คะแนน 4.5 (✅)
+  - Uni Coffee Roastery: ราคา Pacamara Coffee Roasters100-200 THB, คะแนน 4.8 (100-200 THB✅)
 
  4. การวิจัยและสภาพตลาด
 - ภาพรวมตลาด: ประชากรในกรุงเทพฯ ประมาณ 10.5 ล้านคน โดยมีค่าใช้จ่ายเฉลี่ยต่อครัวเรือนประมาณ 45,000 บาทต่อเดือน
