@@ -5,30 +5,32 @@ import utils
 utils.load_env()
 os.environ['LANGCHAIN_TRACING_V2'] = "false"
 
-
 # debug ------------------------------------------------------------------
 from langchain.globals import set_debug, set_verbose
 set_verbose(True)
 set_debug(False)
-
 from langchain_core.messages import (
     AIMessage, 
     HumanMessage,
     ToolMessage
 )
 from langgraph.graph import END, StateGraph, START
-from agents import(
-    AgentState,
-    agents,
-    agent_name
-)
-from tools import get_tools_output, all_tools
-from chat_history import save_chat_history, load_chat_history
+from langgraph.prebuilt import ToolNode
 from langgraph.checkpoint.memory import MemorySaver
 
 ## Define Tool Node
-from langgraph.prebuilt import ToolNode
 from typing import Literal
+
+from agents import(
+    AgentState,
+    agent_names,
+    analyst_node,
+    data_collector_node,
+    data_analyst_node,
+    reporter_node,
+)
+from tools import get_tools_output, all_tools
+from chat_history import save_chat_history, load_chat_history
 
 tool_node = ToolNode(all_tools)
 
@@ -57,17 +59,17 @@ def router(state) -> Literal["call_tool", "__end__", "data_collector", "reporter
 workflow = StateGraph(AgentState)
 
 # add agent nodes
-for name, value in agents.items():
-    workflow.add_node(name, value['node'])
+workflow.add_node('analyst', analyst_node)
+workflow.add_node('data_collector', data_collector_node)
+workflow.add_node('data_analyst', data_analyst_node)
+workflow.add_node('reporter', reporter_node)
     
 workflow.add_node("call_tool", tool_node)
-
 
 workflow.add_conditional_edges(
     "analyst",
     router,
     {
-        "data_collector":"data_collector",
         "call_tool": "call_tool", 
         "__end__": END,
         "continue": "data_collector", 
@@ -79,7 +81,15 @@ workflow.add_conditional_edges(
     router,
     {
         "call_tool": "call_tool", 
-        "reporter":"reporter",
+        "continue": "data_analyst", 
+        }
+)
+
+workflow.add_conditional_edges(
+    "data_analyst",
+    router,
+    {
+        "call_tool": "call_tool", 
         "continue": "reporter", 
         }
 )
@@ -89,7 +99,6 @@ workflow.add_conditional_edges(
     router,
     {
         "__end__": END,
-        "data_collector":"data_collector",
         "continue": "data_collector", 
         }
 )
@@ -101,7 +110,7 @@ workflow.add_conditional_edges(
     # this edge will route back to the original agent
     # who invoked the tool
     lambda x: x["sender"],
-    {name:name for name in agent_name},
+    {name:name for name in agent_names},
 )
 
 workflow.add_edge(START, "analyst")
@@ -151,8 +160,10 @@ def submitUserMessage(
     response = response.replace("FINALANSWER,", "")
     response = response.replace("FINALANSWER", "")
     
+    restrict_str_size = lambda response: response[200:] + "..."
+    
     if keep_chat_history:
-        save_chat_history(bot_message=response, human_message=user_input, user_id=user_id)
+        save_chat_history(bot_message=restrict_str_size(response), human_message=user_input, user_id=user_id)
     
     if return_reference:
         return response, get_tools_output()

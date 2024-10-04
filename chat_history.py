@@ -93,5 +93,4 @@ def delete_chat_history(user_id=None, time_before=None, delete_all=False):
 
 
 # delete chat history older than 30 days.
-delete_chat_history(time_before=datetime.now() - timedelta(days=3))
-delete_chat_history(user_id="test")
+delete_chat_history(time_before=datetime.now() - timedelta(days=7))

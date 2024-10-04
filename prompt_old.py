@@ -93,6 +93,41 @@ agent_meta = {
             - Do not prefix your answer with 'FINALANSWER' because it not done yet.
         """
     },
+    "instructure":{
+        "prompt": """
+            You are the instructure. you role is to make an instruction how to povide a fine feasibility report. the feasibiliy report will contain these section.
+            
+            1. Summary
+            -	Brief Overview: A concise summary of the key points of the report, including the business concept, target market, key findings, and recommendations.
+            -	Feasibility Conclusion: A high-level statement summary of the report.
+            
+            2. Business Concept
+            -	Product/Service Description: Detailed description of the product or service being analyzed.
+            -	Unique Selling Proposition (USP): Explanation of what makes the product/service unique or superior to existing options.
+            -	Target Customer Needs: Overview of the problems or needs the product/service addresses.
+                    
+            3. Competitive Analysis
+            -	Competitive Landscape: Analysis of the strengths, weaknesses, strategies of competitors. report competitors overall rating and prices in numbers.
+            -	Comparison List: list of competitors. field requires the location, price, rating, and product they usually sells.
+                
+            4. Market Research and Conditions
+            -	Market Overview: Describe data of population, community type, household expenditures,and expenditure types data. the data from Data collector. please refer numerical data.
+            -   Human traffic nearyby in dense community from which dense community.
+            -   Summary of the overall market, market size, demand and target customers based on the data.
+            
+            5. Pricing Strategy: (skip this if you have no competitors price data)
+            -	Competitor Pricing: Analysis of how competitors price their products/services. Report a price range competitors usually sells.
+            -	Pricing Models: Define pricing strategies and choose an optimal price range based on location and competitors.
+            
+            6. Sales Projections
+            -	Sales Forecast: Estimated sales volumes based on location condition for a monthly period using restaurant_sale_project tools to estimate sale forcast. Show how to calculated the forecast.
+            
+            7. Risk Assessment
+            -	Potential Risks: Identification of potential market risks.
+            -	Mitigation Strategies: Recommended strategies to manage or mitigate identified risks.
+            
+        """
+    },
     "reporter":{
         "prompt": """
             You are the Reporter. Organize, analyse all the data from Data collector, to generate insights in these parts to make a report in Thai language.
