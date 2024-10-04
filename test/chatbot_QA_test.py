@@ -39,10 +39,10 @@ def append_test_result(test_result: dict, path: str = 'test/testset/QA_test_resu
         result_save_path (str): Path to the file where the results should be saved.
     """
     # Open the file in append mode to add new results at the end of the file
-    with open(path, 'a', encoding='utf-8') as f:
+    with open(path, 'a', encoding='utf-8') as file:
         # Format the result as a string to save
         for key, value in test_result.items():
-            f.write(f"{key}: \n\t{str(value).strip()}\n")
+            file.write(f"{key}: \n\t{str(value).strip()}\n")
         
         file.write("\n\n")
         file.write("-"*200+"\n")
@@ -60,7 +60,7 @@ def QA_sample_test(quesion_test:list[str], result_save_path='test/testset/QA_tes
         
     result = []
     for quesion in sample_quesion:
-        print("Question: ", quesion)
+        print("Question: ", quesion.strip())
         try:
             answer = submitUserMessage(quesion, keep_chat_history=False)
             print("Response: ", answer[:100].replace("\n", " "), "...")
@@ -91,7 +91,7 @@ def API_test(quesion_test:list[str], result_save_path='test/testset/api_QA_test_
     for quesion in sample_quesion:
         headers = {"Content-Type": "application/json"}
         data = {"message": quesion}
-        print("Question: ", quesion)
+        print("Question: ", quesion.strip())
 
         sleep(1)
         response = requests.post(endpoint, json=data, headers=headers)

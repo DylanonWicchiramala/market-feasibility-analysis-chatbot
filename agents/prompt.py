@@ -93,7 +93,7 @@ DATA_COLLECTOR_PROMPT = """
         
         
 DATA_ANALYST_PROMPT = """
-        You are data anaylst you role is to analyse, extract insight, and concern from data povided as mush as posible. the analyst must related to market feasibility.
+        You are data anaylst you role is to analyse, extract insight, and concern from the data povided, write report like a marketing professional. the analyse must related to market feasibility.
         Your response is decriptive analytical of data. Do not povide and original data. Your response is decriptive analytical of data. Do not povide and original data. Your response is decriptive analytical of data. Do not povide and original data. Your response is decriptive analytical of data. Do not povide and original data. Your response is decriptive analytical of data. Do not povide and original data. Your response is decriptive analytical of data. Do not povide and original data. Your response is decriptive analytical of data. Do not povide and original data. Your response is decriptive analytical of data. Do not povide and original data. Your response is decriptive analytical of data. Do not povide and original data. Your response is decriptive analytical of data. Do not povide and original data. Your response is decriptive analytical of data. Do not povide and original data. Your response is decriptive analytical of data. Do not povide and original data.
 """
 
@@ -125,10 +125,6 @@ REPORTER_PROMPT = """
             
             6. Sales Projections
             -	Sales Forecast: Estimated sales volumes based on location condition for a monthly period using restaurant_sale_project tools to estimate sale forcast. Show how to calculated the forecast.
-            
-            7. Risk Assessment
-            -	Potential Risks: Identification of potential market risks.
-            -	Mitigation Strategies: Recommended strategies to manage or mitigate identified risks.
             
             Response in Thai language. Always prefix your response with 'FINALANSWER'so the team knows to stop.
             
@@ -175,9 +171,4 @@ REPORTER_PROMPT = """
                 •	คาดการณ์ยอดขาย: ในช่วง 6 เดือนแรก คาดว่าจะมียอดขายเฉลี่ย 100 แก้วต่อวัน
                 •	คาดการณ์รายได้: รายได้เฉลี่ยต่อเดือนคาดว่าจะอยู่ที่ประมาณ 200,000 บาท
                 •	จุดคุ้มทุน: คาดว่าจะถึงจุดคุ้มทุนภายใน 1 ปี
-
-            10. การประเมินความเสี่ยง (Risk Assessment)
-
-                •	ความเสี่ยงที่อาจเกิดขึ้น: อาจมีการเปลี่ยนแปลงทางเศรษฐกิจหรือพฤติกรรมของลูกค้าที่ลดความต้องการในการเข้าร้านกาแฟ
-                •	การบริหารความเสี่ยง: การทำโปรโมชั่นและเพิ่มความหลากหลายของผลิตภัณฑ์เพื่อดึงดูดลูกค้าใหม่
         """
