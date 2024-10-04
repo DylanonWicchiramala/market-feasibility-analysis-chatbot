@@ -3,6 +3,8 @@
 import functools
 from os.path import dirname, realpath, sep, pardir
 import sys
+
+import tqdm
 sys.path.append(dirname(realpath(__file__)) + sep + pardir)
 
 from chatbot_multiagent import submitUserMessage
@@ -59,7 +61,7 @@ def QA_sample_test(quesion_test:list[str], result_save_path='test/testset/QA_tes
     __append_test_result = functools.partial(append_test_result, path=result_save_path)
         
     result = []
-    for quesion in sample_quesion:
+    for quesion in tqdm(sample_quesion):
         print("Question: ", quesion.strip())
         try:
             answer = submitUserMessage(quesion, keep_chat_history=False)
@@ -88,7 +90,7 @@ def API_test(quesion_test:list[str], result_save_path='test/testset/api_QA_test_
     __append_test_result = functools.partial(append_test_result, path=result_save_path)
     
     result = []
-    for quesion in sample_quesion:
+    for quesion in tqdm(sample_quesion):
         headers = {"Content-Type": "application/json"}
         data = {"message": quesion}
         print("Question: ", quesion.strip())
