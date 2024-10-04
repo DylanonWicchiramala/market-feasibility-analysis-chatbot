@@ -4,7 +4,7 @@ from tools import sale_forecasting
 from tools import gplace
 import utils
 
-from typing import TypedDict, Optional, NotRequired, Literal
+from typing import Any, TypedDict, Optional, NotRequired, Literal
 ## Document vector store for context
 from langchain_chroma import Chroma
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -90,7 +90,7 @@ def nearby_search(input_dict: NearbySearchInput):
     max_results = 10
     keyword = input_dict['keyword']
     location = input_dict['location_name']
-    radius = input_dict.get('radius', 2000)
+    radius = int(input_dict.get('radius', 2000))
 
     # Call the internal function to find location
     location_coords = gplace.find_location(location, radius=radius)
@@ -290,12 +290,12 @@ def search_population_community_household_expenditures_data(query:str):
 
 
 # @tool
-def get_geometric_data(input_dict:GetGeometricDataInput):
+def get_geometric_data(input_dict:NearbySearchInput):
     """ this function is to get all geometric related data such as nearby competitor, dense community nearby, community type in distrinct, etc.
     """
-    keyword:str = input_dict["keyword"]
-    location_name:str = input_dict['location_name']
-    radius:int = input_dict.get('radius', 2000)
+    keyword = input_dict['keyword']
+    location_name = input_dict['location_name']
+    radius = int(input_dict.get('radius', 2000))
     
     result = gplace.find_place_from_text(location_name)
     r = result['candidates'][0]
