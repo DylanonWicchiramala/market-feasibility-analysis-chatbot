@@ -15,6 +15,7 @@ gunicorn
 pymongo==4.8.0
 flask-cors==5.0.0
 
+ratelimit==2.2.1
 langchain_experimental==0.0.64
 scikit-learn==1.5.1
 duckduckgo-search==6.2.10
