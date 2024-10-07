@@ -36,6 +36,7 @@ class AgentState(TypedDict):
     chat_history: List[BaseMessage]
     data_context: list[str] = []
     sender: str
+    user_request: dict
     
     
 def __bind(llm, tools:list, agent_prompt:str):
@@ -97,6 +98,27 @@ def analyst_node_build(state:AgentState, name:str, tools:StructuredTool, agent_p
     agent = __bind(llm, tools, agent_prompt=agent_prompt)
     
     result = agent.invoke(state)
+    
+    # extract user feasibility analysis requests
+    user_request = {}
+    if len(result.content.split("\n"))>3 and "location" in result.content.lower() and "keyword" in result.content.lower():
+
+        for li in result.content.split("\n"):
+            li = li.lower()
+            if "location" in li:
+                user_request['location'] = li.split(":")[-1].strip()
+            if "keyword" in li:
+                user_request['keyword'] = li.split(":")[-1].strip()
+            if "business" in li:
+                user_request['business type'] = li.split(":")[-1].strip()
+                
+    
+    # if "food" in user_request['business type']:
+    #     result += "\nTo: data_collector"
+    # elif "real estate" in user_request['business type']:
+    #     result += "\nTo: data_collector"
+
+    
     # We convert the agent output into a format that is suitable to append to the global state
     if isinstance(result, ToolMessage):
         pass
@@ -106,6 +128,7 @@ def analyst_node_build(state:AgentState, name:str, tools:StructuredTool, agent_p
     return {
         "messages": [result],
         "chat_history" : chat_history,
+        "user_request" : user_request,
         # Since we have a strict workflow, we can
         # track the sender so we know who to pass to next.
         "sender": name,
@@ -127,6 +150,7 @@ def data_collector_node_build(state:AgentState, name:str, tools:StructuredTool, 
     return {
         "messages": [result],
         "chat_history" : chat_history,
+        "user_request" : state.get("user_request", {}),
         "data_context": data_context+"\n"+result.content,
         # Since we have a strict workflow, we can
         # track the sender so we know who to pass to next.
@@ -147,6 +171,7 @@ def data_analyst_node_build(state:AgentState, name:str, tools:StructuredTool, ag
     return {
         "messages": [result],
         "chat_history" : chat_history,
+        "user_request" : state.get("user_request", {}),
         "data_context": state.get("data_context","n/a"),
         # Since we have a strict workflow, we can
         # track the sender so we know who to pass to next.
@@ -174,7 +199,8 @@ def reporter_node_build(state:AgentState, name:str, tools:StructuredTool, agent_
     return {
         "messages": [result],
         "chat_history" : chat_history,
-        "data_context": [],
+        "user_request" : {}, # reset user requests
+        "data_context": [],  # reset data contexts
         # Since we have a strict workflow, we can
         # track the sender so we know who to pass to next.
         "sender": name,

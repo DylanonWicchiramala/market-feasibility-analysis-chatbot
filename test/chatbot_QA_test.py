@@ -4,7 +4,7 @@ import functools
 from os.path import dirname, realpath, sep, pardir
 import sys
 
-import tqdm
+from tqdm import tqdm
 sys.path.append(dirname(realpath(__file__)) + sep + pardir)
 
 from chatbot_multiagent import submitUserMessage

@@ -24,9 +24,10 @@ ANALYST_PROMPT = """
                 - ทำ feasibility report เกี่ยวร้านเกมแถวสยาม
                 
             Tasks:
-                - Your top priority is to identify both the location (where) and the keyword (type of business or service, such as "coffee shop," "restaurant," or "hotel") from the human's request. 
+                - Your top priority is to identify both the location (where), business type and the keyword (type of business or service, such as "coffee shop," "restaurant," or "hotel") from the human's request. 
                     - The **location** is where the analysis will take place (e.g., city, district, or specific address).
                     - The **keyword** is the type of business or service the human is asking about (e.g., "coffee shop," "restaurant," or "hotel").
+                    - The **business type** is the main type of business can be literal between real estate, and food
                 - Once you have both the location and keyword, send this information to the Data Collector. Make sure to communicate this in English. 
                 - In this condition, do not prefix your answer with 'FINALANSWER' because it not done yet.
 
@@ -136,10 +137,23 @@ REPORTER_PROMPT = """
 
             แนวคิดในการเปิดร้านกาแฟ “คอฟฟี่เลิฟ” ตั้งอยู่ในเขตกลางเมืองที่มีผู้คนสัญจรและทำงานเป็นจำนวนมาก การวิเคราะห์ตลาดแสดงถึงแนวโน้มการเติบโตของตลาดร้านกาแฟในพื้นที่นี้ ซึ่งมีการเพิ่มขึ้นของความต้องการในเครื่องดื่มและสถานที่นั่งทำงาน การแข่งขันในพื้นที่อยู่ในระดับปานกลางและมีโอกาสที่จะเจาะตลาดได้ รายงานนี้สรุปว่าการเปิดร้านกาแฟมีความเป็นไปได้ทางธุรกิจที่ดี
 
-            3. แนวคิดธุรกิจ (Business Concept)
+            2. แนวคิดธุรกิจ (Business Concept)
 
                 •	รายละเอียดสินค้า/บริการ: ร้านกาแฟ “คอฟฟี่เลิฟ” จะเน้นเสิร์ฟกาแฟสดคุณภาพสูงพร้อมกับขนมอบที่ทำเอง นอกจากนี้ ร้านยังให้บริการ Wi-Fi ฟรีและมีบรรยากาศที่เหมาะสำหรับการทำงานและพบปะสังสรรค์
                 •	จุดขายเฉพาะ (USP): เราเน้นที่กาแฟคุณภาพสูง การตกแต่งที่อบอุ่น และบริการที่เป็นมิตร ซึ่งจะดึงดูดลูกค้าที่ต้องการสถานที่นั่งทำงานหรือพักผ่อนในบรรยากาศที่ผ่อนคลาย
+
+            3. การวิเคราะห์การแข่งขัน (Competitive Analysis)
+
+                •	คู่แข่งโดยตรง: ร้านกาแฟชื่อดัง 3 แห่งในรัศมี 2 กิโลเมตร
+                       - **ได้แก่**: 
+                    1. **Gallery Drip Coffee** - ราคา 80 THB, Rating 4.6
+                    2. **BEANS Coffee Roaster Paragon** - ราคา 60-150 THB, Rating 5
+                    3. **GATTA CAFÉ** - ราคา 80-150 THB, Rating 4.9
+                    4. **The Coffee Academics** - ราคา 480++ THB, Rating 4.4
+                    5. **Oasis Coffee** - Rating 4.6
+                    6. **MONGKOL COFFEE X WARMBATCH ROASTERS** - Rating ไม่ระบุ
+                •	คู่แข่งโดยอ้อม: ร้านเบเกอรี่และร้านอาหารที่มีบริการกาแฟ
+                •	จุดเด่นและจุดด้อยของคู่แข่ง: ร้านกาแฟที่มีอยู่แล้วเน้นลูกค้าประจำและมีราคาสูง แต่มีบรรยากาศที่คนส่วนใหญ่รู้จักและชอบ
 
             4. การวิจัยตลาด (Market Research)
 
@@ -148,25 +162,20 @@ REPORTER_PROMPT = """
                 •	กลุ่มเป้าหมายหลักคือพนักงานออฟฟิศและนักศึกษาที่มองหาสถานที่นั่งทำงานหรือพบปะเพื่อนฝูง
                 •	กลุ่มลูกค้ารองเป็นผู้ที่ผ่านไปมาหรืออยู่ในพื้นที่ใกล้เคียง
                 •	ความต้องการของตลาด (Market Demand): ข้อมูลจากการสำรวจแสดงว่ามีความต้องการสูงสำหรับสถานที่ที่มีบรรยากาศผ่อนคลาย และร้านกาแฟคุณภาพดี
-
-            5. การวิเคราะห์การแข่งขัน (Competitive Analysis)
-
-                •	คู่แข่งโดยตรง: ร้านกาแฟชื่อดัง 3 แห่งในรัศมี 2 กิโลเมตร
-                •	คู่แข่งโดยอ้อม: ร้านเบเกอรี่และร้านอาหารที่มีบริการกาแฟ
-                •	จุดเด่นและจุดด้อยของคู่แข่ง: ร้านกาแฟที่มีอยู่แล้วเน้นลูกค้าประจำและมีราคาสูง แต่มีบรรยากาศที่คนส่วนใหญ่รู้จักและชอบ
-
-            6. สภาพตลาด (Market Conditions)
+                - ข้อมูลประชากร: มีประชากรที่หนาแน่นในพื้นที่ประมาณ 7,200 คน
+                
+            5. สภาพตลาด (Market Conditions)
 
                 •	การวิเคราะห์อุตสาหกรรม: ตลาดกาแฟในประเทศไทยเติบโตอย่างต่อเนื่อง โดยมีความนิยมของกาแฟพิเศษเพิ่มขึ้นในกลุ่มคนรุ่นใหม่
                 •	สภาพเศรษฐกิจ: พื้นที่นี้เป็นศูนย์กลางเศรษฐกิจและมีประชากรหนาแน่น ทำให้มีโอกาสสูงที่จะมีลูกค้าหมุนเวียน
                 •	กฎระเบียบ: ไม่มีกฎหมายหรือข้อบังคับที่ซับซ้อนในการเปิดร้านกาแฟในพื้นที่นี้
 
-            8. กลยุทธ์การตั้งราคา (Pricing Strategy)
+            6. กลยุทธ์การตั้งราคา (Pricing Strategy)
 
                 •	รูปแบบการตั้งราคา: ใช้กลยุทธ์การตั้งราคาในระดับกลาง โดยคำนึงถึงกลุ่มลูกค้าที่ต้องการกาแฟคุณภาพในราคาที่เหมาะสม
                 •	การเปรียบเทียบราคา: ราคาอยู่ในระดับที่แข่งขันได้เมื่อเทียบกับคู่แข่ง
 
-            9. ประมาณการยอดขายและรายได้ (Sales and Revenue Projections)
+            7. ประมาณการยอดขายและรายได้ (Sales and Revenue Projections)
 
                 •	คาดการณ์ยอดขาย: ในช่วง 6 เดือนแรก คาดว่าจะมียอดขายเฉลี่ย 100 แก้วต่อวัน
                 •	คาดการณ์รายได้: รายได้เฉลี่ยต่อเดือนคาดว่าจะอยู่ที่ประมาณ 200,000 บาท
