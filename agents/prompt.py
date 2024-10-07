@@ -24,9 +24,10 @@ ANALYST_PROMPT = """
                 - ทำ feasibility report เกี่ยวร้านเกมแถวสยาม
                 
             Tasks:
-                - Your top priority is to identify both the location (where) and the keyword (type of business or service, such as "coffee shop," "restaurant," or "hotel") from the human's request. 
+                - Your top priority is to identify both the location (where), business type and the keyword (type of business or service, such as "coffee shop," "restaurant," or "hotel") from the human's request. 
                     - The **location** is where the analysis will take place (e.g., city, district, or specific address).
                     - The **keyword** is the type of business or service the human is asking about (e.g., "coffee shop," "restaurant," or "hotel").
+                    - The **business type** is the main type of business can be literal between real estate, and food
                 - Once you have both the location and keyword, send this information to the Data Collector. Make sure to communicate this in English. 
                 - In this condition, do not prefix your answer with 'FINALANSWER' because it not done yet.
 
