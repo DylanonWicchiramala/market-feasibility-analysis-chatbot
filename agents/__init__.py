@@ -147,6 +147,8 @@ def data_collector_node_build(state:AgentState, name:str, tools:StructuredTool, 
     result = AIMessage(**result.dict(exclude={"type", "name"}), name=name)
     
     data_context = state.get("data_context", "")
+    data_context = "" if not data_context else data_context
+    
     return {
         "messages": [result],
         "chat_history" : chat_history,
@@ -184,7 +186,7 @@ def reporter_node_build(state:AgentState, name:str, tools:StructuredTool, agent_
         use functools.partial to pass the argument `name`, `tools`, `llm`.
     """
     data_context = state.get("data_context","n/a")
-    agent_prompt = agent_prompt + "\ndata_context: \n" + data_context
+    agent_prompt = agent_prompt + "\ndata_context: \n" + data_context 
     
     agent = __bind(llm, tools, agent_prompt=agent_prompt)
     
