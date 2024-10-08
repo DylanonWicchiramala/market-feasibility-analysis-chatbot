@@ -25,7 +25,8 @@ from agents import(
     AgentState,
     agent_names,
     analyst_node,
-    data_collector_node,
+    food_data_collector_node,
+    realestate_data_collector_node,
     data_analyst_node,
     reporter_node,
 )
@@ -35,7 +36,26 @@ from chat_history import save_chat_history, load_chat_history
 tool_node = ToolNode(all_tools)
 
 
-def router(state) -> Literal["call_tool", "__end__", "data_collector", "reporter", "analyst"]:
+def analyst_router(state) -> Literal["call_tool", "__end__", "realestate_data_collector", "food_data_collector", "reporter", "analyst"]:
+    # This is the router
+    business_type = state.get("user_request", {}).get('business type', "")
+    messages = state["messages"]
+    last_message = messages[-1]
+    if "FINALANSWER" in last_message.content:
+        # Any agent decided the work is done
+        return "__end__"
+    if last_message.tool_calls:
+        # The previous agent is invoking a tool
+        return "call_tool"
+    if "real estate" in business_type:
+        return "realestate_data_collector"    
+    if "food" in business_type:
+        return "food_data_collector"
+    else:
+        return "continue"
+
+
+def router(state) -> Literal["call_tool", "__end__"]:
     # This is the router
     messages = state["messages"]
     last_message = messages[-1]
@@ -45,12 +65,6 @@ def router(state) -> Literal["call_tool", "__end__", "data_collector", "reporter
     if last_message.tool_calls:
         # The previous agent is invoking a tool
         return "call_tool"
-    if "data_collector" in last_message.content:
-        return "data_collector"
-    if "reporter" in last_message.content:
-        return "reporter"
-    if "analyst" in last_message.content:
-        return "analyst"
     else:
         return "continue"
 
@@ -60,7 +74,8 @@ workflow = StateGraph(AgentState)
 
 # add agent nodes
 workflow.add_node('analyst', analyst_node)
-workflow.add_node('data_collector', data_collector_node)
+workflow.add_node('food_data_collector', food_data_collector_node)
+workflow.add_node('realestate_data_collector', realestate_data_collector_node)
 workflow.add_node('data_analyst', data_analyst_node)
 workflow.add_node('reporter', reporter_node)
     
@@ -68,16 +83,27 @@ workflow.add_node("call_tool", tool_node)
 
 workflow.add_conditional_edges(
     "analyst",
-    router,
+    analyst_router,
     {
         "call_tool": "call_tool", 
         "__end__": END,
-        "continue": "data_collector", 
+        "realestate_data_collector":"realestate_data_collector",
+        "food_data_collector":"food_data_collector",
+        "continue": "food_data_collector", 
         }
 )
 
 workflow.add_conditional_edges(
-    "data_collector",
+    "food_data_collector",
+    router,
+    {
+        "call_tool": "call_tool", 
+        "continue": "data_analyst", 
+        }
+)
+
+workflow.add_conditional_edges(
+    "realestate_data_collector",
     router,
     {
         "call_tool": "call_tool", 
@@ -96,10 +122,12 @@ workflow.add_conditional_edges(
 
 workflow.add_conditional_edges(
     "reporter",
-    router,
+    analyst_router,
     {
         "__end__": END,
-        "continue": "data_collector", 
+        "realestate_data_collector":"realestate_data_collector",
+        "food_data_collector":"food_data_collector",
+        "continue": "food_data_collector", 
         }
 )
 

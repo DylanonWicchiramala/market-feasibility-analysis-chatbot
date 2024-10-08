@@ -207,7 +207,7 @@ def reporter_node_build(state:AgentState, name:str, tools:StructuredTool, agent_
     }
 
 
-agent_names = ['analyst', 'data_collector', 'data_analyst', 'reporter']
+agent_names = ['analyst', 'food_data_collector', 'realestate_data_collector', 'data_analyst', 'reporter']
 
 
 analyst_node = functools.partial(
@@ -218,11 +218,19 @@ analyst_node = functools.partial(
     llm=llm
     )
 
-data_collector_node = functools.partial(
+food_data_collector_node = functools.partial(
     data_collector_node_build, 
-    name='data_collector',
+    name='food_data_collector',
     tools=[restaurant_sale_projection, get_geometric_data, find_place_from_text, duckduckgo_search],
-    agent_prompt=DATA_COLLECTOR_PROMPT,
+    agent_prompt=FOOD_DATA_COLLECTOR_PROMPT,
+    llm=llm
+    )
+
+realestate_data_collector_node = functools.partial(
+    data_collector_node_build, 
+    name='realestate_data_collector',
+    tools=[get_geometric_data, find_place_from_text, duckduckgo_search],
+    agent_prompt=REALESTATE_DATA_COLLECTOR_PROMPT,
     llm=llm
     )
 
