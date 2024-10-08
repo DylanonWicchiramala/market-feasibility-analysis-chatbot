@@ -1,3 +1,4 @@
+import traceback
 from flask import Flask, request, abort, jsonify
 from flask_cors import CORS
 import json
@@ -38,8 +39,9 @@ async def webhook():
             return request.json, 200
         
         except Exception as e:
-            app.logger.error(f"Error: {e}")
-            return jsonify({"error": str(e)}), 500
+            error_traceback = traceback.format_exc()
+            app.logger.error(f"Error: {e}\nTraceback: {error_traceback}")
+            return jsonify({"error": str(e), "traceback": error_traceback}), 500
     else:
         return jsonify({"error": "method not allowed"}), 400
         
@@ -49,14 +51,9 @@ def chatbot_test():
     try:
         user_message = request.json.get('message', '')
         
-    except Exception as e:
-        app.logger.error(f"Error: {e}")
-        return jsonify({"error": f"{e}"}), 500
+        if not user_message:
+            return jsonify({"error": "Message is required"}), 400
 
-    if not user_message:
-        return jsonify({"error": "Message is required"}), 400
-
-    try:
         response = submitUserMessage(user_message, user_id="test", keep_chat_history=False, return_reference=True, verbose=BOT_VERBOSE)
         response = utils.format_bot_response(response, markdown=False)
         
@@ -66,8 +63,9 @@ def chatbot_test():
         return jsonify({"response": response})
 
     except Exception as e:
-        app.logger.error(f"Error: {e}")
-        return jsonify({"error": f"{e}"}), 500
+        error_traceback = traceback.format_exc()
+        app.logger.error(f"Error: {e}\nTraceback: {error_traceback}")
+        return jsonify({"error": str(e), "traceback": error_traceback}), 500
         
         
 @app.route('/health', methods=['GET'])
