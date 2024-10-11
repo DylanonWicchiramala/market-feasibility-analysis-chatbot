@@ -178,7 +178,7 @@ def nearby_dense_community(input_dict: NearbyDenseCommunityInput) -> str:
 
 
 # @tool
-@ratelimit.limits(calls=20, period=1)
+@ratelimit.limits(calls=15, period=1)
 def duckduckgo_search(query:str):
     """A wrapper around DuckDuckGo Search. Useful for when you need to answer questions about current events. Input should be a search query."""
     engine = DuckDuckGoSearchRun()
