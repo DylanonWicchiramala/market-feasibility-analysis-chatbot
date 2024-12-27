@@ -13,6 +13,7 @@ from langchain_community.document_loaders import CSVLoader
 from langchain_openai import OpenAIEmbeddings
 from langchain_community.tools import DuckDuckGoSearchRun, DuckDuckGoSearchResults
 from langchain_community.utilities import DuckDuckGoSearchAPIWrapper
+from langchain_community.chat_models import ChatPerplexity
 # from langchain_google_community import GoogleSearchAPIWrapper
 from langchain_experimental.utilities import PythonREPL
 import glob
@@ -181,13 +182,25 @@ def nearby_dense_community(input_dict: NearbyDenseCommunityInput) -> str:
 @ratelimit.limits(calls=15, period=1)
 def duckduckgo_search(query:str):
     """A wrapper around DuckDuckGo Search. Useful for when you need to answer questions about current events. Input should be a search query."""
-    engine = DuckDuckGoSearchRun()
-    result = engine.invoke(query)
+    result = pplx_search(query)
     unicode_chars_to_remove = ["\U000f1676", "\u2764", "\xa0", "▫️", "Δ", "#"]
     for char in unicode_chars_to_remove:
         result = result.replace(char, "")
     result = search_optimizer(query, result).replace("NOT_MATCH", "").strip()
     return result
+
+
+def pplx_search(
+    query:str, 
+    pplx_model_kwargs={
+        'model':"llama-3.1-sonar-small-128k-online", 
+        'temperature':0.01, 
+        'max_retries':2, 
+        'request_timeout':20
+        }) -> str:
+    pplx_model = ChatPerplexity(**pplx_model_kwargs)
+    res = pplx_model.invoke(query)
+    return res.content
 
 
 # @tool
